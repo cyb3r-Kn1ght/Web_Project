@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "NT208, Web, Chatbot",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon --inspect main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyb3r-Kn1ght/Web_Project.git"
+  },
+  "keywords": [
+    "NT208",
+    "Web",
+    "Chatbot"
+  ],
+  "author": "cyb3r_Kn1ght",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cyb3r-Kn1ght/Web_Project/issues"
+  },
+  "homepage": "https://github.com/cyb3r-Kn1ght/Web_Project#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
