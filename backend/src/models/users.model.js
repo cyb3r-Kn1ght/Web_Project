@@ -11,15 +11,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    Password: {
+    Password: { // cần kiểm chứng lại về document mật khẩu
         type: String,
-        required: true
+        required: true,
+        minlength: [8, 'Mật khẩu cần phải có ít nhất 8 ký tự!'],
+        validate: {
+            validator: function(v) {
+              return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(v);
+            },
+            message: "Mật khẩu cần phải chứa một ký tự in hoa, in thường, ký tự đặc biệt và một chữ số!"
+        }
     },
     Email: {
         type: String,
         required: true,
         unique: true,
-        match: [/.+\@.+\..+/, 'Please fill a valid email address']
+        match: [/.+\@.+\..+/, 'Xin hãy nhập vào địa chỉ email hợp lệ!']
     },
     ProfilePic: {
         type: String,

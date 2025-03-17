@@ -4,6 +4,7 @@
 // có thể đổi type thành commonjs trong package.json
 import express from 'express';
 import authRoutes from './routes/auth.route.js';
+import messageRoutes from './routes/message.route.js';
 import {ConnectDB} from './lib/db.js';
 
 const app = express();
@@ -15,6 +16,8 @@ app.get('/login', (req, res) => {
 
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
+
+app.use("api/message", messageRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}/login`);

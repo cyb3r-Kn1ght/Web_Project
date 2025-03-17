@@ -1,5 +1,5 @@
-import dotenv from 'dotenv' //import vì lí do bảo mật (không để lộ connection string với server)
-import mongoose from 'mongoose'
+import dotenv from 'dotenv'; //import vì lí do bảo mật (không để lộ connection string với server)
+import mongoose from 'mongoose';
 
 // để có thể đọc dữ liệu bên trong file .env
 dotenv.config();
