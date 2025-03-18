@@ -3,16 +3,14 @@
 // mặc định type đang sử dụng là node, nếu muốn sử dụng require()
 // có thể đổi type thành commonjs trong package.json
 import express from 'express';
+
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
-import {ConnectDB} from './lib/db.js';
+
+import { ConnectDB } from './lib/db.js';
 
 const app = express();
 const port = 3000;
-
-app.get('/login', (req, res) => {
-  res.send('Hello World!');
-}) //để lệnh này vào trong auth.route.js
 
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
