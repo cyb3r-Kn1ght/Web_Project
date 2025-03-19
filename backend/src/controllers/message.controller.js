@@ -35,7 +35,9 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => { // WIP, cần cập nhật tính năng gửi trên thời gian thực
     try {
-        const { id: ReceiverID, ChatID } = req.params; // từ tham số của req, lấy tham số id của Celeb và đặt tên lại thành ReceiverID
+        // từ tham số của req, lấy tham số id của người nhận và đặt tên lại thành ReceiverID
+        // đồng thời lấy thêm ChatID để xác nhận đoạn chat cụ thể mà người gửi vào là gì
+        const { id: ReceiverID, ChatID } = req.params; 
         const SenderID = req.user._id; // lấy tham số id của người gửi request
         const Text = req.body; // truy xuất nội dung tin nhắn của người gửi
 
