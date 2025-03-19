@@ -9,6 +9,10 @@ const celebSchema = new mongoose.Schema({
     CelebName: {
         type: String,
         required: true
+    },
+    ProfilePic: {
+        type: String,
+        default: ""
     }
 }, {timestamps: true});
 

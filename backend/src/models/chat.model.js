@@ -5,19 +5,25 @@ const chatSchema = new mongoose.Schema({
     ChatID: {
         type: String,
         required: true,
-        unique: true
     },
-    MessID: {
+    RefModels: {
         type: String,
         required: true,
-        unique: true
+        enum: ["User", "Celeb"]
+    },
+    ReceiverID: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "RefModels",
+        required: true,
     },
     SenderID: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "RefModels",
         required: true
     },
     Message: {
         type: String,
+        required: true
     }
 }, {timestamps: true});
 
