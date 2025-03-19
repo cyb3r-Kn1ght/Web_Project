@@ -52,7 +52,7 @@ export const sendMessage = async (req, res) => { // WIP, cần cập nhật tín
 
         // xử lí gửi tin nhắn sau với socket.io
 
-        res.status(200).json(newMessage);
+        res.status(201).json(newMessage);
     } catch (error) {
         console.error("Error in getting sendMessage:", error.message);
         res.status(500).json({error: "Internal server error!"});
