@@ -12,12 +12,13 @@ import { ConnectDB } from './lib/db.js';
 const app = express();
 const port = 3000;
 
+
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
 
 app.use("api/message", messageRoutes);
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}/login`);
+  console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
   ConnectDB(); // tiến hành kết nối database
 }); // cần có phương thức listen() để phía server có thể nhận req từ client

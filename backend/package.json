@@ -4,7 +4,7 @@
   "description": "NT208, Web, Chatbot",
   "main": "src/main.js",
   "scripts": {
-    "start": "nodemon --inspect src/main.js",
+    "start": "nodemon src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
+    "parser": "^0.1.4",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
