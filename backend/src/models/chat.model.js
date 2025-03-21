@@ -2,10 +2,6 @@
 import mongoose from 'mongoose';
 
 const chatSchema = new mongoose.Schema({
-    ChatID: {
-        type: String,
-        required: true,
-    },
     RefModels: {
         type: String,
         required: true,

@@ -1,3 +1,4 @@
+import { getAISocket, getReceiverSocket } from '../lib/socket.js';
 import Celeb from '../models/celebs.model.js';
 import Chat from '../models/chat.model.js';
 
@@ -33,24 +34,34 @@ export const getMessages = async (req, res) => {
     }
 }
 
-export const sendMessage = async (req, res) => { // WIP, cần cập nhật tính năng gửi trên thời gian thực
+export const sendMessage = async (req, res) => {
     try {
         // từ tham số của req, lấy tham số id của người nhận và đặt tên lại thành ReceiverID
-        // đồng thời lấy thêm ChatID để xác nhận đoạn chat cụ thể mà người gửi vào là gì
-        const { id: ReceiverID, ChatID } = req.params; 
+        const { id: ReceiverID } = req.params; 
         const SenderID = req.user._id; // lấy tham số id của người gửi request
         const Text = req.body; // truy xuất nội dung tin nhắn của người gửi
 
         const newMessage = new Chat ({
-            ChatID,
             ReceiverID,
             SenderID,
             Message: Text
         })
 
-        await newMessage.save();
+        await newMessage.save(); //lưu tin nhắn được gửi về csdl
 
         // xử lí gửi tin nhắn sau với socket.io
+        const celeb = await Celeb.findOne({_id: ReceiverID});
+        if (celeb && celeb.IsAI) {
+            const ReceiverSocketID = getAISocket(celeb.CelebName);
+            if (ReceiverSocketID) {
+                io.to(ReceiverSocketID).emit("newMessage", newMessage);
+            }
+        } else {
+            const ReceiverSocketID = getReceiverSocket(ReceiverID);
+            if (ReceiverSocketID) {
+                io.to(ReceiverSocketID).emit("newMessage", newMessage);
+            }
+        }
 
         res.status(201).json(newMessage);
     } catch (error) {

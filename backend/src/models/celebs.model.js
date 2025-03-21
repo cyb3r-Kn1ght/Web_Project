@@ -2,9 +2,9 @@
 import mongoose from 'mongoose';
 
 const celebSchema = new mongoose.Schema({
-    CelebID: {
-        type: String,
-        required: true
+    IsAI: {
+        type: Boolean,
+        default: false
     },
     CelebName: {
         type: String,
