@@ -3,9 +3,8 @@
     align-items:center;
     width: 60%;
     height: 50px;
-    border: 2px solid black;
     justify-content:space-between;
-    background: white;
+    background: rgb(99, 98, 98);
     margin: 0 auto;
     border-radius: 10px;
 }
@@ -15,13 +14,17 @@
     height: 35px;
     padding-left: 10px;
     border:none;
-    outline: none;
+    border-radius: 10px;
+    outline: none; /* bỏ viền khi click vào ô nhập tin nhắn */
+    background-color: rgb(99, 98, 98);
+    color: whitesmoke;
 }
 
 .chattype button {
     height: 40px;
     border: none;
-    background-color: white;
+    background-color: rgb(99, 98, 98);
+    border-radius: 10px;
 }
 
 .chattype button svg {

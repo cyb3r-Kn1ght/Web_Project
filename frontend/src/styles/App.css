@@ -1,5 +1,5 @@
 .app{
-    display: flex;
-    height: 100vh;
-    width: 100vw;
+    display: flex; /* flexbox để auto chỉnh layout */
+    height: 100vh; /* cao toàn trang */
+    width: 100vw; /* rộng toàn trang */
 }

@@ -7,6 +7,7 @@ import "../styles/Bodysidebar.css";
 import { useSelectedCeleb } from '../contexts/SelectedCelebContext';
 import { useSelectedAvatar } from '../contexts/SelectedAvatarContext';
 
+/* Danh sách celebs, mỗi người gồm ảnh và tên, có thể bổ sung vào thêm */
 const celebs = [
     {
         celebImage: CelebImages1,
@@ -21,11 +22,16 @@ const celebs = [
         celebName: 'Barack Obama'
     }
 ];
+
+/* Conponent chính hiển thị phần body sidebar, bao gồm danh sách các celebs */ 
 function Bodysidebar() {
+    /* Hook từ context SelectedCelebContext, dùng để lưu tên người nổi tiếng được chọn */
     const { setSelectedCeleb } = useSelectedCeleb();
+    /* Hook từ context SelectedAvatarContext, dùng để lưu ảnh người nổi tiếng được chọn */
     const { setSelectedAvatar } = useSelectedAvatar();
     return (
         <div className="Bodysidebar">
+            {/* map toàn bộ người nổi tiếng trong mảng celebs và hiển thị thông qua componets Celebs, nếu chọn vào Celebs nào thì lưu tên + ảnh người đó vào context */}
             {celebs.map((celeb, index) => (
                 <div
                     key={index}
