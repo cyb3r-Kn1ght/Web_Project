@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     Username: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     Password: {
         type: String,
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        match: [/.+\@.+\..+/, 'Xin hãy nhập vào địa chỉ email hợp lệ!']
+        // match: [/.+\@.+\..+/, 'Plesae fill a valid email address']
     },
     ProfilePic: {
         type: String,

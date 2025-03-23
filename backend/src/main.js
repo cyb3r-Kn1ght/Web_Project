@@ -17,6 +17,7 @@ dotenv.config();
 
 const port = process.env.PORT || 3000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
+
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
 
