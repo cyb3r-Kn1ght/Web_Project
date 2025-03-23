@@ -3,7 +3,7 @@
     flex-direction: column;
     padding: 10px;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: auto; /* căn chỉnh nội dung bị tràn theo chiều dọc với mode auto (hiển thị scroll khi cần) */
 }
 .message-container {
     display: flex;
@@ -15,26 +15,26 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid whitesmoke;
 }
 .message {
     margin: 10px;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 20px;
     max-height: 30px;
     align-items: center;
     display: flex;
 }
 
 .user-messages {
-    background-color:blue;
-    color: white;
+    background-color:rgb(131, 131, 131);
+    color:whitesmoke;
     max-width: 60%;
-    align-self: flex-end;
-    text-align: right;
-    margin-left: auto;
+    text-align: right; /* căn lề bên phải với message từ user */
+    margin-left: auto; /* đẩy tin nhắn user ra biên phải */
 }
 
 .bot-messages {
     max-width: 60%;
-    align-self: flex-start;
+    color: whitesmoke;
 }
