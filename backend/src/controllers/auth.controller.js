@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 
 dotenv.config();
+import jwt from "jsonwebtoken";
+import passport from 'passport';
 
 //để JWT_SECRET ở trong file .env
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -94,11 +96,58 @@ export const logout = (req, res) => {
     res.json({ message: "Logout successful" });
 }
 
-export const checkAuth = (req, res) => {
-    try {
-        res.status(200).json(req.user);
-    } catch (error) {
-        console.log("Error in checkAuth controller", error.message);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+// xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
+export const googleAuth = (req, res, next) => {
+    // gọi hàm authenticate của passport với strategy là "google"
+    passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
+        // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
+        if (err || !user) {
+            return res.status(400).send("Authentication failed");
+        }
+        // lấy thông tin cần thiết từ user
+        const { id, displayName, emails } = user;
+        
+        // kiểm tra xem user đã tồn tại trong csdl chưa
+        let existingUser = await User.findOne({ GoogleId: id });
+        if (!existingUser) {
+            existingUser = new User({
+                Username: displayName,
+                Email: emails[0].value,
+                GoogleId: id
+            });
+            await existingUser.save();
+        }
+
+        // tạo token
+        const token = jwt.sign({ Username: existingUser.Username }, JWT_SECRET, { expiresIn: "1h" });
+        res.send(token);
+    })(req, res, next);
+};
+
+// xử lý đăng nhập bằng Facebook OAuth thông qua Passport.js.
+export const facebookAuth = (req, res, next) => {
+    // gọi hàm authenticate của passport với strategy là "facebook"
+    passport.authenticate("facebook", { failureRedirect: "/login", session: false }, async (err, user) => {
+        // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
+        if (err || !user) {
+            return res.status(400).send("Authentication failed");
+        }
+
+        // lấy thông tin cần thiết từ user
+        const { id, displayName } = user;
+
+        // kiểm tra xem user đã tồn tại trong csdl chưa
+        let existingUser = await User.findOne({ FacebookId: id });
+        if (!existingUser) {
+            existingUser = new User({
+                Username: displayName,
+                FacebookId: id
+            });
+            await existingUser.save();
+        }
+
+        // tạo token
+        const token = jwt.sign({ Username: existingUser.Username }, JWT_SECRET, { expiresIn: "1h" });
+        res.send(token);
+    })(req, res, next);
 };

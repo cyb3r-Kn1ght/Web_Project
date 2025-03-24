@@ -1,5 +1,7 @@
 // nơi này để xử lí thông tin đăng kí, đăng nhập và đăng xuất
 import express from 'express';
+import passport from "passport";
+import {googleAuth, facebookAuth } from "../controllers/auth.controller.js"; // 🛠️ Import googleAuth
 
 // định nghĩa các hàm xử lí bên trong đường dẫn này
 import { signup, login, logout, checkAuth } from '../controllers/auth.controller.js';
@@ -16,5 +18,18 @@ router.post("/logout", logout);
 
 // lấy thông tin xác thực của người dùng ở đây
 router.get("/check", verifyToken, checkAuth)
+
+
+// lấy thông tin xác thực của người dùng ở đây
+router.get("/check", verifyToken, checkAuth)
+
+
+// Đăng nhập với Google
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/google/callback", googleAuth);
+
+// Đăng nhập với Facebook
+router.get("/facebook", passport.authenticate("facebook"));
+router.get("/facebook/callback", facebookAuth);
 
 export default router;
