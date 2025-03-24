@@ -1,6 +1,6 @@
-import "../styles/Chatboxhistory.css";
-import { useSelectedAvatar } from "../contexts/SelectedAvatarContext";
-import { useSelectedCeleb } from "../contexts/SelectedCelebContext";
+import '../../styles/chatBox/Chatboxhistory.css';
+import { useSelectedAvatar } from "../../contexts/SelectedAvatarContext";
+import { useSelectedCeleb } from "../../contexts/SelectedCelebContext";
 import React from "react";
 
 /* Component hiển thị lịch sử tin nhắn */

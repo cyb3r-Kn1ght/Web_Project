@@ -1,4 +1,4 @@
-import "../styles/Celebs.css";
+import "../../styles/chatBox/Celebs.css";
 const Celebs = ({ celebImage, celebName }) => {
     return (
         <div className="Celebs">

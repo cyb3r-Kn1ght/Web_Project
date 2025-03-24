@@ -1,4 +1,4 @@
-import "../styles/Footersidebar.css";
+import '../../styles/chatBox/Footersidebar.css';
 
 function Footersidebar() {
     return (

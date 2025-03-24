@@ -1,8 +1,8 @@
 import Chatboxheader from "./Chatboxheader";
 import Chatboxhistory from "./Chatboxhistory";
 import Chattype from "./Chattype";
-import '../styles/Chatbox.css';
-import { useSelectedCeleb } from "../contexts/SelectedCelebContext";
+import '../../styles/chatBox/Chatbox.css';
+import { useSelectedCeleb } from "../../contexts/SelectedCelebContext";
 import { useEffect, useState } from "react";
 import Alertdemo from "./Alertdemo";
 import Usericon from "./Usericon";

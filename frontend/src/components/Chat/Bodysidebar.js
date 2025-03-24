@@ -1,11 +1,11 @@
 import React from 'react';
 import Celebs from './Celebs';
-import CelebImages1 from '../assets/images/elon-musk.jpg';
-import CelebImages2 from '../assets/images/donald-trump.jpg';
-import CelebImages3 from '../assets/images/barack-obama.jpg';
-import "../styles/Bodysidebar.css";
-import { useSelectedCeleb } from '../contexts/SelectedCelebContext';
-import { useSelectedAvatar } from '../contexts/SelectedAvatarContext';
+import CelebImages1 from '../../assets/images/elon-musk.jpg';
+import CelebImages2 from '../../assets/images/donald-trump.jpg';
+import CelebImages3 from '../../assets/images/barack-obama.jpg';
+import "../../styles/chatBox/Bodysidebar.css";
+import { useSelectedCeleb } from "../../contexts/SelectedCelebContext";
+import { useSelectedAvatar } from '../../contexts/SelectedAvatarContext';
 
 /* Danh sách celebs, mỗi người gồm ảnh và tên, có thể bổ sung vào thêm */
 const celebs = [

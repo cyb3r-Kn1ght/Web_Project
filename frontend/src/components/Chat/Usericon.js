@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import "../styles/Usericon.css"
-import IconImages from "../assets/images/user-icon.png"
+import '../../styles/chatBox/Usericon.css'
+import IconImages from "../../assets/images/user-icon.png"
 /*component để hiển thị icon người dùng ở góc trên bên phải */
 function Usericon() {
     /* state để lưu trạng thái hiển thị Menu (khi nhấn vào icon) */

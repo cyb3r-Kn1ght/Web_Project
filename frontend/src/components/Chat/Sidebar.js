@@ -1,7 +1,7 @@
 import Bodysidebar from "./Bodysidebar";
 import Headersidebar from "./Headersidebar";
 import Footersidebar from "./Footersidebar";
-import '../styles/Sidebar.css';
+import '../../styles/chatBox/Sidebar.css';
 
 /* components dùng để hiển thị sidebar */
 function Sidebar() {
