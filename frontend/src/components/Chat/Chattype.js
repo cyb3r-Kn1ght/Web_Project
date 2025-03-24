@@ -1,4 +1,4 @@
-import "../styles/Chattype.css";
+import '../../styles/chatBox/Chattype.css';
 /* import icon send */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons"

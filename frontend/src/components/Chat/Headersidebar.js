@@ -1,5 +1,5 @@
-import "../styles/Headersidebar.css";
-import { useUsername } from "../contexts/UsernameContext";
+import '../../styles/chatBox/Headersidebar.css';
+import { useUsername } from "../../contexts/UsernameContext";
 
 /* components hiển thị header của sidebar */
 function Headersidebar() {

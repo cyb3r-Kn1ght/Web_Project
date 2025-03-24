@@ -1,4 +1,4 @@
-import "../styles/Alertdemo.css"
+import "../../styles/chatBox/Alertdemo.css"
 function Alertdemo() {
     return (
         /* Dòng thông báo ở dưới thanh chatbox */

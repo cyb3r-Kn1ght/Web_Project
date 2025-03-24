@@ -1,5 +1,5 @@
-import "../styles/Chatboxheader.css";
-import { useSelectedAvatar } from "../contexts/SelectedAvatarContext";
+import '../../styles/chatBox/Chatbox.css';
+import { useSelectedAvatar } from "../../contexts/SelectedAvatarContext";
 /* hiển thị thông tin ở header của chatbox, gồm ảnh và tên celebs */
 function Chatboxheader({SelectedCeleb}) {
     /* Lấy ảnh người nổi tiếng qua context SelectedAvatarContext */
