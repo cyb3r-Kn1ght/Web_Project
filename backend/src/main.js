@@ -14,6 +14,12 @@ import { ConnectDB } from './lib/db.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
+import session from 'express-session';
+import passport from 'passport';
+import './lib/passport.js'; // file này sẽ cấu hình Google & Facebook login
+
+// Cấu hình session cho Passport
+app.use(passport.initialize());
 
 const port = process.env.PORT || 3000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
