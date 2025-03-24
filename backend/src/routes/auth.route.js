@@ -2,7 +2,8 @@
 import express from 'express';
 
 // định nghĩa các hàm xử lí bên trong đường dẫn này
-import { signup, login, logout } from '../controllers/auth.controller.js';
+import { signup, login, logout, checkAuth } from '../controllers/auth.controller.js';
+import { verifyToken } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -12,5 +13,8 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 router.post("/logout", logout);
+
+// lấy thông tin xác thực của người dùng ở đây
+router.get("/check", verifyToken, checkAuth)
 
 export default router;

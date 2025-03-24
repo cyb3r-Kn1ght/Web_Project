@@ -1,4 +1,4 @@
-import { getAISocket, getReceiverSocket } from '../lib/socket.js';
+import { getAISocket, getReceiverSocket, io } from '../lib/socket.js';
 import Celeb from '../models/celebs.model.js';
 import Chat from '../models/chat.model.js';
 

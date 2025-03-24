@@ -15,14 +15,14 @@ import dotenv from 'dotenv';
 import Celeb from '../models/celebs.model.js';
 
 dotenv.config();
-const port = process.env.PORT || 3000; //port mặc định phòng trường hợp không có biến PORT trong .env
+const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
 const app = express();
 const server = http.createServer(app); // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
         origin: [`http://localhost:${port}`]
-    } //Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:3000 được tiếp nhận
+    } //Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
     nên để hai server có thể trao đổi thông tin với nhau (bypass same-origin policy) cần để nguồn của 

@@ -2,8 +2,12 @@
 import User from '../models/users.model.js'
 import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào trong csdl
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
 
-const JWT_SECRET = "WhoIsThePersonThatIsGayThanTheNam1sOut"
+dotenv.config();
+
+//để JWT_SECRET ở trong file .env
+const JWT_SECRET = process.env.JWT_SECRET;
 // thao tác cơ bản
 // yêu cầu người dùng nhập tiếp nếu không đủ các trường được nhập vào
 // nếu mật khẩu thỏa mãn yêu cầu trong csdl thì tiến hành hash và lưu trong csdl
@@ -89,3 +93,12 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     res.json({ message: "Logout successful" });
 }
+
+export const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        console.log("Error in checkAuth controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

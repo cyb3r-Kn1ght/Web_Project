@@ -1,9 +1,5 @@
 import jwt from "jsonwebtoken";
 
-export const protectRoute =  async (req, res) => {
-
-};
-
 // xác thực JWT token
 export const verifyToken = async (req, res) => {
     const token = req.header("authorization"); // lấy token từ header

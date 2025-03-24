@@ -8,6 +8,7 @@ function Chatboxhistory({ messages }) {
     /* Lấy ảnh và tên người nổi tiếng qua context */
     const { selectedAvatar } = useSelectedAvatar();
     const {selectedCeleb} = useSelectedCeleb();
+    
     return (
         <div className="Chatboxhistory">
             {/* Duyệt qua mảng messages để hiển thị từng tin nhắn */}
