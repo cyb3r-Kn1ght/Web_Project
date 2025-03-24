@@ -1,0 +1,36 @@
+.user-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid whitesmoke;
+}
+
+.user-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: rgb(66, 65, 65);
+    border-radius: 5px;
+    z-index: 100;
+    width: 160px;
+}
+
+.menu-item {
+    padding: 10px;
+    font-size: 14px;
+    color: whitesmoke;
+    cursor: pointer;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background-color: rgb(117, 115, 115);
+    border-radius: 5px;
+}

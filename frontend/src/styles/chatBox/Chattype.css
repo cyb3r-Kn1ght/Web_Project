@@ -1,0 +1,33 @@
+.chattype {
+    display: flex;
+    align-items:center;
+    width: 60%;
+    height: 50px;
+    justify-content:space-between;
+    background: rgb(99, 98, 98);
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.chattype input {
+    width: 95%;
+    height: 35px;
+    padding-left: 10px;
+    border:none;
+    border-radius: 10px;
+    outline: none; /* bỏ viền khi click vào ô nhập tin nhắn */
+    background-color: rgb(99, 98, 98);
+    color: whitesmoke;
+}
+
+.chattype button {
+    height: 40px;
+    border: none;
+    background-color: rgb(99, 98, 98);
+    border-radius: 10px;
+}
+
+.chattype button svg {
+    font-size: 18px;
+    margin-right: 10px;
+}
