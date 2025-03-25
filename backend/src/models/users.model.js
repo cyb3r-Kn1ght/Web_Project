@@ -2,23 +2,23 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    Username: {
+    username: {
         type: String,
         required: true,
         unique: true,
     },
-    Password: {
+    password: {
         type: String,
         required: true,
         minlength: [8, 'Mật khẩu cần phải có ít nhất 8 ký tự!'],
     },
-    Email: {
+    email: {
         type: String,
         required: true,
         unique: true,
         // match: [/.+\@.+\..+/, 'Plesae fill a valid email address']
     },
-    ProfilePic: {
+    profilePic: {
         type: String,
         default: ""
     }

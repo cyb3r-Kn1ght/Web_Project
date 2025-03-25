@@ -17,16 +17,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // lưu những thông tin còn lại vào trong csdl nếu như không bị trùng
 
 export const signup = async (req, res) => {
-    const { Username, Password, Email } = req.body;
+    const { username, password, email } = req.body;
 
     // kiểm tra xem người dùng đã nhập đủ thông tin chưa
-    if (!Username || !Password || !Email) {
+    if (!username || !password || !email) {
         res.status(400).send("Missing required information");
         return;
     }
 
     // kiểm tra xem người dùng có trùng username không
-    const user = await User.findOne({ Username });
+    const user = await User.findOne({ username });
     if (user) {
         res.status(400).send("Username already exists");
         return;
@@ -34,31 +34,31 @@ export const signup = async (req, res) => {
 
     // kiểm tra mật khẩu
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-    if (Password.length < 8){
+    if (password.length < 8){
         res.status(400).send("Password must be at least 8 characters long");
     }
 
-    if (!passwordRegex.test(Password)){
+    if (!passwordRegex.test(password)){
         res.status(400).send("Password must contain at least one letter, one number and one special character");
         return;
     }
 
     const emailRegex = /.+\@.+\..+/;
-    if (!emailRegex.test(Email)){
+    if (!emailRegex.test(email)){
         res.status(400).send("Invalid email address");
         return;
     }
     // kiểm tra xem email có trùng không
-    const emailExists = await User.findOne({ Email });
+    const emailExists = await User.findOne({ email });
     if (emailExists) {
         res.status(400).send("Email already exists");
         return;
     }
 
     // mã hóa mật khẩu
-    const hashedPassword = bcrypt.hashSync(Password, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10);
     // tạo một user mới
-    const newUser = new User({ Username, Password: hashedPassword, Email });
+    const newUser = new User({ username, password: hashedPassword, email });
     // lưu user mới vào trong csdl
     await newUser.save();
     res.send("User created successfully");
@@ -66,32 +66,31 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     // lấy thông tin từ người dùng
-    const {Email,Password} = req.body;
+    const {email,password} = req.body;
 
-    if (!Email || !Password) {
+    if (!email || !password) {
         res.status(400).send("Missing required information");
         return;
     }
     
     // kiểm tra xem người dùng có tồn tại không
-    const user = await User.findOne({Email});
+    const user = await User.findOne({email});
     if (!user){
         res.status(400).send("User does not exist");
         return;
     }
 
     // kiểm tra xem mật khẩu có đúng không
-    const isValidPasswd = bcrypt.compareSync(Password, user.Password);
+    const isValidPasswd = bcrypt.compareSync(password, user.password);
     if (!isValidPasswd){
         res.status(400).send("Invalid password");
         return;
     }
 
     // tạo token
-    const token = jwt.sign({ Email }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
     console.log("Login successful");
-    res.send(token);
-
+    res.json({token, user});
 }
 
 export const logout = (req, res) => {
@@ -122,8 +121,8 @@ export const googleAuth = (req, res, next) => {
         let existingUser = await User.findOne({ GoogleId: id });
         if (!existingUser) {
             existingUser = new User({
-                Username: displayName,
-                Email: emails[0].value,
+                username: displayName,
+                email: emails[0].value,
                 GoogleId: id
             });
             await existingUser.save();

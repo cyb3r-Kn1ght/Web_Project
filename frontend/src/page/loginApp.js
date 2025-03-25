@@ -8,21 +8,23 @@ import { useAuthStore } from "../store/useAuthStore";
 const LoginApp = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState({
-    Email: "",
-    Password: "",
+    email: "",
+    password: "",
   });
 
   const { LogIn } = useAuthStore();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
     // Giả sử bạn có kiểm tra hợp lệ dữ liệu nhập vào (email và password) ở đây.
     // Nếu hợp lệ:
-    //onLoginSuccess(); // cập nhật trạng thái đăng nhập
-    //navigate("/chat"); // chuyển hướng sang trang Chat
-    console.log(formData);
-    LogIn(formData);
-    //navigate("/chat"); // chuyển hướng sang trang Chat
+    const user = await LogIn(formData);
+    console.log(user);
+    if (user) {
+      onLoginSuccess();
+      navigate("/chat"); // chuyển hướng sang trang Chat
+    }
   };
   
   
@@ -46,8 +48,8 @@ const LoginApp = ({ onLoginSuccess }) => {
             icon="mail"
 
             //hỗ trợ tính năng kiểm tra ở thời gian thực
-            value={formData.Email}
-            onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
           <InputField 
               type="password" 
@@ -55,8 +57,8 @@ const LoginApp = ({ onLoginSuccess }) => {
               icon="key"
               
               //hỗ trợ tính năng kiểm tra ở thời gian thực
-              value={formData.Password}
-              onChange={(e) => setFormData({ ...formData, Password: e.target.value })}
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
               <a href="#" className="forget-pass-link">Forgot password?</a>
               <button className="login-button">Log In</button>

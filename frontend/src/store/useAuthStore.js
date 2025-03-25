@@ -54,14 +54,12 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
         set({isLoggingIn:true});
         try {
             const res = await axiosInstance.post("/auth/login", data);
-            // const res = await axiosInstance.post("/auth/login", {
-            //     Email: "nam@gmail.com",
-            //     Password: "IamNam1s!"
-            // });
+
             //thêm thông báo tạo tài khoản thành công
-            set({authUser:res.data});
+            set({authUser:res.data.user});
             get().connectSocket();
             console.log("Logged in successfully!");
+            return res.data;
         } catch (error) {
             //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
             console.log("Error in LogIn:", error);
