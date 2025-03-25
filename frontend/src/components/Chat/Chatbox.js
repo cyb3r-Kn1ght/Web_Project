@@ -40,12 +40,11 @@ function Chatbox() {
                 <Usericon />
             </div>
             {/* Khu vực tiêu đề */}
-            <div className="chatbox-header">
                 {selectedCeleb ? (
-                    <>
+                    <div className="chatbox-header">
                     {/*Nếu đã chọn celeb -> Hiện header */}
                         <Chatboxheader SelectedCeleb={selectedCeleb} />
-                    </>
+                    </div>
                 ) : (
                     <div className="welcome-message">
                         {/* Nếu chưa chọn celeb -> Hiện khung welcome-message*/}
@@ -53,7 +52,6 @@ function Chatbox() {
                         <p>Please select the character you want to chat with from the sidebar on the left.</p>
                     </div>
                 )}
-            </div>
             {/* Nếu đã chọn celeb thì hiển thị phần chat */}
             {selectedCeleb && (
                 <>

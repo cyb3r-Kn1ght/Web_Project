@@ -14,7 +14,7 @@
     flex-direction: column;
     justify-content: center; /* căn giữa văn bản bên trong */
     align-items: center; /* căn giữa box văn bản theo chiều dọc */
-    height: 658pt;
+    height: 100vh;
     width: 100%;
     text-align: center; /* căn giữa box văn bản theo chiều ngang */
 }
@@ -41,7 +41,7 @@
 
 .usericon {
     position:fixed;
-    top: 30px;
-    right: 30px;
+    top: 3%;
+    right: 4%;
     z-index: 1000; /* set thứ tự của lớp usericon ở trên cùng (không bị đè bởi thuộc tính khác) */
 }
