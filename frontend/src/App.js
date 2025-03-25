@@ -16,10 +16,10 @@ const App = () => {
     return (
         <Router>
           <Routes>
-            <Route path="/login" element={<LoginApp onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/auth/login" element={<LoginApp onLoginSuccess={handleLoginSuccess} />} />
             {/* Nếu chưa đăng nhập, cố gắng truy cập /chat sẽ chuyển hướng về /login */}
-            <Route path="/chat" element={isAuthenticated ? <ChatApp /> : <Navigate to="/login" />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/chat" element={isAuthenticated ? <ChatApp /> : <Navigate to="/auth/login" />} />
+            <Route path="*" element={<Navigate to="/auth/login" />} />
           </Routes>
         </Router>
       );

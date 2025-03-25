@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const InputField = ({ type, placeholder, icon }) => {
+const InputField = ({ type, placeholder, icon, onChange }) => {
     const [isPasswordShown, setIsPasswordShown] = useState(false);
 
     return (
@@ -10,10 +10,11 @@ const InputField = ({ type, placeholder, icon }) => {
                 placeholder={placeholder}
                 className="input-field"
                 required
+                onChange={onChange}
                 {...(type === "email"
                     ? {
-                        pattern: "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
-                        title: "Nhập địa chỉ email với định dạng example@gmail.com"
+                        //pattern: "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
+                        //title: "Nhập địa chỉ email với định dạng example@gmail.com"
                     }
                     : type === "password"
                     ? {

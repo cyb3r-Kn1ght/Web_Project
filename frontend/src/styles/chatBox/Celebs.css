@@ -21,3 +21,13 @@
   color: gray;
   padding: 12px;
 }
+@media (max-width: 768px) {
+  .Celebs p {
+    font-size: 16px;
+    padding: 8px;
+  }
+  .Celebs img {
+    width: 40px;
+    height: 40px;
+  }
+}
