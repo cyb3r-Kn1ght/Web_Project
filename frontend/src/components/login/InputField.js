@@ -12,8 +12,8 @@ const InputField = ({ type, placeholder, icon }) => {
                 required
                 {...(type === "email"
                     ? {
-                        pattern: "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
-                        title: "Nhập địa chỉ email với định dạng example@gmail.com"
+                        //pattern: "^[a-zA-Z0-9._%+-]+@gmail\\.com$",
+                        //title: "Nhập địa chỉ email với định dạng example@gmail.com"
                     }
                     : type === "password"
                     ? {

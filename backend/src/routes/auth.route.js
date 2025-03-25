@@ -20,10 +20,6 @@ router.post("/logout", logout);
 router.get("/check", verifyToken, checkAuth)
 
 
-// lấy thông tin xác thực của người dùng ở đây
-router.get("/check", verifyToken, checkAuth)
-
-
 // Đăng nhập với Google
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 router.get("/google/callback", googleAuth);

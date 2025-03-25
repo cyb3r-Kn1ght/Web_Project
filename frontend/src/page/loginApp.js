@@ -3,16 +3,26 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../components/login/InputField";
 import SocialLogin from "../components/login/SocialLogin";
 import "../styles/login/index.css";
+import { useAuthStore } from "../store/useAuthStore";
 
 const LoginApp = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
+  const [formData, setFormData] = React.useState({
+    Email: "",
+    Password: "",
+  });
+
+  const { LogIn } = useAuthStore();
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Giả sử bạn có kiểm tra hợp lệ dữ liệu nhập vào (email và password) ở đây.
     // Nếu hợp lệ:
-    onLoginSuccess(); // cập nhật trạng thái đăng nhập
-    navigate("/chat"); // chuyển hướng sang trang Chat
+    //onLoginSuccess(); // cập nhật trạng thái đăng nhập
+    //navigate("/chat"); // chuyển hướng sang trang Chat
+    console.log(formData);
+    LogIn(formData);
+    //navigate("/chat"); // chuyển hướng sang trang Chat
   };
   
   
@@ -30,8 +40,24 @@ const LoginApp = ({ onLoginSuccess }) => {
 
           <form onSubmit= {handleLogin} action="#" className="login-form">
 
-          <InputField  type="email" placeholder="Email address" icon="mail"/>
-          <InputField type="password" placeholder="Password" icon="key" />
+          <InputField  
+            type="email" 
+            placeholder="Email address" 
+            icon="mail"
+
+            //hỗ trợ tính năng kiểm tra ở thời gian thực
+            value={formData.Email}
+            onChange={(e) => setFormData({ ...formData, Email: e.target.value })}
+          />
+          <InputField 
+              type="password" 
+              placeholder="Password" 
+              icon="key"
+              
+              //hỗ trợ tính năng kiểm tra ở thời gian thực
+              value={formData.Password}
+              onChange={(e) => setFormData({ ...formData, Password: e.target.value })}
+          />
               <a href="#" className="forget-pass-link">Forgot password?</a>
               <button className="login-button">Log In</button>
           </form>

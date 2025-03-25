@@ -2,35 +2,39 @@ import Chatboxheader from "./Chatboxheader";
 import Chatboxhistory from "./Chatboxhistory";
 import Chattype from "./Chattype";
 import '../../styles/chatBox/Chatbox.css';
-import { useSelectedCeleb } from "../../contexts/SelectedCelebContext";
+//import { useSelectedCeleb } from "../../contexts/SelectedCelebContext";
 import { useEffect, useState } from "react";
 import Alertdemo from "./Alertdemo";
 import Usericon from "./Usericon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {faRobot} from "@fortawesome/free-solid-svg-icons"
-function Chatbox() {
-    /* Lấy tên người nổi tiếng đã chọn từ context */
-    const { selectedCeleb} = useSelectedCeleb();
-    /* State lưu danh sách tin nhắn trò chuyện */
-    const [messages, setMessages] = useState([]);
+import { useChatStore } from "../../store/useChatStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
-    /* Mỗi khi chọn người nổi tiếng mới, reset đoạn chat */
+function Chatbox() {
+    const { messages, useSelectedCeleb, getMessages, sendMessage, subscribeToMessages } = useChatStore();
+    const { authUser } = useAuthStore();
+    /* Lấy tên người nổi tiếng đã chọn từ context */
+    //const { selectedCeleb} = useSelectedCeleb();
+    /* State lưu danh sách tin nhắn trò chuyện */
+    //const [messages, setMessages] = useState([]);
+
+    /* Mỗi khi chọn người nổi tiếng mới, load lịch sử đoạn chat */
     useEffect(()=>{
-        setMessages([]);
-    },[selectedCeleb]);
+        if (useSelectedCeleb && authUser) {
+            getMessages(authUser._id);
+        }
+    },[useSelectedCeleb, authUser]);
 
     /* Xử lý khi người dùng gửi tin nhắn */
-    const handleSendMessage = (message) => {
+    const handleSendMessage = (messageData) => {
+        if (!useSelectedCeleb) return; //không xử lí nếu không có đối tượng gửi
+        sendMessage(messageData);
         /* Cập nhật tin nhắn mới của người dùng vào mảng messages */
-        const updatedMessages = [...messages, {sender:"user", text: message}];
-        setMessages(updatedMessages);
+        //const updatedMessages = [...messages, {sender:"user", text: message}];
+        //setMessages(updatedMessages);
         /* Giả lập phản hồi của bot sau 1s */
-        setTimeout(() => {
-            setMessages((prevMessages) => [
-                ...prevMessages, 
-                { sender: "bot", text: `Tôi là ${selectedCeleb}` }
-            ]);
-        }, 1000);
+
     };
     return (
         <div className="Chatbox">
@@ -41,10 +45,10 @@ function Chatbox() {
             </div>
             {/* Khu vực tiêu đề */}
             <div className="chatbox-header">
-                {selectedCeleb ? (
+                {useSelectedCeleb ? (
                     <>
                     {/*Nếu đã chọn celeb -> Hiện header */}
-                        <Chatboxheader SelectedCeleb={selectedCeleb} />
+                        <Chatboxheader SelectedCeleb={useSelectedCeleb} />
                     </>
                 ) : (
                     <div className="welcome-message">
@@ -55,7 +59,7 @@ function Chatbox() {
                 )}
             </div>
             {/* Nếu đã chọn celeb thì hiển thị phần chat */}
-            {selectedCeleb && (
+            {useSelectedCeleb && (
                 <>
                     <Chatboxhistory messages={messages} />
                     <Chattype onSendMessage={handleSendMessage} />

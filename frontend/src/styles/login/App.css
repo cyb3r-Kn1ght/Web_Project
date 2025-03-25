@@ -1,7 +1,7 @@
 .App {
   display: flex; /* flexbox để auto chỉnh layout */
-  height: 100vh; /* cao toàn trang */
-  width: 100vw; /* rộng toàn trang */
+  height: 100%; /* cao toàn trang */
+  width: 100%; /* rộng toàn trang */
   margin: 0;
   padding: 0;
 }

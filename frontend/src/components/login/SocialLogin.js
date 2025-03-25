@@ -13,7 +13,7 @@ const SocialLogin = () => {
               <img src={facebookIcon} alt="Facebook icon" className="social-img" />
             Facebook
             </button>
-          </div>
+        </div>
     )
 
 }

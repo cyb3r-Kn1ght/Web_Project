@@ -3,7 +3,7 @@ import {create} from 'zustand';
 import { axiosInstance } from '../lib/axios';
 import {io} from 'socket.io-client';
 
-const BASE_URL="http://localhost:3402";
+const BASE_URL="http://localhost:3001";
 
 export const useAuthStore = create((set, get) => ({ //useAuthStore là một hàm chứa các biến kiểm tra trạng thái người dùng và kiểm tra thông tin xác thực
     authUser:null,
@@ -17,7 +17,7 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
         try {
             const res = await axiosInstance.get("/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
             set({authUser:res.data});
-            get.connectSocket();
+            get().connectSocket();
         } catch (error) {
             console.log("Error in checkAuth: ", error);
             set({authUser:null});
@@ -26,30 +26,13 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
         }
     },
 
-    /*
-    *
-    *
-    * 
-    * 
-    * 
-    * 
-    * 
-    * THIẾU webpage đăng kí, đăng nhập
-    * 
-    * 
-    * 
-    * 
-    * 
-    * 
-    * 
-    */
     SignUp: async (data) => {
         set({isSigningUp:true});
         try {
             const res = await axiosInstance.post("/auth/signup", data);
             //thêm thông báo tạo tài khoản thành công
             set({authUser:res.data});
-            get.connectSocket();
+            get().connectSocket();
         } catch (error) {
             //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
         } finally {
@@ -61,7 +44,7 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
         try {
             const res = await axiosInstance.post("/auth/logout");
             set({authUser:null});
-            get.disconnectSocket();
+            get().disconnectSocket();
         } catch (error) {
             //thông báo lỗi ở đây
         }
@@ -71,11 +54,17 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
         set({isLoggingIn:true});
         try {
             const res = await axiosInstance.post("/auth/login", data);
+            // const res = await axiosInstance.post("/auth/login", {
+            //     Email: "nam@gmail.com",
+            //     Password: "IamNam1s!"
+            // });
             //thêm thông báo tạo tài khoản thành công
             set({authUser:res.data});
-            get.connectSocket();
+            get().connectSocket();
+            console.log("Logged in successfully!");
         } catch (error) {
             //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+            console.log("Error in LogIn:", error);
         } finally {
             set({isLoggingIn:false});
         }

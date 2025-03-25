@@ -4,9 +4,10 @@ import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 
-dotenv.config();
-import jwt from "jsonwebtoken";
+
 import passport from 'passport';
+
+dotenv.config();
 
 //để JWT_SECRET ở trong file .env
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -16,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // lưu những thông tin còn lại vào trong csdl nếu như không bị trùng
 
 export const signup = async (req, res) => {
-    const { Username, Password, Email } = req.query;
+    const { Username, Password, Email } = req.body;
 
     // kiểm tra xem người dùng đã nhập đủ thông tin chưa
     if (!Username || !Password || !Email) {
@@ -65,14 +66,15 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     // lấy thông tin từ người dùng
-    const { Username, Password } = req.query;
-    if (!Username || !Password) {
+    const {Email,Password} = req.body;
+
+    if (!Email || !Password) {
         res.status(400).send("Missing required information");
         return;
     }
     
     // kiểm tra xem người dùng có tồn tại không
-    const user = await User.findOne({ Username});
+    const user = await User.findOne({Email});
     if (!user){
         res.status(400).send("User does not exist");
         return;
@@ -86,7 +88,7 @@ export const login = async (req, res) => {
     }
 
     // tạo token
-    const token = jwt.sign({ Username }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ Email }, JWT_SECRET, { expiresIn: "1h" });
     console.log("Login successful");
     res.send(token);
 
@@ -95,6 +97,15 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     res.json({ message: "Logout successful" });
 }
+
+export const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        console.log("Error in checkAuth controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
 export const googleAuth = (req, res, next) => {
