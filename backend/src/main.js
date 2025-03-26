@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import cookieParser from 'cookie-parser';
 import { ConnectDB } from './lib/db.js';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -18,17 +19,19 @@ dotenv.config();
 import session from 'express-session';
 import passport from 'passport';
 import './lib/passport.js'; // file này sẽ cấu hình Google & Facebook login
+import cors from 'cors';
 
 // Cấu hình session cho Passport
 app.use(passport.initialize());
 
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
-app.use(cookieParser());
+app.use(express.json());
+//app.use(cookieParser());
 app.use(cors({
     origin: "http://localhost:3000",
     credentials:true,
-}));
+})); //tiếp nhận thông tin từ port 3000
 
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use(express.json());

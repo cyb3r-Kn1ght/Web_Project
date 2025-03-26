@@ -2,15 +2,15 @@
 import mongoose from 'mongoose';
 
 const celebSchema = new mongoose.Schema({
-    IsAI: {
+    isAI: {
         type: Boolean,
         default: false
     },
-    CelebName: {
+    celebName: {
         type: String,
         required: true
     },
-    ProfilePic: {
+    profilePic: {
         type: String,
         default: ""
     }

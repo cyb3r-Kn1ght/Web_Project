@@ -2,22 +2,22 @@
 import mongoose from 'mongoose';
 
 const chatSchema = new mongoose.Schema({
-    RefModels: {
+    refModels: {
         type: String,
         required: true,
         enum: ["User", "Celeb"]
     },
-    ReceiverID: {
+    receiverID: {
         type: mongoose.Schema.Types.ObjectId,
         refPath: "RefModels",
         required: true,
     },
-    SenderID: {
+    senderID: {
         type: mongoose.Schema.Types.ObjectId,
         refPath: "RefModels",
         required: true
     },
-    Message: {
+    message: {
         type: String,
         required: true
     }

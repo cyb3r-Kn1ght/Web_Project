@@ -21,7 +21,7 @@ const app = express();
 const server = http.createServer(app); // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
-        origin: [`http://localhost:${port}`]
+        origin: [`http://localhost:3000`]
     } //Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
@@ -37,12 +37,12 @@ const io = new Server(server, {
 const aiSocketMap = {};
 const userSocketMap = {}; //tương tự như trên {userID: socketID}
 
-export function getAISocket(CelebName) {
-    return aiSocketMap[CelebName];
+export function getAISocket(celebName) {
+    return aiSocketMap[celebName];
 }
 
 export function getReceiverSocket(userId) {
-    return userSocketMap[CelebName];
+    return userSocketMap[userId];
 }
 
 //socket.io server sẽ lắng nghe tín hiệu kết nối và cấp phát socket cho client khi điều này xảy ra
@@ -51,10 +51,10 @@ io.on("connection", async (socket) => {
     //lấy thông tin client đã truyền vào để kết nối tới server để xác minh
     const userId = socket.handshake.query.userId;
     try {
-        const celeb = await Celeb.findOne({CelebName: userId}); //findOne() là method trả về một document
+        const celeb = await Celeb.findOne({celebName: userId}); //findOne() là method trả về một document
 
         if (celeb && celeb.IsAI) {
-            aiSocketMap[celeb.CelebName] = socket.id;
+            aiSocketMap[celeb.celebName] = socket.id;
             console.log(`AI has been connected, ${userId}`);
         } else {
             userSocketMap[userId] = socket.id;
@@ -67,7 +67,7 @@ io.on("connection", async (socket) => {
     socket.on("disconnect", async () => {
         const celeb = await Celeb.findOne({CelebName: userId}); //findOne() là method trả về một document
         try {
-            if (celeb && celeb.IsAI) {
+            if (celeb && celeb.isAI) {
                 delete aiSocketMap[celeb.CelebName];
                 console.log(`AI has been disconnected, ${socket.id}`);
             } else {

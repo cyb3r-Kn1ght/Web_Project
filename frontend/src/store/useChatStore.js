@@ -6,7 +6,7 @@ import { useAuthStore } from "./useAuthStore.js";
 export const useChatStore = create((set, get) => ({
     messages:[],
     celebs:[],
-    selectedCeleb:null,
+    useSelectedCeleb:null,
     isCelebsLoading:false,
 
     getCelebs: async () => {
@@ -33,9 +33,9 @@ export const useChatStore = create((set, get) => ({
     },
 
     sendMessage: async (messageData) => {
-        const { selectedCeleb, messages } = get();
+        const { useSelectedCeleb, messages } = get();
         try {
-            const res = await axiosInstance.post(`/messages/send/${selectedCeleb._id}`, messageData);
+            const res = await axiosInstance.post(`/messages/send/${useSelectedCeleb._id}`, messageData);
             set({ messages: [...messages, res.data] });
         } catch (error) {
             //lỗi ở đây
@@ -43,13 +43,13 @@ export const useChatStore = create((set, get) => ({
     },
 
     subscribeToMessages: () => { //cập nhật tin nhắn mới vào lịch sử chat
-        const { selectedCeleb } = get();
-        if (!selectedCeleb) return; //nếu chưa vào khung chat nào thì kết thúc hàm
+        const { useSelectedCeleb } = get();
+        if (!useSelectedCeleb) return; //nếu chưa vào khung chat nào thì kết thúc hàm
 
         const socket = useAuthStore.getState().socket;
     
         socket.on("newMessage", (newMessage) => {
-            const isMessageSentFromSelectedCeleb = newMessage.SenderID === selectedCeleb._id;
+            const isMessageSentFromSelectedCeleb = newMessage.SenderID === useSelectedCeleb._id;
             if (!isMessageSentFromSelectedCeleb) return;
         
             set({
@@ -57,4 +57,7 @@ export const useChatStore = create((set, get) => ({
             });
         });
     },
+
+    // New: Method to update the selected celebrity
+    setSelectedCeleb: (celeb) => set({ useSelectedCeleb: celeb }),
 }));

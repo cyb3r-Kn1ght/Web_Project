@@ -14,13 +14,17 @@ const LoginApp = ({ onLoginSuccess }) => {
 
   const { LogIn } = useAuthStore();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
     // Giả sử bạn có kiểm tra hợp lệ dữ liệu nhập vào (email và password) ở đây.
     // Nếu hợp lệ:
-    //onLoginSuccess(); // cập nhật trạng thái đăng nhập
-    //navigate("/chat"); // chuyển hướng sang trang Chat
-    LogIn(formData);
+    const user = await LogIn(formData);
+    console.log(user);
+    if (user) {
+      onLoginSuccess();
+      navigate("/chat"); // chuyển hướng sang trang Chat
+    }
   };
   
   
