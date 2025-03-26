@@ -1,7 +1,6 @@
 //nơi này định nghĩa hàm để xử lí tín hiệu đăng nhập, đăng xuất, đăng kí
 import User from '../models/users.model.js'
 import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào trong csdl
-import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -65,16 +64,18 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     // lấy thông tin từ người dùng
-    const { Username, Password } = req.query;
-    if (!Username || !Password) {
+    console.log("req.body:", req.body);
+
+    const { Email, Password } = req.body;
+    if (!Email || !Password) {
         res.status(400).send("Missing required information");
         return;
     }
     
     // kiểm tra xem người dùng có tồn tại không
-    const user = await User.findOne({ Username});
+    const user = await User.findOne({ Email});
     if (!user){
-        res.status(400).send("User does not exist");
+        res.status(400).send("Email does not exist");
         return;
     }
 
@@ -86,10 +87,9 @@ export const login = async (req, res) => {
     }
 
     // tạo token
-    const token = jwt.sign({ Username }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ Email }, JWT_SECRET, { expiresIn: "1h" });
     console.log("Login successful");
     res.send(token);
-
 }
 
 export const logout = (req, res) => {

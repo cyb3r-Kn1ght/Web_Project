@@ -3,7 +3,7 @@ import {create} from 'zustand';
 import { axiosInstance } from '../lib/axios';
 import {io} from 'socket.io-client';
 
-const BASE_URL="http://localhost:3402";
+const BASE_URL="http://localhost:3001";
 
 export const useAuthStore = create((set, get) => ({ //useAuthStore là một hàm chứa các biến kiểm tra trạng thái người dùng và kiểm tra thông tin xác thực
     authUser:null,
@@ -15,7 +15,7 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
  
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get("/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
+            const res = await axiosInstance.get("/api/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
             set({authUser:res.data});
             get.connectSocket();
         } catch (error) {
@@ -46,7 +46,7 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
     SignUp: async (data) => {
         set({isSigningUp:true});
         try {
-            const res = await axiosInstance.post("/auth/signup", data);
+            const res = await axiosInstance.post("/api/auth/signup", data);
             //thêm thông báo tạo tài khoản thành công
             set({authUser:res.data});
             get.connectSocket();
@@ -59,7 +59,7 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
 
     LogOut: async () => {
         try {
-            const res = await axiosInstance.post("/auth/logout");
+            const res = await axiosInstance.post("/api/auth/logout");
             set({authUser:null});
             get.disconnectSocket();
         } catch (error) {
@@ -68,14 +68,16 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
     },
 
     LogIn: async (data) => {
+        console.log("Data: ",data);
         set({isLoggingIn:true});
         try {
-            const res = await axiosInstance.post("/auth/login", data);
+            const res = await axiosInstance.post("/api/auth/login", data);
             //thêm thông báo tạo tài khoản thành công
             set({authUser:res.data});
             get.connectSocket();
         } catch (error) {
             //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+            console.log("Error in LogIn: ", error);
         } finally {
             set({isLoggingIn:false});
         }

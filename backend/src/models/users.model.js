@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        // match: [/.+\@.+\..+/, 'Plesae fill a valid email address']
     },
     ProfilePic: {
         type: String,

@@ -3,16 +3,16 @@
 // mặc định type đang sử dụng là node, nếu muốn sử dụng require()
 // có thể đổi type thành commonjs trong package.json
 
-//import express from 'express';
+import express from 'express';
 //sử dụng server và expressjs app đã được tạo từ socket.js
 import { server, app } from './lib/socket.js';
 
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
-
+import cookieParser from 'cookie-parser';
 import { ConnectDB } from './lib/db.js';
-import cookieParser from 'cookieParser';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 import session from 'express-session';
@@ -27,13 +27,15 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(cookieParser());
 app.use(cors({
     origin: "http://localhost:3000",
-    credential:true,
+    credentials:true,
 }));
 
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
+app.use(express.json());
+
 app.use("/api/auth", authRoutes); 
 
-app.use("/api/message", messageRoutes);
+app.use("/api/chat", messageRoutes);
 
 server.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
