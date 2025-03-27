@@ -398,3 +398,18 @@ form.sign-in-form {
     left: 50%;
   }
 }
+
+.input-field .eye-icon {
+  transform: translateY(-97%);
+  margin-left: 600%;
+}
+
+.forget-password .link {
+  text-decoration: none;
+  color: red;
+}
+
+.forget-password {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
