@@ -1,9 +1,0 @@
-.container-sidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 300px;
-  min-width: 200px;
-  max-width: 300px;
-  background-color: rgb(20, 20, 20);
-} 
