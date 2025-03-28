@@ -1,11 +1,13 @@
 //nơi này định nghĩa hàm để xử lí tín hiệu đăng nhập, đăng xuất, đăng kí
 import User from '../models/users.model.js'
+import Token from '../models/token.model.js'
 import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào trong csdl
 import dotenv from 'dotenv';
-
-
+import jwt from 'jsonwebtoken';
+import cryto, { randomBytes } from 'crypto'; // random token reset mật khẩu
+import nodemailer from 'nodemailer'; // thư viện gửi gmail
 import passport from 'passport';
-
+const date = new Date();
 dotenv.config();
 
 //để JWT_SECRET ở trong file .env
@@ -67,8 +69,8 @@ export const login = async (req, res) => {
     // lấy thông tin từ người dùng
     console.log("req.body:", req.body);
 
-    const { Email, Password } = req.body;
-    if (!Email || !Password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         res.status(400).send("Missing required information");
         return;
     }
@@ -105,6 +107,59 @@ export const checkAuth = (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+// xử lý quên mật khẩu
+const sendEmail = async (email, reset_link) => {
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD
+        },
+    });
+
+    await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Reset Password",
+        text: `Click on the link to reset your password: ${reset_link}`
+    });
+}
+
+export const forgotPassword = async (req, res) => {
+    const {email} = req.body;
+    if (!email){
+        res.status(400).send("Missing required information");
+        return;
+    }
+
+    const user = await User.findOne({email: req.body.email});
+    if (!user){
+        res.status(400).send("Email does not exist");
+        return;
+    }
+
+    console.log("User ID:", user._id);
+
+    // tạo token
+    const reset_token = cryto.randomBytes(32).toString("hex");
+
+    if (!user._id){
+        res.status(400).send("Missing information");
+    }
+
+    // lưu token vào trong csdl
+    const newToken = new Token({
+        userId: user._id,
+        token: reset_token,
+        expiresAt: Date.now() + 15 * 60 * 1000
+    });
+    await newToken.save();
+
+    const reset_link = `http://localhost:3001/reset-password/${reset_token}`;
+    await sendEmail(email, reset_link);
+    res.json({message: "Reset link has been sent to your email"});
+}
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
 export const googleAuth = (req, res, next) => {

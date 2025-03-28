@@ -9,11 +9,9 @@ import { server, app } from './lib/socket.js';
 
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
-import cookieParser from 'cookie-parser';
 import { ConnectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import cors from 'cors';
 
 dotenv.config();
 import session from 'express-session';
