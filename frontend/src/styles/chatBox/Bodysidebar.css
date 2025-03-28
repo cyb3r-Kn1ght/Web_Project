@@ -1,9 +1,0 @@
-.Bodysidebar {
-  display: flex; /* Kích hoạt flexbox */
-  flex-direction: column; /* chỉnh hướng flexbox layout theo chiều dọc */ 
-  justify-content: start; /* chỉnh vị trí bắt đầu của body sidebar ở sát với header sidebar */
-  width: 100%; 
-  height: 100%;
-  flex: 1;
-  overflow-y: auto;
-}

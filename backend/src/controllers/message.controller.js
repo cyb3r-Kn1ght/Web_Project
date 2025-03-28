@@ -48,6 +48,7 @@ export const sendMessage = async (req, res) => {
         })
 
         await newMessage.save(); //lưu tin nhắn được gửi về csdl
+        await newMessage.save(); //lưu tin nhắn được gửi về csdl
 
         // xử lí gửi tin nhắn sau với socket.io
         const celeb = await Celeb.findOne({_id: receiverID});

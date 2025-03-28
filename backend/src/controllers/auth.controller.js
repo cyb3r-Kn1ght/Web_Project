@@ -17,6 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // nếu mật khẩu thỏa mãn yêu cầu trong csdl thì tiến hành hash và lưu trong csdl
 // lưu những thông tin còn lại vào trong csdl nếu như không bị trùng
 
+
 export const signup = async (req, res) => {
     const { username, password, email } = req.body;
 
