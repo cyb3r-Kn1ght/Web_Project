@@ -19,6 +19,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 
 export const signup = async (req, res) => {
+    console.log("Received request at signup:", req.body);
+
     const { username, password, email } = req.body;
 
     // kiểm tra xem người dùng đã nhập đủ thông tin chưa
@@ -67,6 +69,8 @@ export const signup = async (req, res) => {
 }
 
 export const login = async (req, res) => {
+    console.log("Received request at signup:", req.body);
+
     // lấy thông tin từ người dùng
     console.log("req.body:", req.body);
 
@@ -160,6 +164,60 @@ export const forgotPassword = async (req, res) => {
     const reset_link = `http://localhost:3001/reset-password/${reset_token}`;
     await sendEmail(email, reset_link);
     res.json({message: "Reset link has been sent to your email"});
+}
+
+// reset password
+export const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    // kiểm tra nếu chưa có newPassword
+    if (!newPassword) {
+        return res.status(400).send("Missing new password");
+    }
+
+    // kiểm tra độ mạnh của mật khẩu mới (tương tự như ở signup)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (newPassword.length < 8) {
+        return res.status(400).send("Password must be at least 8 characters long");
+    }
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).send("Password must contain at least one letter, one number and one special character");
+    }
+
+    try {
+        // tìm token đã lưu trong csdl
+        const tokenRecord = await Token.findOne({ token });
+        if (!tokenRecord) {
+            return res.status(400).send("Invalid or expired token");
+        }
+
+        // kiểm tra hạn token (expiresAt)
+        if (tokenRecord.expiresAt < Date.now()) {
+            // nếu token hết hạn thì xóa luôn token này
+            await tokenRecord.remove();
+            return res.status(400).send("Token has expired");
+        }
+
+        // tìm user dựa trên userId được lưu trong tokenRecord
+        const user = await User.findById(tokenRecord.userId);
+        if (!user) {
+            return res.status(400).send("User not found");
+        }
+
+        // hash mật khẩu mới và cập nhật cho user
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        // xóa token sau khi cập nhật mật khẩu thành công
+        await tokenRecord.remove();
+
+        res.send("Password has been reset successfully");
+    } catch (err) {
+        console.error("Error resetting password: ", err);
+        res.status(500).send("Internal Server Error");
+    }
 }
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.

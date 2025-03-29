@@ -6,7 +6,7 @@ import {googleAuth, facebookAuth } from "../controllers/auth.controller.js"; // 
 
 // định nghĩa các hàm xử lí bên trong đường dẫn này
 import { signup, login, logout} from '../controllers/auth.controller.js';
-import { forgotPassword} from '../controllers/auth.controller.js';
+import { forgotPassword, resetPassword} from '../controllers/auth.controller.js';
 import { verifyToken } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.post("/logout", logout);
 
 // xử lí yêu cầu quên mật khẩu ở đây
 router.post("/forgot-password", forgotPassword);
-//router.post("/reset-password", resetPassword);
+router.post("/reset-password", resetPassword);
 
 // lấy thông tin xác thực của người dùng ở đây
 router.get("/check", verifyToken)

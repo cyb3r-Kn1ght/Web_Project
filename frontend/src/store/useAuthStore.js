@@ -1,6 +1,6 @@
 //lưu trữ thông tin xác thực và đăng kí, đăng nhập của người dùng
 import {create} from 'zustand';
-import { axiosInstance } from '../lib/axios';
+import { axiosInstance } from '../lib/axios.js';
 import {io} from 'socket.io-client';
 
 const BASE_URL="http://localhost:3001";
@@ -27,6 +27,8 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
     },
 
     SignUp: async (data) => {
+        console.log("Sending signup request with data:", data);
+
         set({isSigningUp:true});
         try {
             const res = await axiosInstance.post("/auth/signup", data);
@@ -51,6 +53,8 @@ export const useAuthStore = create((set, get) => ({ //useAuthStore là một hà
     },
 
     LogIn: async (data) => {
+        console.log("Sending signup request with data:", data);
+
         set({isLoggingIn:true});
         try {
             const res = await axiosInstance.post("/auth/login", data);

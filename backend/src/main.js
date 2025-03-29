@@ -27,7 +27,7 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(express.json());
 //app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials:true,
 })); //tiếp nhận thông tin từ port 3000
 
