@@ -2,25 +2,27 @@
 import mongoose from 'mongoose';
 
 const chatSchema = new mongoose.Schema({
-    ChatID: {
+    refModels: {
         type: String,
         required: true,
-        unique: true
+        enum: ["User", "Celeb"]
     },
-    MessID: {
-        type: String,
+    receiverID: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "RefModels",
         required: true,
-        unique: true
     },
-    SenderID: {
-        type: Number,
+    senderID: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "RefModels",
         required: true
     },
-    Message: {
+    message: {
         type: String,
+        required: true
     }
-}, {timestamp: true});
+}, {timestamps: true});
 
-const Chat = mongoose.Model("Chat", chatSchema);
+const Chat = new mongoose.model("Chat", chatSchema);
 
 export default Chat;
