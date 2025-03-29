@@ -1,13 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Login from "./page/login.jsx";
+import "./index.css";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App.jsx";
+import React from "react";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Login />
+    <Router>
+      <App />
+    </Router>
   </StrictMode>
 );
-
-// day la file gop phan goi den va render ra trang web
-// Xu li, goi, router cac trang web tai day
-// KHONG XOA TRANG NAY
