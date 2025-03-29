@@ -38,6 +38,33 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/chat", messageRoutes);
 
+app.post('/api/gpt', async (req, res) => {
+    const { message } = req.body;
+  
+    try {
+      const gptRes = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo', 
+          messages: [{ role: 'user', content: message }],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      // Lấy nội dung trả về
+      const reply = gptRes.data.choices[0].message.content;
+      res.json({ reply });
+    } catch (err) {
+      console.error('Error calling OpenAI:', err.message);
+      res.status(500).json({ error: 'Mày chưa mua mà thằng lồn' });
+    }
+  });
+
 server.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
     ConnectDB(); // tiến hành kết nối database
