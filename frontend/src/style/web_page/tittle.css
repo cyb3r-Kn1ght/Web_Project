@@ -1,0 +1,27 @@
+.Tittle-section{
+    margin-top: 15rem;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    color: #BB86FC;
+    letter-spacing: -0.02em;
+}
+.MainTittle {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; 
+    font-size: 3rem;
+    background: linear-gradient(45deg, #BB86FC, #6200EE);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+    }
+.debcribe {
+  display :block;
+  margin-top: 0px;
+  padding-top:0px;
+}

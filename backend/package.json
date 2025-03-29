@@ -1,0 +1,46 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "NT208, Web, Chatbot",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "nodemon src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyb3r-Kn1ght/Web_Project.git"
+  },
+  "keywords": [
+    "NT208",
+    "Web",
+    "Chatbot"
+  ],
+  "author": "cyb3r_Kn1ght",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cyb3r-Kn1ght/Web_Project/issues"
+  },
+  "homepage": "https://github.com/cyb3r-Kn1ght/Web_Project#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.6.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "parser": "^0.1.4",
+    "passport": "^0.7.0",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
