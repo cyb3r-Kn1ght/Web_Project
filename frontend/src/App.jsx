@@ -1,5 +1,5 @@
-import Home from "./page/Home";
-import Login from "./page/login";
+import Home from "./page/web_page/Home.jsx";
+import Login from "./page/login/login.jsx";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (

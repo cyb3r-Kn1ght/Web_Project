@@ -1,5 +1,5 @@
 //Tieu de
-import "../../style/web_page/Tittle.css";
+import "../../style/web_page/tittle.css";
 function title() {
   return (
     <section className="Tittle-section">

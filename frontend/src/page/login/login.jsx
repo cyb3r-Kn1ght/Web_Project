@@ -1,15 +1,44 @@
 import React, { useEffect } from "react";
 // import { Link } from "react-router-dom";
-import { initLoginHandlers } from "../feature/login/login.js";
-import GoogleIcon from "../assets/login/google.svg";
-import FacebookIcon from "../assets/login/facebook.svg";
-import "../style/login/login.css";
-import Input_Field from "../components/login/Input_Fields.jsx";
-function Login() {
-  useEffect(() => {
-    // Gọi hàm chuyển cảnh sau khi component render xong
-    initLoginHandlers();
-  }, []);
+import { initLoginHandlers } from "../../feature/login/login.js";
+import GoogleIcon from "../../assets/login/google.svg";
+import FacebookIcon from "../../assets/login/facebook.svg";
+import "../../style/login/login.css";
+import Input_Field from "../../components/login/Input_Fields.jsx";
+import { useAuthStore } from "../../store/useAuthStore.js";
+import axiosInstance from "../../lib/axios.js";
+
+const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      // Gửi request POST đến endpoint /login của server
+      const response = await axiosInstance.post("/login", {
+        username,
+        password,
+      });
+
+      // Giả sử server trả về { success: true, user: {...} } khi đăng nhập thành công
+      if (response.data.success) {
+        // Lưu thông tin phiên làm việc, ví dụ: lưu vào localStorage hoặc Context
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        // Chuyển hướng đến trang chatbox hoặc trang chính của ứng dụng
+        navigate("/chatbox");
+      } else {
+        setError(response.data.message || "Đăng nhập thất bại!");
+      }
+    } catch (err) {
+      setError("Có lỗi xảy ra, vui lòng thử lại!");
+      console.error(err);
+    }
+  };
 
   return (
     <>
@@ -154,6 +183,6 @@ function Login() {
       </div>
     </>
   );
-}
+};
 
 export default Login;
