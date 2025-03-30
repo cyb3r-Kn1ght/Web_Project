@@ -251,7 +251,7 @@ export const googleAuth = (req, res, next) => {
             sameSite: 'lax',          // tuỳ domain setup
             maxAge: 60 * 60 * 1000    // 1 giờ
         });
-        res.redirect('http://localhost:5173/api/auth/chat');
+        res.redirect('http://localhost:5173/chat');
     })(req, res, next);
 };
 
@@ -279,6 +279,13 @@ export const facebookAuth = (req, res, next) => {
 
         // tạo token
         const token = jwt.sign({ Username: existingUser.Username }, JWT_SECRET, { expiresIn: "1h" });
-        res.send(token);
+        res.cookie('jwt', token, {
+            httpOnly: true,           // ngăn JS trên browser đọc cookie
+            secure: false,            // bật true nếu HTTPS
+            sameSite: 'lax',          // tuỳ domain setup
+            maxAge: 60 * 60 * 1000    // 1 giờ
+        });
+        res.redirect('http://localhost:5173/chat');
+
     })(req, res, next);
 };

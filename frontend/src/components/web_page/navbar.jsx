@@ -21,7 +21,7 @@ const Navbar = () => {
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="logo-text">AI ChatBox</div>
       <div className="nav-links">
-        <Link to="/login" className="api-link">
+        <Link to="/auth/login" className="api-link">
           Login↗
         </Link>
       </div>
