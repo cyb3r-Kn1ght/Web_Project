@@ -1,6 +1,7 @@
 import { getAISocket, getReceiverSocket, io } from '../lib/socket.js';
 import Celeb from '../models/celebs.model.js';
 import Chat from '../models/chat.model.js';
+import User from '../models/users.model.js';
 
 //hiển thị người nổi tiếng ở sidebar bên trái
 export const getCelebsForSidebar = async (req, res) => {
@@ -22,8 +23,8 @@ export const getMessages = async (req, res) => {
 
         const messages = await Chat.find({
             $or: [
-                {SenderID:myId, ReceiverID:userToChatId},
-                {SenderID:userToChatId, ReceiverID:myId},
+                {senderID:myId, receiverID:userToChatId},
+                {senderID:userToChatId, receiverID:myId},
             ]
         });
 
@@ -37,29 +38,32 @@ export const getMessages = async (req, res) => {
 export const sendMessage = async (req, res) => {
     try {
         // từ tham số của req, lấy tham số id của người nhận và đặt tên lại thành ReceiverID
-        const { id: ReceiverID } = req.params; 
-        const SenderID = req.user._id; // lấy tham số id của người gửi request
-        const Text = req.body; // truy xuất nội dung tin nhắn của người gửi
+        const { id: receiverID } = req.params; 
+        const senderID = req.user._id; // lấy tham số id của người gửi request
+        const Text = req.body.message; // truy xuất nội dung tin nhắn của người gửi
 
         const newMessage = new Chat ({
-            ReceiverID,
-            SenderID,
-            Message: Text
+            receiverID,
+            senderID,
+            message: Text
         })
 
         await newMessage.save(); //lưu tin nhắn được gửi về csdl
 
         // xử lí gửi tin nhắn sau với socket.io
-        const celeb = await Celeb.findOne({_id: ReceiverID});
-        if (celeb && celeb.IsAI) {
-            const ReceiverSocketID = getAISocket(celeb.CelebName);
+        const celeb = await Celeb.findOne({_id: receiverID});
+        if (celeb) {
+            const ReceiverSocketID = getAISocket(celeb.celebName);
             if (ReceiverSocketID) {
                 io.to(ReceiverSocketID).emit("newMessage", newMessage);
             }
         } else {
-            const ReceiverSocketID = getReceiverSocket(ReceiverID);
-            if (ReceiverSocketID) {
-                io.to(ReceiverSocketID).emit("newMessage", newMessage);
+            const user = await User.findOne({_id: receiverID});
+            if (user) {
+                const ReceiverSocketID = getReceiverSocket(receiverID);
+                if (ReceiverSocketID) {
+                    io.to(ReceiverSocketID).emit("newMessage", newMessage);
+                }
             }
         }
 

@@ -95,7 +95,13 @@ export const login = async (req, res) => {
     }
 
     // tạo token
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ _id: user._id, email }, JWT_SECRET, { expiresIn: "1h" });
+    res.cookie('jwt', token, {
+        httpOnly: true,           // ngăn JS trên browser đọc cookie
+        secure: false,            // bật true nếu HTTPS
+        sameSite: 'lax',          // tuỳ domain setup
+        maxAge: 60 * 60 * 1000    // 1 giờ
+    });
     console.log("Login successful");
     res.json({token, user});
 }

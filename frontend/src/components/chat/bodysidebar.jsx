@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 // Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
-const BodySidebar = ({ celebs, selectedCeleb, handleSelect }) => {
+const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
   const [search, setSearch] = useState('');
 
   // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
   const filtered = celebs.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.celebName.toLowerCase().includes(search.toLowerCase())
   );
   return (
     <div className="sidebar-body">
@@ -29,7 +29,7 @@ const BodySidebar = ({ celebs, selectedCeleb, handleSelect }) => {
       {/*Danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm*/}
       <Celebs
         celebs={filtered}
-        selectedCeleb={selectedCeleb}
+        useSelectedCeleb={useSelectedCeleb}
         handleSelect={handleSelect}
       />
     </div>

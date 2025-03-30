@@ -7,15 +7,15 @@ const Celebs = ({ celebs, selectedCeleb, handleSelect }) => {
       {/* Map các nhân vật nổi tiếng (celebs) và hiển thị chúng */}
       {celebs.map((celeb) => (
         <div
-          key={celeb.id}
+          key={celeb._id}
           // Nếu celeb được chọn thì thêm class 'selected' để xác định trạng thái được chọn
-          className={`celebs-item ${selectedCeleb?.id === celeb.id ? 'selected' : ''}`}
+          className={`celebs-item ${selectedCeleb?._id === celeb._id ? 'selected' : ''}`}
           // Khi nhấn vào celeb, gọi hàm handleSelect để xử lý sự kiện chọn celeb
           onClick={() => handleSelect(celeb)}
         >
           {/*Hiển thị ảnh đại diện và tên của celeb*/}
           <img src={celeb.avatar} alt={celeb.name} className="celebs-avatar" />
-          <span className="celebs-name">{celeb.name}</span>
+          <span className="celebs-name">{celeb.celebName}</span>
         </div>
       ))}
     </div>

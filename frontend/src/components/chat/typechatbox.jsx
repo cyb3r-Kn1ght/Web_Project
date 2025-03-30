@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { useChatStore } from "../../store/useChatStore.js";
 
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
+  const {sendMessage} = useChatStore();
 
-  const handleSend = () => {
+  const handleSend = async (e) => {
+    e.preventDefault();
     if (!message.trim()) return;
 
-    // Không gửi đi đâu cả — chỉ reset message sau khi "gửi"
-    console.log('Message:', message);
-    setMessage('');
+    try {
+      await sendMessage({
+        message: message.trim(),
+      });
+
+      setMessage("");
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   return (

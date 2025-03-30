@@ -2,10 +2,6 @@
 import mongoose from 'mongoose';
 
 const celebSchema = new mongoose.Schema({
-    isAI: {
-        type: Boolean,
-        default: false
-    },
     celebName: {
         type: String,
         required: true

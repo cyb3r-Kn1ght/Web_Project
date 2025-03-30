@@ -6,7 +6,7 @@ import { getCelebsForSidebar, getMessages, sendMessage } from '../controllers/me
 const router = new express.Router();
 
 router.get("/", verifyToken, getCelebsForSidebar); //hiện danh sách người nổi tiếng ở sidebar
-router.get("/:id", verifyToken, getMessages); //hiện tin nhắn tại chat có sẵn
+router.get("/get/:id", verifyToken, getMessages); //hiện tin nhắn tại chat có sẵn
 router.post("/send/:id", verifyToken, sendMessage); //gửi tin nhắn tại đoạn chat cụ thể
 
 export default router;

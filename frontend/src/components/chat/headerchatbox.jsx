@@ -7,11 +7,11 @@ const HeaderChatbox = ({ selectedCeleb }) => {
       {selectedCeleb ? (
         <>
           <img
-            src={selectedCeleb.avatar}
+            src={selectedCeleb.profilePic}
             alt={selectedCeleb.name}
             className="chatbox-avatar"
           />
-          <span className="chatbox-name">{selectedCeleb.name}</span>
+          <span className="chatbox-name">{selectedCeleb.celebName}</span>
         </>
       ) : (
         <span className="placeholder-text">Chào mừng!</span>

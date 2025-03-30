@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import { io } from "socket.io-client";
 
-const BASE_URL = "http://localhost:5173";
+const BASE_URL = "http://localhost:3001";
 
 export const useAuthStore = create((set, get) => ({
   //useAuthStore là một hàm chứa các biến kiểm tra trạng thái người dùng và kiểm tra thông tin xác thực
@@ -74,6 +74,7 @@ export const useAuthStore = create((set, get) => ({
 
   connectSocket: () => {
     const { authUser } = get();
+    console.log(authUser);
     if (!authUser || get().socket?.connected) return; //không tạo kết nối nếu như người dùng không được xác thực hoặc khi đã kết nối
 
     const socket = io(BASE_URL, {
@@ -84,6 +85,7 @@ export const useAuthStore = create((set, get) => ({
     socket.connect(); //kết nối tới server (BASE_URL)
 
     set({ socket: socket });
+    console.log("Socket: ", socket);
   },
 
   disconnectSocket: () => {

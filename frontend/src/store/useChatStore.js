@@ -13,7 +13,7 @@ export const useChatStore = create((set, get) => ({
         set({isCelebsLoading:true});
             
         try {
-            const res = await axiosInstance("/message/celebs");
+            const res = await axiosInstance("/chat");
             set({celebs: res.data});
         } catch (error) {
             //thông báo lỗi ở đây
@@ -23,9 +23,9 @@ export const useChatStore = create((set, get) => ({
     },
 
     getMessages: async (myId) => { //lấy id người dùng để có thể load lịch sử tin nhắn với AI cụ thể
-            
+        if (!myId) return;
         try {
-            const res = await axiosInstance(`/message/${myId}`);
+            const res = await axiosInstance(`/chat/get/${myId}`);
             set({messages: res.data});
         } catch (error) {
             //thông báo lỗi ở đây
@@ -47,6 +47,8 @@ export const useChatStore = create((set, get) => ({
         if (!useSelectedCeleb) return; //nếu chưa vào khung chat nào thì kết thúc hàm
 
         const socket = useAuthStore.getState().socket;
+        console.log("Socket:", socket);
+        if (!socket) return;
     
         socket.on("newMessage", (newMessage) => {
             const isMessageSentFromSelectedCeleb = newMessage.SenderID === useSelectedCeleb._id;
@@ -58,6 +60,11 @@ export const useChatStore = create((set, get) => ({
         });
     },
 
+    unsubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        socket.off("newMessage"); //ngừng tiếp nhận tin nhắn sau khi không ở khung chat hiện tại
+    },
+
     // New: Method to update the selected celebrity
-    setSelectedCeleb: (celeb) => set({ useSelectedCeleb: celeb }),
+    setSelectedCeleb: (useSelectedCeleb) => set({ useSelectedCeleb }),
 }));
