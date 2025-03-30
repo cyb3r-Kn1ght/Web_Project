@@ -28,9 +28,9 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(express.json());
 //app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
     credentials:true,
-})); //tiếp nhận thông tin từ port 3000
+})); //tiếp nhận thông tin từ port 5173
 
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 

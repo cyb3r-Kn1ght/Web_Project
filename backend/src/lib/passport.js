@@ -11,7 +11,7 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_APP_ID,
       clientSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackURL: "http://localhost:3000/api/auth/facebook/callback",
+      callbackURL: "http://localhost:3001/api/auth/facebook/callback",
     },
     (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
@@ -25,7 +25,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/api/auth/google/callback",
+      callbackURL: "http://localhost:3001/api/auth/google/callback",
     },
     (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
