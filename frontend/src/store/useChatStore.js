@@ -35,7 +35,7 @@ export const useChatStore = create((set, get) => ({
     sendMessage: async (messageData) => {
         const { useSelectedCeleb, messages } = get();
         try {
-            const res = await axiosInstance.post(`/messages/send/${useSelectedCeleb._id}`, messageData);
+            const res = await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
             set({ messages: [...messages, res.data] });
         } catch (error) {
             //lỗi ở đây
