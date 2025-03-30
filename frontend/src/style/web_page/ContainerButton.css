@@ -9,34 +9,34 @@
   flex: 1;
   padding-bottom: 260px;
 }
-
 .button-part {
   display: inline-block;
   padding: 24px;
   height: 5.5rem;
   flex: 1 1;
-  background: rgba(50, 50, 50, 0.4);
+  background: #FFFFFF; /* Nền trắng */
   backdrop-filter: blur(10px);
   border-radius: 10px;
-  box-shadow: 0 4px 24px -1px rgba(50, 50, 50, 0.3),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  color: #bb86fc;
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.1),
+              inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  color: #333333; /* Text đen/xám đậm để tương phản tốt */
   transition: all 0.3s ease;
   cursor: pointer;
-  text-shadow: 0 2px 5px rgba(74, 110, 224, 0.3);
+  /* Bỏ text-shadow hoặc dùng nhẹ nếu cần */
+  text-shadow: none;
 }
 .button-part:hover {
   transform: translateY(-5px);
-  background: rgba(50, 50, 50, 0.5);
-  box-shadow: 0 8px 32px -1px rgba(50, 50, 50, 0.4),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.3);
-  color: #6200ee;
+  background: #e5f8ff; /* Nền hơi xám khi hover */
+  box-shadow: 0 8px 32px -1px rgba(0, 0, 0, 0.15),
+              inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  color: #333333;
 }
 .button-part h3 {
   font-family: "Inter", sans-serif;
   font-weight: bold;
   font-size: 1.25rem;
-  background: linear-gradient(45deg, #bb86fc, #6200ee);
+  background: #1d4ed8;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -47,7 +47,7 @@
   font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #e0e0e0;
+  color: #555555;
   font-weight: 400;
   margin: 0;
 }

@@ -8,12 +8,16 @@ import "../../style/login/login.css";
 import Input_Field from "../../components/login/Input_Fields.jsx";
 import { useAuthStore } from "../../store/useAuthStore.js";
 import { axiosInstance } from "../../lib/axios.js";
+ỉmport 
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = 'Login';
+  }, []);
 
   useEffect(() => {
     // Gọi hàm chuyển cảnh sau khi component render xong

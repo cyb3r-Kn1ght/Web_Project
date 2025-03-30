@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import "../style/login/login.css";
+import React, { useEffect } from 'react';
 import Input_Field from "../components/login/Input_Fields.jsx";
 
 function Forgot_Password() {
