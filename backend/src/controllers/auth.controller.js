@@ -264,7 +264,7 @@ export const facebookAuth = (req, res, next) => {
         let existingUser = await User.findOne({ FacebookId: id });
         if (!existingUser) {
             existingUser = new User({
-                Username: displayName,
+                username: displayName,
                 FacebookId: id
             });
             await existingUser.save();
