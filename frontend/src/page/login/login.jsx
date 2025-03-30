@@ -160,24 +160,6 @@ const Login = () => {
               />
 
               <input type="submit" className="btn" value="Sign up" />
-              <p className="social-text">Or sign up with social platforms</p>
-              <div className="social-media">
-                <a href="#" className="social-icon">
-                  <img
-                    src={FacebookIcon}
-                    alt="FacebookIcon"
-                    className="icon-facebook"
-                  />
-                </a>
-
-                <a href="#" className="social-icon">
-                  <img
-                    src={GoogleIcon}
-                    alt="GoogleIcon"
-                    className="icon-google"
-                  />
-                </a>
-              </div>
             </form>
           </div>
         </div>
@@ -191,7 +173,6 @@ const Login = () => {
                 Sign up
               </button>
             </div>
-            <img src="img/log.svg" className="image" alt="" />
           </div>
           <div className="panel right-panel">
             <div className="content">
