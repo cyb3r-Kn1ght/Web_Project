@@ -23,7 +23,8 @@ const footer = () => {
               <a href="/careers">Careers</a>
             </li>
             <li>
-              <a href="/contact">Contact Us</a>
+              <a href="mailto:ndtnetdautruong@gmail.com">Contact: ndtnetdautruong@gmail.com</a>
+
             </li>
           </ul>
         </div>

@@ -1,12 +1,13 @@
 import "../../style/web_page/ContainerButton.css";
+import { Link } from "react-router-dom";
 
 function ContainerButton() {
   return (
     <div className="container-button">
-      <div className="button-part">
+      <Link className="button-part" to="/auth/login">
         <h3> Bắt đầu ngay </h3>
         <p> demo </p>
-      </div>
+      </Link>
       <div className="button-part">
         <h3> Hướng dẫn sử dụng </h3>
         <p> demo </p>

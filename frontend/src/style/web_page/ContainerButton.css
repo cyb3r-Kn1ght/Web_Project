@@ -24,6 +24,7 @@
   cursor: pointer;
   /* Bỏ text-shadow hoặc dùng nhẹ nếu cần */
   text-shadow: none;
+  text-decoration: none;
 }
 .button-part:hover {
   transform: translateY(-5px);
