@@ -6,7 +6,7 @@ import Tittle from "../../components/web_page/tittle.jsx";
 import "../../style/web_page/Home_module.css";
 function Home() {
   useEffect(() => {
-    document.title = 'AI ChatBox-Home';
+    document.title = 'AI ChatBot-Home';
   }, []);
   return (
     <>

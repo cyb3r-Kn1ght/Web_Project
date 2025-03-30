@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useEffect} from "react";
 import "../../style/chat/chat.css";
 import "../../style/chat/chatbox.css";
 import "../../style/chat/sidebar.css";
@@ -37,8 +37,11 @@ const Chat = () => {
 
   const handleSelect = (celeb) => {
     setSelectedCeleb(celeb);
-  };
 
+  };
+  useEffect(() => {
+    document.title = 'AI ChatBot';
+  }, []);
   return (
     <div className="chat-container">
       <div className="sidebar-container">
