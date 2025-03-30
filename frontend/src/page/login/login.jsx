@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import { initLoginHandlers } from "../../feature/login/login.js";
 import GoogleIcon from "../../assets/login/google.svg";
@@ -11,7 +11,7 @@ import { axiosInstance } from "../../lib/axios.js";
 ỉmport 
 
 const Login = () => {
-  const { LogIn } = useAuthStore();
+  const {LogIn, SignUp} = useAuthStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -59,6 +59,17 @@ const Login = () => {
     //   setError("Có lỗi xảy ra, vui lòng thử lại!");
     //   console.error(err);
     // }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const user = await SignUp(formData);
+    console.log(user);
+    if (user) {
+      navigate("/chat"); // chuyển hướng sang trang chat
+    }
   };
 
   return (
@@ -120,7 +131,7 @@ const Login = () => {
               </div>
             </form>
 
-            <form action="#" className="sign-up-form">
+            <form action="#" className="sign-up-form" onSubmit={handleSignUp}>
               <h2 className="title">Sign up</h2>
 
               <Input_Field

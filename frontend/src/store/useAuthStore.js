@@ -33,10 +33,12 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/signup", data);
       //thêm thông báo tạo tài khoản thành công
-      set({ authUser: res.data });
+      set({ authUser: res.data.user });
       get().connectSocket();
+      return res.data;
     } catch (error) {
       //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+      console.log("Error in SignUp:", error)
     } finally {
       set({ isSigningUp: false });
     }
