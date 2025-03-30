@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 // import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
 import { initLoginHandlers } from "../../feature/login/login.js";
 import GoogleIcon from "../../assets/login/google.svg";
 import FacebookIcon from "../../assets/login/facebook.svg";
@@ -31,7 +30,11 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    
+    const user = await LogIn(formData);
+    console.log(user);
+    if (user) {
+      navigate("/chat"); // chuyển hướng sang trang chat
+    }
 
     //   // Gửi request POST đến endpoint /login của server
     //   const response = await axiosInstance.post("/login", {
@@ -59,7 +62,7 @@ const Login = () => {
       <div className="container">
         <div className="forms-container">
           <div className="signin-signup">
-            <form action="#" className="sign-in-form" onSubmit={handl}>
+            <form action="#" className="sign-in-form" onSubmit={handleSubmit}>
               <h2 className="title">Sign in</h2>
 
               {/* su dung component vao thuc te */}
@@ -67,20 +70,20 @@ const Login = () => {
                 icon="mail"
                 type="email"
                 placeholder="Email"
-                // value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                // onChange={(e) =>
-                //   setFormData({ ...formData, email: e.target.value })
-                // }
+                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
 
               <Input_Field
                 icon="key"
                 type="password"
                 placeholder="Password"
-                // value={formData.password} // doan nay can BE check lai
-                // onChange={(e) =>
-                //   setFormData({ ...formData, password: e.target.value })
-                // }
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
 
               <p className="forget-password">
@@ -114,40 +117,40 @@ const Login = () => {
                 icon="account_circle"
                 type="text"
                 placeholder="Username"
-                // value={formData.username} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                // onChange={(e) =>
-                //   setFormData({ ...formData, username: e.target.value })
-                // }
+                value={formData.username} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
               />
 
               <Input_Field
                 icon="mail"
                 type="email"
                 placeholder="Email"
-                // value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                // onChange={(e) =>
-                //   setFormData({ ...formData, email: e.target.value })
-                // }
+                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
 
               <Input_Field
                 icon="key"
                 type="password"
                 placeholder="Password"
-                // value={formData.password} // doan nay can BE check lai
-                // onChange={(e) =>
-                //   setFormData({ ...formData, password: e.target.value })
-                // }
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
 
               <Input_Field
                 icon="verified_user"
                 type="password"
                 placeholder="Confirm Password"
-                // value={formData.password} // doan nay can BE check lai
-                // onChange={(e) =>
-                //   setFormData({ ...formData, password: e.target.value })
-                // }
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
 
               <input type="submit" className="btn" value="Sign up" />
