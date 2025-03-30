@@ -3,7 +3,7 @@ import Footer from "../../components/web_page/footer";
 import ContainerButton from "../../components/web_page/container-button.jsx";
 import React, { useEffect } from 'react';
 import Tittle from "../../components/web_page/tittle.jsx";
-import "../../style/web_page/Home.module.css";
+import "../../style/web_page/Home_module.css";
 function Home() {
   useEffect(() => {
     document.title = 'AI ChatBox-Home';

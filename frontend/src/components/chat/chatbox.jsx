@@ -3,14 +3,17 @@ import HeaderChatbox from './headerchatbox';
 import HistoryChatbox from './historychatbox';
 import TypeChatbox from './typechatbox';
 import AlertDemo from './alertdemo';
+import { useChatStore } from '../../store/useChatStore';
+import '../../style/chat/chatbox.css';
 
-// Component này đại diện cho chatbox chính, bao gồm header, lịch sử trò chuyện và ô nhập liệu.
-const Chatbox = ({ selectedCeleb }) => {
+const Chatbox = () => {
+  const selectedCeleb = useChatStore((state) => state.useSelectedCeleb);
+
   return (
     <div className="chatbox">
       <HeaderChatbox selectedCeleb={selectedCeleb} />
-      <HistoryChatbox selectedCeleb={selectedCeleb} />
-      <TypeChatbox selectedCeleb={selectedCeleb} />
+      <HistoryChatbox />
+      <TypeChatbox />
       <AlertDemo />
     </div>
   );

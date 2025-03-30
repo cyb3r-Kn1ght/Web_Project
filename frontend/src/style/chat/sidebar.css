@@ -114,9 +114,7 @@
 
 .celebs-name {
   font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: black;
 }
 
 .sidebar-wrapper.collapsed .celebs-item img,

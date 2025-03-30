@@ -4,25 +4,21 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useChatStore } from '../../store/useChatStore';
 
-// component này đại diện cho ô nhập liệu để người dùng có thể gửi tin nhắn đến nhân vật nổi tiếng (celeb) đã chọn
-const TypeChatbox = ({ selectedCeleb }) => {
-  // State để lưu nội dung tin nhắn
+const TypeChatbox = () => {
   const [message, setMessage] = useState('');
-  // Lấy thông tin người dùng đã đăng nhập từ store
-  const { authUser } = useAuthStore();
-  // Lấy hàm gửi tin nhắn từ store
-  const { sendMessage } = useChatStore();
 
-  // Hàm xử lý khi người dùng nhấn nút gửi tin nhắn
+  const authUser = useAuthStore((state) => state.authUser);
+  const selectedCeleb = useChatStore((state) => state.useSelectedCeleb);
+  const sendMessage = useChatStore((state) => state.sendMessage);
+
   const handleSend = async () => {
     if (!message.trim() || !authUser || !selectedCeleb) return;
-    // Hàm này sẽ gửi tin nhắn đến server thông qua socket
+
     const newMessage = {
       SenderID: authUser._id,
       content: message,
     };
 
-    // Gửi tin nhắn đến server
     await sendMessage(newMessage);
     setMessage('');
   };
@@ -30,19 +26,19 @@ const TypeChatbox = ({ selectedCeleb }) => {
   return (
     <div className="typechatbox">
       <input
-        // Input để người dùng nhập tin nhắn
         className="typechatbox-input"
-        placeholder={`Nhắn tin cho ${selectedCeleb.name}...`}
+        placeholder={
+          selectedCeleb ? `Nhắn tin cho ${selectedCeleb.name}...` : 'Chọn người để nhắn tin...'
+        }
         type="text"
         value={message}
-        // Khi người dùng nhập tin nhắn, cập nhật state message
         onChange={(e) => setMessage(e.target.value)}
+        disabled={!selectedCeleb}
       />
       <button
-        // Nút gửi tin nhắn
         className="typechatbox-send"
         onClick={handleSend}
-        disabled={!message.trim()}
+        disabled={!message.trim() || !selectedCeleb}
       >
         <FontAwesomeIcon icon={faPaperPlane} />
       </button>
@@ -51,3 +47,4 @@ const TypeChatbox = ({ selectedCeleb }) => {
 };
 
 export default TypeChatbox;
+

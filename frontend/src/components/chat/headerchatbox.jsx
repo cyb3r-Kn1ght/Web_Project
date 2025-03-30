@@ -4,9 +4,18 @@ import React from 'react';
 const HeaderChatbox = ({ selectedCeleb }) => {
   return (
     <div className="chatbox-header">
-      {/* hiển thị ảnh đại diện của người nổi tiếng được chọn và tên của họ */}
-      <img src={selectedCeleb.avatar} alt={selectedCeleb.name} className="chatbox-header-avatar" />
-      <span className="chatbox-header-name">{selectedCeleb.name}</span>
+      {selectedCeleb ? (
+        <>
+          <img
+            src={selectedCeleb.avatar}
+            alt={selectedCeleb.name}
+            className="chatbox-avatar"
+          />
+          <span className="chatbox-name">{selectedCeleb.name}</span>
+        </>
+      ) : (
+        <span className="placeholder-text">Chào mừng!</span>
+      )}
     </div>
   );
 };
