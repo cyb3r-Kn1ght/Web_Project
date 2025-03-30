@@ -20,13 +20,14 @@ import passport from 'passport';
 import './lib/passport.js'; // file này sẽ cấu hình Google & Facebook login
 import cors from 'cors';
 
-// Cấu hình session cho Passport
-app.use(passport.initialize());
-
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
 app.use(express.json());
-//app.use(cookieParser());
+app.use(cookieParser());
+
+// Cấu hình session cho Passport
+app.use(passport.initialize());
+
 app.use(cors({
     origin: "http://localhost:5173",
     credentials:true,

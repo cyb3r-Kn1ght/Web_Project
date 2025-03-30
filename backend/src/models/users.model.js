@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         required: function(){
             return !this.GoogleId && !this.FacebookId;
         },
+
         minlength: [8, 'Mật khẩu cần phải có ít nhất 8 ký tự!'],
     },
     email: {
@@ -23,10 +24,10 @@ const userSchema = new mongoose.Schema({
         // match: [/.+\@.+\..+/, 'Plesae fill a valid email address']
     },
     GoogleId: {
-        type: String
+        type: String // Không required
     },
-    FacebookId: {
-        type: String
+      FacebookId: {
+        type: String // Không required
     },
     profilePic: {
         type: String,

@@ -117,10 +117,7 @@ const Login = () => {
                   />
                 </a>
 
-                <a
-                  href="http://localhost:3001/api/auth/google"
-                  className="social-icon"
-                >
+                <a href="http://localhost:3001/api/auth/google" className="social-icon">
                   <img
                     src={GoogleIcon}
                     alt="GoogleIcon"
