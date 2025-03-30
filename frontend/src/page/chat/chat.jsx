@@ -1,31 +1,30 @@
-import React, { useState } from 'react';
-import '../style/chat/chat.css';
-import '../style/chat/chatbox.css';
-import '../style/chat/sidebar.css';
-import trumpImg from '../assets/chat/images/donald-trump.jpg';
-import obamaImg from '../assets/chat/images/barack-obama.jpg';
-import muskImg from '../assets/chat/images/elon-musk.jpg';
+import React, { useState } from "react";
+import "../../style/chat/chat.css";
+import "../../style/chat/chatbox.css";
+import "../../style/chat/sidebar.css";
+import trumpImg from "../../assets/chat/donald-trump.jpg";
+import obamaImg from "../../assets/chat/barack-obama.jpg";
+import muskImg from "../../assets/chat/elon-musk.jpg";
 
-
-import Sidebar from '../components/chat/sidebar';
-import Chatbox from '../components/chat/chatbox';
+import Sidebar from "../../components/chat/sidebar";
+import Chatbox from "../../components/chat/chatbox";
 
 const celebData = [
   {
     id: 1,
-    name: 'Donald Trump',
-    avatar: trumpImg
+    name: "Donald Trump",
+    avatar: trumpImg,
   },
   {
     id: 2,
-    name: 'Barack Obama',
-    avatar: obamaImg
+    name: "Barack Obama",
+    avatar: obamaImg,
   },
   {
     id: 3,
-    name: 'Elon Musk',
-    avatar: muskImg
-  }
+    name: "Elon Musk",
+    avatar: muskImg,
+  },
 ];
 
 const Chat = () => {

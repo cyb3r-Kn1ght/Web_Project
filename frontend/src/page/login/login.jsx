@@ -10,11 +10,11 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { axiosInstance } from "../../lib/axios.js";
 
 const Login = () => {
-  const {LogIn} = useAuthStore();
+  const { LogIn } = useAuthStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
   });
   // const [username, setUsername] = useState("");
   // const [password, setPassword] = useState("");
@@ -92,7 +92,10 @@ const Login = () => {
               <input type="submit" value="Login" className="btn solid" />
               <p className="social-text">Or sign in with social platforms</p>
               <div className="social-media">
-                <a href="#" className="social-icon">
+                <a
+                  href="http://localhost:3001/api/auth/facebook"
+                  className="social-icon"
+                >
                   <img
                     src={FacebookIcon}
                     alt="FacebookIcon"
@@ -100,7 +103,10 @@ const Login = () => {
                   />
                 </a>
 
-                <a href="#" className="social-icon">
+                <a
+                  href="http://localhost:3001/api/auth/google"
+                  className="social-icon"
+                >
                   <img
                     src={GoogleIcon}
                     alt="GoogleIcon"
