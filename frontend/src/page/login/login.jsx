@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 // import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { initLoginHandlers } from "../../feature/login/login.js";
@@ -10,8 +11,14 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { axiosInstance } from "../../lib/axios.js";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {LogIn} = useAuthStore();
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -24,26 +31,27 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    try {
-      // Gửi request POST đến endpoint /login của server
-      const response = await axiosInstance.post("/login", {
-        username,
-        password,
-      });
+    
 
-      // Giả sử server trả về { success: true, user: {...} } khi đăng nhập thành công
-      if (response.data.success) {
-        // Lưu thông tin phiên làm việc, ví dụ: lưu vào localStorage hoặc Context
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        // Chuyển hướng đến trang chatbox hoặc trang chính của ứng dụng
-        navigate("/chatbox");
-      } else {
-        setError(response.data.message || "Đăng nhập thất bại!");
-      }
-    } catch (err) {
-      setError("Có lỗi xảy ra, vui lòng thử lại!");
-      console.error(err);
-    }
+    //   // Gửi request POST đến endpoint /login của server
+    //   const response = await axiosInstance.post("/login", {
+    //     username,
+    //     password,
+    //   });
+
+    //   // Giả sử server trả về { success: true, user: {...} } khi đăng nhập thành công
+    //   if (response.data.success) {
+    //     // Lưu thông tin phiên làm việc, ví dụ: lưu vào localStorage hoặc Context
+    //     localStorage.setItem("user", JSON.stringify(response.data.user));
+    //     // Chuyển hướng đến trang chatbox hoặc trang chính của ứng dụng
+    //     navigate("/chatbox");
+    //   } else {
+    //     setError(response.data.message || "Đăng nhập thất bại!");
+    //   }
+    // } catch (err) {
+    //   setError("Có lỗi xảy ra, vui lòng thử lại!");
+    //   console.error(err);
+    // }
   };
 
   return (
@@ -51,7 +59,7 @@ const Login = () => {
       <div className="container">
         <div className="forms-container">
           <div className="signin-signup">
-            <form action="#" className="sign-in-form">
+            <form action="#" className="sign-in-form" onSubmit={handl}>
               <h2 className="title">Sign in</h2>
 
               {/* su dung component vao thuc te */}

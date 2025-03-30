@@ -21,7 +21,7 @@ const app = express();
 const server = http.createServer(app); // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
-        origin: [`http://localhost:3000`]
+        origin: [`http://localhost:5173`]
     } //Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
