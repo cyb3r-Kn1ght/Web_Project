@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { initLoginHandlers } from "../../feature/login/login.js";
 import GoogleIcon from "../../assets/login/google.svg";
 import FacebookIcon from "../../assets/login/facebook.svg";
 import "../../style/login/login.css";
 import Input_Field from "../../components/login/Input_Fields.jsx";
 import { useAuthStore } from "../../store/useAuthStore.js";
-import axiosInstance from "../../lib/axios.js";
+import { axiosInstance } from "../../lib/axios.js";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Gọi hàm chuyển cảnh sau khi component render xong
+    initLoginHandlers();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

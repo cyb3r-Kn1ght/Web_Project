@@ -6,7 +6,7 @@ export default function Input_Field({ icon, type, placeholder, onChange }) {
   // bien nay duoc khai bao de kiem tra xem password co duoc hien hay an
 
   return (
-    <div class="input-field">
+    <div className="input-field">
       <i className="material-symbols-rounded">{icon}</i>
       <input // xu li input dau vao
         type={isPasswordShown && type === "password" ? "text" : type}
