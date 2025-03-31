@@ -14,7 +14,7 @@ const Celebs = ({ celebs, selectedCeleb, handleSelect }) => {
           onClick={() => handleSelect(celeb)}
         >
           {/*Hiển thị ảnh đại diện và tên của celeb*/}
-          <img src={celeb.avatar} alt={celeb.name} className="celebs-avatar" />
+          <img src={celeb.profilePic} alt={celeb.celebName} className="celebs-avatar" />
           <span className="celebs-name">{celeb.celebName}</span>
         </div>
       ))}

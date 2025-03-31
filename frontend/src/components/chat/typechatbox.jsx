@@ -5,7 +5,7 @@ import { useChatStore } from "../../store/useChatStore.js";
 
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
-  const {sendMessage} = useChatStore();
+  const { sendMessage } = useChatStore();
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -22,6 +22,12 @@ const TypeChatbox = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSend(e);
+    }
+  };
+
   return (
     <div className="typechatbox">
       <input
@@ -30,6 +36,7 @@ const TypeChatbox = () => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown} 
       />
       <button
         className="typechatbox-send"
@@ -43,4 +50,3 @@ const TypeChatbox = () => {
 };
 
 export default TypeChatbox;
-
