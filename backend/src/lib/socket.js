@@ -37,6 +37,14 @@ const io = new Server(server, {
 const aiSocketMap = {};
 const userSocketMap = {}; //tương tự như trên {userID: socketID}
 
+io.use(async (socket, next) => {
+    // Ví dụ: lấy userId từ query (hoặc từ token nếu bạn đã tích hợp middleware xác thực)
+    const userId = socket.handshake.query.userId;
+    // Ở đây bạn có thể tích hợp xác thực bằng JWT nếu cần
+    socket.userId = userId;
+    next();
+});
+
 export function getAISocket(celebName) {
     return aiSocketMap[celebName];
 }
@@ -63,6 +71,16 @@ io.on("connection", async (socket) => {
     } catch (error) {
         console.log("Error checking Celeb:", error);
     }
+
+    // Lắng nghe tin nhắn từ người dùng
+    socket.on("chatMessage", async (msg) => {
+        console.log(`Received message from ${userId}: ${msg}`);
+        // Import hàm getAIResponse từ ai.controller.js
+        const { getAIResponse } = await import('./../controllers/ai.controller.js');
+        const aiReply = await getAIResponse(msg);
+        // Phát tin nhắn trả về cho cùng một socket hoặc broadcast đến phòng chat
+        socket.emit("chatMessage", { sender: "celebrity", text: aiReply });
+    });
 
     socket.on("disconnect", async () => {
         const celeb = await Celeb.findOne({CelebName: userId}); //findOne() là method trả về một document
