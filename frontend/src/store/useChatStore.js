@@ -59,10 +59,12 @@ export const useChatStore = create((set, get) => ({
             });
         });
     },
-
+//Sửa hàm 
     unsubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
-        socket.off("newMessage"); //ngừng tiếp nhận tin nhắn sau khi không ở khung chat hiện tại
+        if (socket) {
+            socket.off("newMessage");
+        }
     },
 
     // New: Method to update the selected celebrity
