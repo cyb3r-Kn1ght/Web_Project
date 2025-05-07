@@ -7,22 +7,23 @@ LƯU Ý: ĐÂY MỚI ĐANG LÀ SOCKET PHÍA BÊN SERVER, CẦN PHẢI CÀI ĐẶ
 *
 *
 *
-*/
-import { Server } from 'socket.io';
+*/import { Server } from 'socket.io';
 import http from 'http'; // có sẵn trong node.js
 import express from 'express';
 import dotenv from 'dotenv';
 import Celeb from '../models/celebs.model.js';
-
+import mongoose from 'mongoose';
+import Chat from '../models/chat.model.js';
 dotenv.config();
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
 const app = express();
-const server = http.createServer(app); // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
+const server = http.createServer(app);  // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
-        origin: [`http://localhost:5173`]
-    } //Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
+        origin: [`http://localhost:5173`],
+        methods: ["GET", "POST"]
+    }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
     nên để hai server có thể trao đổi thông tin với nhau (bypass same-origin policy) cần để nguồn của 
@@ -30,54 +31,91 @@ const io = new Server(server, {
     */
 });
 
-//lưu trữ một hashmap để cho biết AI đang online
-//định dạng: {CelebName: socketID}
-//để giải thích, id AI đã là riêng biệt, nên sẽ đóng vai trò là một key
-//còn socket được cấp phát khi AI kết nối tới server, nên sẽ đóng vai trò là value
-const aiSocketMap = {};
-const userSocketMap = {}; //tương tự như trên {userID: socketID}
+const aiSocketMap = {}; // {celebId: socketId}
 
-export function getAISocket(celebName) {
-    return aiSocketMap[celebName];
+const userSocketMap = {}; // {userId: socketId}
+
+export function getAISocket(celebId) {
+    return aiSocketMap[celebId];
 }
 
 export function getReceiverSocket(userId) {
     return userSocketMap[userId];
 }
 
-//socket.io server sẽ lắng nghe tín hiệu kết nối và cấp phát socket cho client khi điều này xảy ra
-//socket này cũng sẽ lắng nghe tín hiệu ngắt kết nối, các dòng console.log để kiểm soát luồng truy cập và debugging
 io.on("connection", async (socket) => {
-    //lấy thông tin client đã truyền vào để kết nối tới server để xác minh
     const userId = socket.handshake.query.userId;
+    
     try {
-        const celeb = await Celeb.findOne({celebName: userId}); //findOne() là method trả về một document
+        // Kiểm tra xem có phải AI (Celeb)
+        const celeb = await Celeb.findOne({
+            _id: new mongoose.Types.ObjectId(userId),
+            isAI: true
+        });
 
-        if (celeb && celeb.IsAI) {
-            aiSocketMap[celeb.celebName] = socket.id;
-            console.log(`AI has been connected, ${userId}`);
+        if (celeb) {
+            // Lưu socket cho AI
+            aiSocketMap[celeb._id.toString()] = socket.id;
+            socket.data.userType = 'ai';
+            socket.data.celebId = celeb._id.toString();
+            console.log(`AI connected: ${celeb.celebName} (${socket.id})`);
         } else {
+            // Lưu socket cho user thường
             userSocketMap[userId] = socket.id;
-            console.log(`A user has been connected, ${userId}`);
+            socket.data.userType = 'user';
+            socket.data.userId = userId;
+            console.log(`User connected: ${userId} (${socket.id})`);
         }
     } catch (error) {
-        console.log("Error checking Celeb:", error);
+        console.log("Connection error:", error);
     }
 
-    socket.on("disconnect", async () => {
-        const celeb = await Celeb.findOne({CelebName: userId}); //findOne() là method trả về một document
+    socket.on('sendMessage', async (messageData) => {
         try {
-            if (celeb && celeb.isAI) {
-                delete aiSocketMap[celeb.CelebName];
-                console.log(`AI has been disconnected, ${socket.id}`);
+            const newMessage = new Chat({
+                message: messageData.content,
+                sender: messageData.sender,
+                receiver: messageData.receiver
+              });
+              
+// Khi lưu tin nhắn, populate sender
+const savedMessage = await newMessage.save()
+  .then(msg => msg.populate('sender')); // Thêm populate
+
+// Gửi tin nhắn đã populate đến client
+io.to(messageData.sender).emit('newMessage', savedMessage);
+io.to(messageData.receiver).emit('newMessage', savedMessage);
+            io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
+            io.to(`user_${messageData.receiver}`).emit('newMessage', savedMessage);
+            
+        } catch (error) {
+            console.log("🔴 Error sending message:", error);
+        }
+    });
+    
+    socket.on('joinRoom', (roomId) => {
+        socket.join(roomId);
+        console.log(`✅ Joined room: ${roomId}`);
+    });
+    
+    socket.on('leaveRoom', (roomId) => {
+        socket.leave(roomId);
+        console.log(`🚪 Left room: ${roomId}`);
+    });
+    app.set('io', io);
+    socket.on("disconnect", () => {
+        try {
+            if (socket.data.userType === 'ai') {
+                delete aiSocketMap[socket.data.celebId];
+                console.log(`AI disconnected: ${socket.data.celebId} (${socket.id})`);
             } else {
-                delete userSocketMap[userId];
-                console.log(`A user has been disconnected, ${socket.id}`);
+                delete userSocketMap[socket.data.userId];
+                console.log(`User disconnected: ${socket.data.userId} (${socket.id})`);
             }
         } catch (error) {
-            console.log("Error in disconnection check: ", error)
+            console.log("Disconnection error:", error);
         }
-    })
+    });
 });
 
 export { app, server, io };

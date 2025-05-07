@@ -1,65 +1,83 @@
-//
+// File: client/src/store/useChatStore.js
 import { create } from 'zustand';
 import { axiosInstance } from '../lib/axios.js';
 import { useAuthStore } from "./useAuthStore.js";
 
 export const useChatStore = create((set, get) => ({
-    messages:[],
-    celebs:[],
-    useSelectedCeleb:null,
-    isCelebsLoading:false,
+    messages: [],
+    celebs: [],
+    useSelectedCeleb: null,
+    isCelebsLoading: false,
 
     getCelebs: async () => {
-        set({isCelebsLoading:true});
-            
+        set({ isCelebsLoading: true });
         try {
-            const res = await axiosInstance("/chat");
-            set({celebs: res.data});
+            const res = await axiosInstance("/chat"); 
+            set({ celebs: res.data });
         } catch (error) {
-            //thông báo lỗi ở đây
+            // Xử lý lỗi
         } finally {
-            set({isCelebsLoading:false});
+            set({ isCelebsLoading: false });
         }
     },
 
-    getMessages: async (myId) => { //lấy id người dùng để có thể load lịch sử tin nhắn với AI cụ thể
+    getMessages: async (myId) => {
         if (!myId) return;
         try {
             const res = await axiosInstance(`/chat/get/${myId}`);
-            set({messages: res.data});
+            set({ messages: res.data });
         } catch (error) {
-            //thông báo lỗi ở đây
+            // Xử lý lỗi
         }
     },
 
     sendMessage: async (messageData) => {
         const { useSelectedCeleb, messages } = get();
+        const authUser = useAuthStore.getState().authUser;
+
         try {
-            const res = await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
-            set({ messages: [...messages, res.data] });
+            const tempMessage = {
+                _id: Date.now().toString(),
+                message: messageData.message,
+                sender: authUser._id,
+                receiver: useSelectedCeleb._id,
+                createdAt: new Date().toISOString(),
+                isOptimistic: true
+            };
+
+            // Optimistic update
+            set({ messages: [...messages, tempMessage] });
+
+            await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
+            
+            // Socket sẽ tự động cập nhật tin nhắn AI qua newMessage
         } catch (error) {
-            //lỗi ở đây
+            set((state) => ({
+                messages: state.messages.filter(msg => msg._id !== tempMessage._id)
+            }));
+            
         }
     },
 
-    subscribeToMessages: () => { //cập nhật tin nhắn mới vào lịch sử chat
-        const { useSelectedCeleb } = get();
-        if (!useSelectedCeleb) return; //nếu chưa vào khung chat nào thì kết thúc hàm
-
+    subscribeToMessages: () => {
         const socket = useAuthStore.getState().socket;
-        console.log("Socket:", socket);
-        if (!socket) return;
-    
-        socket.on("newMessage", (newMessage) => {
-            const isMessageSentFromSelectedCeleb = newMessage.SenderID === useSelectedCeleb._id;
-            if (!isMessageSentFromSelectedCeleb) return;
         
-            set({
-                messages: [...get().messages, newMessage],
-            });
-        });
-    },
-//Sửa hàm 
+        const handleNewMessage = (newMessage) => {
+          set((state) => ({
+            messages: [
+              ...state.messages.filter(msg => 
+                msg._id !== newMessage._id && 
+                !msg.isOptimistic
+              ),
+              newMessage
+            ]
+          }));
+        };
+      
+        socket.on('newMessage', handleNewMessage);
+        return () => socket.off('newMessage', handleNewMessage);
+      },
+
     unsubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
         if (socket) {
@@ -67,6 +85,5 @@ export const useChatStore = create((set, get) => ({
         }
     },
 
-    // New: Method to update the selected celebrity
     setSelectedCeleb: (useSelectedCeleb) => set({ useSelectedCeleb }),
-}));
+}))

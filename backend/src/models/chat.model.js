@@ -1,21 +1,13 @@
-//định nghĩa collection lịch sử chat của người dùng với một người nổi tiếng
 import mongoose from 'mongoose';
 
 const chatSchema = new mongoose.Schema({
-    receiverID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-    },
-    senderID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    },
-    message: {
-        type: String,
-        required: true
-    }
-}, {timestamps: true});
+  message: {
+    type: String,
+    required: true
+},
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now }
+});
 
-const Chat = new mongoose.model("Chat", chatSchema);
-
-export default Chat;
+export default mongoose.model('Chat', chatSchema);

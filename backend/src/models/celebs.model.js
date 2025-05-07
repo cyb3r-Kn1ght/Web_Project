@@ -1,4 +1,3 @@
-// định nghĩa collection Celeb
 import mongoose from 'mongoose';
 
 const celebSchema = new mongoose.Schema({
@@ -9,9 +8,14 @@ const celebSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default: ""
-    }
-}, {timestamps: true});
+    },
+    prompt: {
+        type: String,
+        required: true,
+        default: "Bạn là một trợ lý AI, trả lời ngắn gọn và lịch sự." 
+    },
+}, { timestamps: true });
 
-const Celeb = new mongoose.model("Celeb", celebSchema);
+const Celeb = mongoose.model("Celeb", celebSchema);
 
 export default Celeb;

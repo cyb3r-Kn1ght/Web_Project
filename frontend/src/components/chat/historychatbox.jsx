@@ -11,44 +11,75 @@ const HistoryChatbox = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser } = useAuthStore();
+  const { authUser, socket } = useAuthStore();
+  const bottomRef = useRef(null);
 
-  const bottomRef = useRef(null); // Tạo ref cho phần cuối cùng
+  // Xử lý scroll xuống dưới cùng khi có tin nhắn mới
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    if (!useSelectedCeleb) return;
+    if (!socket || !useSelectedCeleb) return;
+    const userRoom = `user_${authUser._id}`;
+    const celebRoom = `celeb_${useSelectedCeleb._id}`;
+  
+    socket.emit('joinRoom', userRoom);
+    socket.emit('joinRoom', celebRoom);
     getMessages(useSelectedCeleb._id);
-    subscribeToMessages();
-
-    return () => unsubscribeFromMessages();
-  }, [useSelectedCeleb, getMessages, subscribeToMessages, unsubscribeFromMessages]);
-
-  // Scroll xuống dưới khi messages thay đổi
+  
+    return () => {
+      socket.emit('leaveRoom', userRoom);
+      socket.emit('leaveRoom', celebRoom);
+    };
+  }, [socket, authUser._id, useSelectedCeleb]);
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'auto' });
-    }
+    if (!socket) return;
+    subscribeToMessages();
+    return () => unsubscribeFromMessages();
+  }, [socket]);
+  useEffect(() => {
+    scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (!socket || !useSelectedCeleb) return;
+    const userRoom = `user_${authUser._id}`;
+    const celebRoom = `celeb_${useSelectedCeleb._id}`;
+  
+    socket.emit('joinRoom', userRoom);
+    socket.emit('joinRoom', celebRoom);
+    getMessages(useSelectedCeleb._id);
+  
+    return () => {
+      socket.emit('leaveRoom', userRoom);
+      socket.emit('leaveRoom', celebRoom);
+    };
+  }, [socket, authUser._id, useSelectedCeleb]);
   return (
     <div className="historychatbox">
-      {messages && messages.length > 0 ? (
+      {messages.length > 0 ? (
         messages.map((message) => {
-          const isUserMessage = message.senderID === authUser._id;
+          const senderId = message.sender?._id || message.sender;
+          const isUserMessage = senderId === authUser._id;
           return (
-            <div
-              className="chat-message"
-              key={message._id}
-              // className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
-            >
+<div
+      className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
+      key={message._id || `temp-${message.timestamp}`}
+    >
               <p>{message.message}</p>
+                       
             </div>
           );
         })
       ) : (
-        <p>No messages yet.</p>
+        <div className="empty-chat">
+          <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
+        </div>
       )}
-      {/* Phần tử cuối cùng để scroll tới */}
+
+  
+
       <div ref={bottomRef} />
     </div>
   );
