@@ -27,14 +27,15 @@ export const useChatStore = create((set, get) => ({
             const res = await axiosInstance(`/chat/get/${myId}`);
             set({ messages: res.data });
         } catch (error) {
-            // Xử lý lỗi
+            console.error("Error fetching messages:", error);
         }
     },
 
     sendMessage: async (messageData) => {
         const { useSelectedCeleb, messages } = get();
         const authUser = useAuthStore.getState().authUser;
-
+        const socket = useAuthStore.getState().socket; // Lấy socket từ useAuthStore
+        //tin nhắn tạm(hỗ trợ chat real-life)
         try {
             const tempMessage = {
                 _id: Date.now().toString(),
@@ -45,16 +46,24 @@ export const useChatStore = create((set, get) => ({
                 isOptimistic: true
             };
 
-            // Optimistic update
+            // Optimistic update tin nhắn tạm (real-time)
             set({ messages: [...messages, tempMessage] });
-
-            await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
+                // Bật trạng thải "đang trả lời"
+            socket.emit('ai_typing_start');
+           const res= await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
+            set((state) => ({
+                messages: state.messages.map(msg =>
+                  msg._id === tempMessage._id ? res.data.userMessage : msg
+                )
+              }));
             
             // Socket sẽ tự động cập nhật tin nhắn AI qua newMessage
         } catch (error) {
+            console.error("Error sending message:", error);
             set((state) => ({
                 messages: state.messages.filter(msg => msg._id !== tempMessage._id)
             }));
+            useChatStore.getState().socket.emit('ai_typing_end');
             
         }
     },

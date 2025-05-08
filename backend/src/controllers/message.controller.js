@@ -52,14 +52,14 @@ export const sendMessage = async (req, res) => {
 
     // Phát tin nhắn mới tới room celebId để frontend nhận ngay
     const io = req.app.get('io');
+    io.to(`user_${userId}`).emit('ai_typing_start');
     io.to(`user_${userId}`).emit('newMessage', userMessage);
-    io.to(`celeb_${celebId}`).emit('newMessage', userMessage);
     // 2) Lấy prompt của celeb và gọi AI trả lời
     const celeb = await Celeb.findById(celebId);
     const openrouterResp = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "google/learnlm-1.5-pro-experimental:free",
+        model: "google/gemma-3-1b-it:free",
         messages: [
           { role: 'system', content: celeb.prompt },
           { role: 'user',   content: messageText }
@@ -85,8 +85,10 @@ export const sendMessage = async (req, res) => {
     }).then(msg => msg.populate('sender')); // Populate thông tin người gửi
     //Populate trong Mongoose là một phương thức giúp tự động thay thế các trường tham chiếu (references) trong MongoDB bằng các documents thực tế từ collection được tham chiếu. Điều này giúp truy vấn và làm việc với dữ liệu liên quan trở nên dễ dàng và hiệu quả hơn.
     // Gửi tin nhắn AI qua socket
+
     io.to(`user_${userId}`).emit('newMessage', aiMessage);
-    io.to(`celeb_${celebId}`).emit('newMessage', aiMessage);
+    io.to(`user_${userId}`).emit('ai_typing_end');
+
     res.status(201).json({ userMessage, aiMessage });
   } catch (error) {
     next(error);

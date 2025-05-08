@@ -72,6 +72,7 @@ io.on("connection", async (socket) => {
 
     socket.on('sendMessage', async (messageData) => {
         try {
+            io.to(`user_${messageData.sender}`).emit('ai_typing_start');
             const newMessage = new Chat({
                 message: messageData.content,
                 sender: messageData.sender,
@@ -79,20 +80,18 @@ io.on("connection", async (socket) => {
               });
               
 // Khi lưu tin nhắn, populate sender
-const savedMessage = await newMessage.save()
-  .then(msg => msg.populate('sender')); // Thêm populate
+    const savedMessage = await newMessage.save()
+    .then(msg => msg.populate('sender')); // Thêm populate
 
 // Gửi tin nhắn đã populate đến client
-io.to(messageData.sender).emit('newMessage', savedMessage);
-io.to(messageData.receiver).emit('newMessage', savedMessage);
-            io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
-            io.to(`user_${messageData.receiver}`).emit('newMessage', savedMessage);
+    io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
             
         } catch (error) {
             console.log("🔴 Error sending message:", error);
         }
     });
-    
+
+    //chatroom sử dụng socket.io
     socket.on('joinRoom', (roomId) => {
         socket.join(roomId);
         console.log(`✅ Joined room: ${roomId}`);

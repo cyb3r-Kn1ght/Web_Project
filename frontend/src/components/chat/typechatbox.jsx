@@ -10,13 +10,11 @@ const TypeChatbox = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-
+    setMessage("");
     try {
       await sendMessage({
         message: message.trim(),
       });
-
-      setMessage("");
     } catch (error) {
       console.error("Failed to send message:", error);
     }
