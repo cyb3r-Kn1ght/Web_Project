@@ -38,7 +38,7 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/chat", messageRoutes);
 
-server.listen(port, () => {
+server.listen(port,"0.0.0.0", () => {
     console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
     ConnectDB(); // tiến hành kết nối database
 }); // cần có phương thức listen() để phía server có thể nhận req từ client
