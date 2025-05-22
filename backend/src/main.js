@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://web-project-flame-five.vercel.app/",
     credentials:true,
 })); //tiếp nhận thông tin từ port 5173
 
