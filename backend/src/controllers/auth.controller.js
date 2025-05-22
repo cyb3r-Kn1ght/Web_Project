@@ -226,7 +226,7 @@ export const googleAuth = (req, res, next) => {
         res.cookie('jwt', token, {
             httpOnly: false,
             secure: false,
-            sameSite: 'lax',
+            sameSite: 'none',
             maxAge: 60 * 60 * 1000
         });
         res.redirect(`${process.env.FRONTEND_URL}/chat`);
