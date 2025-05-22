@@ -22,7 +22,8 @@ const server = http.createServer(app);  // đại khái là express.js app mới
 const io = new Server(server, {
     cors: {
         origin: [`https://web-project-flame-five.vercel.app`],
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        credentials: true
     }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
