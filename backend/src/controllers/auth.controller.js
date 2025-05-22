@@ -99,9 +99,9 @@ export const login = async (req, res) => {
     // tạo token
     const token = jwt.sign({ _id: user._id, email }, JWT_SECRET, { expiresIn: "1h" });
     res.cookie('jwt', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge: 60 * 60 * 1000
     });
     console.log("Login successful");
