@@ -224,7 +224,7 @@ export const googleAuth = (req, res, next) => {
         const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
         // Set cookie
         res.cookie('jwt', token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: 'lax',
             maxAge: 60 * 60 * 1000
