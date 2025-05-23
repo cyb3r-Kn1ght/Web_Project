@@ -22,7 +22,8 @@ const server = http.createServer(app);  // đại khái là express.js app mới
 const io = new Server(server, {
     cors: {
         origin: [`https://web-project-flame-five.vercel.app`, `http://localhost:5173`], // Chỉ định các nguồn được phép truy cập
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức HTTP được phép
+        allowedHeaders: ["Content-Type", "Authorization"], // Các tiêu đề được phép
         credentials: true
     }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
