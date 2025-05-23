@@ -9,6 +9,7 @@ import { server, app } from './lib/socket.js';
 
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
+import vnpayHandler from './routes/vnpay.route.js';
 
 import { ConnectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
@@ -29,7 +30,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use(cors({
-    origin: "https://web-project-flame-five.vercel.app",
+    origin: ["https://web-project-flame-five.vercel.app", "http://localhost:5173"],
     credentials:true,
 })); //tiếp nhận thông tin từ port 5173
 
@@ -37,6 +38,8 @@ app.use(cors({
 app.use("/api/auth", authRoutes); 
 
 app.use("/api/chat", messageRoutes);
+
+app.use("/api/vnpay", vnpayHandler);
 
 server.listen(port,"0.0.0.0", () => {
     console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);

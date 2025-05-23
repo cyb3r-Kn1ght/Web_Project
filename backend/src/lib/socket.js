@@ -21,7 +21,7 @@ const app = express();
 const server = http.createServer(app);  // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
-        origin: [`https://web-project-flame-five.vercel.app`],
+        origin: [`https://web-project-flame-five.vercel.app`, `http://localhost:5173`], // Chỉ định các nguồn được phép truy cập
         methods: ["GET", "POST"],
         credentials: true
     }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
