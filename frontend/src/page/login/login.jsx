@@ -107,7 +107,7 @@ const Login = () => {
               <p className="social-text">Or sign in with social platforms</p>
               <div className="social-media">
                 <a
-                  href="http://localhost:3001/api/auth/facebook"
+                  href="https://celebritychatbot.up.railway.app/api/auth/facebook"
                   className="social-icon"
                 >
                   <img
@@ -117,7 +117,7 @@ const Login = () => {
                   />
                 </a>
 
-                <a href="http://localhost:3001/api/auth/google" className="social-icon">
+                <a href="https://celebritychatbot.up.railway.app/api/auth/google" className="social-icon">
                   <img
                     src={GoogleIcon}
                     alt="GoogleIcon"
