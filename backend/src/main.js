@@ -35,13 +35,16 @@ app.use(cors({
     : ["http://localhost:5173"],
     credentials:true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Origin", "Accept", "X-Requested-With"],
     exposedHeaders: ["set-cookie"]
 })); //tiếp nhận thông tin từ port 5173
 
-app.options('*', cors()); // cho phép tất cả các phương thức OPTIONS từ mọi nguồn
+//app.options('*', cors()); // cho phép tất cả các phương thức OPTIONS từ mọi nguồn
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Cookie');
     next();
 });
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
