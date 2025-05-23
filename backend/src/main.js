@@ -30,7 +30,9 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use(cors({
-    origin: ["https://web-project-flame-five.vercel.app", "http://localhost:5173"],
+    origin: process.env.NODE_ENV === 'production' 
+    ? ["https://web-project-flame-five.vercel.app"] 
+    : ["http://localhost:5173"],
     credentials:true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -38,6 +40,10 @@ app.use(cors({
 })); //tiếp nhận thông tin từ port 5173
 
 app.options('*', cors()); // cho phép tất cả các phương thức OPTIONS từ mọi nguồn
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
 
