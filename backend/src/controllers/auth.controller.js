@@ -224,8 +224,8 @@ export const googleAuth = (req, res, next) => {
         const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
         // Set cookie
         res.cookie('jwt', token, {
-            httpOnly: false,
-            secure: false,
+            httpOnly: true,
+            secure: true,
             sameSite: 'none',
             maxAge: 60 * 60 * 1000
         });
@@ -256,7 +256,7 @@ export const facebookAuth = (req, res, next) => {
                 const tokenFB = jwt.sign({ _id: existingUserFB._id }, JWT_SECRET, { expiresIn: "1h" });
                 res.cookie('jwt', tokenFB, {
                     httpOnly: true,
-                    secure: false,
+                    secure: true,
                     sameSite: 'lax',
                     maxAge: 60 * 60 * 1000
                 });
