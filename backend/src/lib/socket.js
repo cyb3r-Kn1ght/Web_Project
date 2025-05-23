@@ -21,13 +21,15 @@ const app = express();
 const server = http.createServer(app);  // đại khái là express.js app mới tạo sẽ đóng vai trò là http server, cần làm vậy để socket.io có thể được gắn vào server
 const io = new Server(server, {
     cors: {
-        origin: process.env.NODE_ENV === 'production' 
-    ? ["https://web-project-flame-five.vercel.app"] 
-    : ["http://localhost:5173"], // Chỉ định các nguồn được phép truy cập
-        methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức HTTP được phép
-        allowedHeaders: ["Content-Type", "Authorization"], // Các tiêu đề được phép
+        origin: function(origin, callback) {
+            const allowedOrigins = [
+                'https://web-project-flame-five.vercel.app',
+                'http://localhost:5173'
+            ];
+            callback(null, allowedOrigins.includes(origin) ? origin : false);
+        }, // Chỉ định các nguồn được phép truy cập
         credentials: true,
-        exposedHeaders: ["set-cookie"] // Các tiêu đề được phép truy cập từ phía client
+        methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức HTTP được phép
     }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau
