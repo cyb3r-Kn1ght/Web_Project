@@ -24,7 +24,8 @@ const io = new Server(server, {
         origin: [`https://web-project-flame-five.vercel.app`, `http://localhost:5173`], // Chỉ định các nguồn được phép truy cập
         methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức HTTP được phép
         allowedHeaders: ["Content-Type", "Authorization"], // Các tiêu đề được phép
-        credentials: true
+        credentials: true,
+        exposedHeaders: ["set-cookie"] // Các tiêu đề được phép truy cập từ phía client
     }//Cross-Origin Resource Sharing: Chỉ những request có nguồn là http://localhost:${port} được tiếp nhận
     /*
     để giải thích thêm, socket.io server và http server mới tạo khả năng có origin khác nhau

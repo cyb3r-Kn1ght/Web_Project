@@ -34,6 +34,7 @@ app.use(cors({
     credentials:true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["set-cookie"]
 })); //tiếp nhận thông tin từ port 5173
 
 app.options('*', cors()); // cho phép tất cả các phương thức OPTIONS từ mọi nguồn

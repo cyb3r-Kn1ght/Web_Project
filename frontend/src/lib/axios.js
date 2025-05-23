@@ -4,4 +4,8 @@ import axios from "axios"; // cài đặt thư viện HTP client
 export const axiosInstance = axios.create({
   baseURL: "https://celebritychatbot.up.railway.app/api" /*"http://localhost:3001/api"*/,
   withCredentials: true,
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
