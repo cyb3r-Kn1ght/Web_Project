@@ -11,7 +11,7 @@
 }
 
 .sidebar-wrapper.collapsed {
-  width: 60px;
+  width: 100%;
 }
 
 /* ------------ Toggle Button (always shown) ------------ */
@@ -137,8 +137,8 @@
 @media (max-width: 768px) {
   .sidebar-wrapper {
     width: 100%;
-    height: auto;
-    min-height: auto;
+    height: 100%;
+    min-height: 100%;
   }
 
   .sidebar-wrapper.collapsed {
