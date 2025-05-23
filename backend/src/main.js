@@ -26,20 +26,6 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none', // Required for cross-domain cookies
-    maxAge: 86400000
-  }
-}));
-
-// Cấu hình session cho Passport
-app.use(passport.initialize());
-
 const allowedOrigins = [
   'https://web-project-flame-five.vercel.app',
   'http://localhost:5173'
@@ -54,6 +40,21 @@ app.use(cors({
 
 // Đáp ứng preflight OPTIONS cho tất cả route
 app.options('*', cors());
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none', // Required for cross-domain cookies
+    maxAge: 86400000
+  }
+}));
+
+// Cấu hình session cho Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 //debug
 app.use((req, res, next) => {

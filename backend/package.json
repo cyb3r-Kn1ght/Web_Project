@@ -4,7 +4,8 @@
   "description": "NT208, Web, Chatbot",
   "main": "src/main.js",
   "scripts": {
-    "start": "nodemon src/main.js",
+    "start": "node src/main.js",
+    "dev": "nodemon src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,9 @@
   ],
   "author": "cyb3r_Kn1ght",
   "type": "module",
+  "engine": {
+    "node": ">=18.0.0"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/cyb3r-Kn1ght/Web_Project/issues"
@@ -46,6 +50,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "eslint": "^9.4.0"
   }
 }
