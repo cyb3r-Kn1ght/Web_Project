@@ -26,6 +26,17 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none', // Required for cross-domain cookies
+    maxAge: 86400000
+  }
+}));
+
 // Cấu hình session cho Passport
 app.use(passport.initialize());
 
@@ -35,18 +46,10 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Cho phép request không có origin (như từ Postman)
-    //from nhóm 7 with love
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: allowedOrigins, // Direct array reference
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Đáp ứng preflight OPTIONS cho tất cả route
@@ -65,6 +68,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/chat", messageRoutes);
 
 app.use("/api/vnpay", vnpayHandler);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: process.env.NODE_ENV === 'development' 
+      ? err.message 
+      : 'Internal Server Error'
+  });
+});
 
 server.listen(port,"0.0.0.0", () => {
     console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
