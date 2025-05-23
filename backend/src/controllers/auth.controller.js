@@ -229,7 +229,7 @@ export const googleAuth = (req, res, next) => {
             sameSite: 'none',
             maxAge: 60 * 60 * 1000
         });
-        res.redirect(`${process.env.FRONTEND_URL}/chat`);
+        res.redirect(`/chat`);
     })(req, res, next);
 };
 
@@ -257,10 +257,10 @@ export const facebookAuth = (req, res, next) => {
                 res.cookie('jwt', tokenFB, {
                     httpOnly: true,
                     secure: true,
-                    sameSite: 'lax',
+                    sameSite: 'none',
                     maxAge: 60 * 60 * 1000
                 });
-                res.redirect(`${process.env.FRONTEND_URL}/chat`);
+                res.redirect(`/chat`);
             })(req, res, next);
         };
         
