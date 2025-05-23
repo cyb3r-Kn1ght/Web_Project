@@ -229,7 +229,7 @@ export const googleAuth = (req, res, next) => {
             sameSite: 'none',
             maxAge: 60 * 60 * 1000
         });
-        res.redirect(`/chat`);
+        res.redirect(`https://web-project-flame-five.vercel.app/chat`);
     })(req, res, next);
 };
 
@@ -260,7 +260,7 @@ export const facebookAuth = (req, res, next) => {
                     sameSite: 'none',
                     maxAge: 60 * 60 * 1000
                 });
-                res.redirect(`/chat`);
+                res.redirect(`https://web-project-flame-five.vercel.app/chat`);
             })(req, res, next);
         };
         
