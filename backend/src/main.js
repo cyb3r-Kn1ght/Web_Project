@@ -29,23 +29,28 @@ app.use(cookieParser());
 // Cấu hình session cho Passport
 app.use(passport.initialize());
 
+const allowedOrigins = [
+  'https://web-project-flame-five.vercel.app',
+  'http://localhost:5173'
+];
+
 app.use(cors({
-    origin: function(origin, callback) {
-        const allowedOrigins = [
-            'https://web-project-flame-five.vercel.app',
-            'http://localhost:5173'
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, origin);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials:true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Origin", "Accept", "X-Requested-With"],
-    exposedHeaders: ["Set-Cookie"]
-})); //tiếp nhận thông tin từ port 5173
+  origin: function (origin, callback) {
+    // Cho phép request không có origin (như từ Postman)
+    //from nhóm 7 with love
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+}));
+
+// Đáp ứng preflight OPTIONS cho tất cả route
+app.options('*', cors());
 
 //debug
 app.use((req, res, next) => {
