@@ -27,8 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'https://web-project-flame-five.vercel.app',
-  'http://localhost:5173'
+  'https://web-project-flame-five.vercel.app'
 ];
 
 app.use(cors({
