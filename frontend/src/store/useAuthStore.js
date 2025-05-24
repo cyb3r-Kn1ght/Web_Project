@@ -63,7 +63,9 @@ export const useAuthStore = create(persist((set, get) => ({
   LogIn: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
+      const res = await axiosInstance.post("/auth/login", data, {
+        withCredentials: true, // Đảm bảo gửi cookie xác thực
+      });
        //thêm thông báo tạo tài khoản thành công
       set({ authUser: res.data.user });
       get().connectSocket();
@@ -96,6 +98,7 @@ export const useAuthStore = create(persist((set, get) => ({
     // Tạo socket mới
     const newSocket = io(BASE_URL, {
       query: { userId: authUser._id },
+      withCredentials: true, // Đảm bảo gửi cookie xác thực
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 3000,
