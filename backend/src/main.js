@@ -17,6 +17,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 import session from 'express-session';
+import MongoStore from 'connect-mongo'; // lưu trữ session vào MongoDB
 import passport from 'passport';
 import './lib/passport.js'; // file này sẽ cấu hình Google & Facebook login
 import cors from 'cors';
@@ -44,6 +45,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60 // Session TTL (1 day)
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'none', // Required for cross-domain cookies
