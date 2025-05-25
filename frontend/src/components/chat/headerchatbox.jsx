@@ -14,7 +14,7 @@ const HeaderChatbox = ({ selectedCeleb }) => {
           <span className="chatbox-name">{selectedCeleb.celebName}</span>
         </>
       ) : (
-        <span className="placeholder-text">Chào mừng!</span>
+        <span className="placeholder-text">Chào mừng bạn!</span>
       )}
     </div>
   );
