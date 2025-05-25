@@ -26,3 +26,11 @@
     flex-direction: column; 
   }
   
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+    .sidebar-container {
+        width: 90dvh; 
+    }
+    
+}
