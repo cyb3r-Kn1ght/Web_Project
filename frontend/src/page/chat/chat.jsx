@@ -39,14 +39,14 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <div className="sidebar-container">
+      <div className="sidebar-wrapper">
         <Sidebar
           celebs={celebs}
           selectedCeleb={selectedCeleb}
           handleSelect={handleSelect}
         />
       </div>
-      <div className="chatbox-container">
+      <div className="chatbox">
         <Chatbox isSocketReady={isSocketReady} />
       </div>
     </div>
