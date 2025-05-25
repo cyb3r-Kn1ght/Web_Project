@@ -42,6 +42,7 @@ export const useChatStore = create((set, get) => ({
                 message: messageData.message,
                 sender: authUser._id,
                 receiver: useSelectedCeleb._id,
+                userType: authUser.GoogleId ? 'google_user' : 'user',
                 createdAt: new Date().toISOString(),
                 isOptimistic: true
             };
