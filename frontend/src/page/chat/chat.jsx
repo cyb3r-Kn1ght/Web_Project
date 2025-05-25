@@ -44,7 +44,7 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <div className="sidebar-wrapper">
+      <div>
       <Sidebar
         celebs={celebs}
         selectedCeleb={selectedCeleb}
@@ -53,7 +53,7 @@ const Chat = () => {
         toggleSidebar={toggleSidebar}   // Truyền hàm toggle
       />
       </div>
-      <div className="chatbox">
+      <div>
         <Chatbox isSocketReady={isSocketReady} />
       </div>
     </div>
