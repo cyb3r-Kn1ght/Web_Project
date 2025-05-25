@@ -22,7 +22,7 @@ const server = http.createServer(app);  // đại khái là express.js app mới
 const io = new Server(server, {
     cors: {
         origin: [
-            'https://web-project-flame-five.vercel.app'
+            'https://web-project-flame-five.vercel.app',
         ],
         methods: ["GET", "POST"],
         credentials: true
