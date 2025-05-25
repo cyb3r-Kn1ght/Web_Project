@@ -23,7 +23,7 @@ const HistoryChatbox = () => {
   //đưa user và celeb hiện tại vào room chat
   // và lấy tin nhắn giữa hai bên
   useEffect(() => {
-    if (!socket || !useSelectedCeleb) return;
+    if (!socket || !useSelectedCeleb || !authUser?._id) return;
     const userRoom = `user_${authUser._id}`;
   
     socket.emit('joinRoom', userRoom);
@@ -43,6 +43,13 @@ const HistoryChatbox = () => {
   useEffect(() => {
     if (!socket) return;
 
+    const handleError = (error) => {
+      console.error('Socket error:', error);
+      setIsAITyping(false); // Reset typing state on error
+    };
+
+    //error handling
+    socket.on('error', handleError);
     // Lắng nghe sự kiện AI đang trả lời
     socket.on('ai_typing_start', () => {
       setIsAITyping(true);
@@ -54,6 +61,7 @@ const HistoryChatbox = () => {
     });
 
     return () => {
+      socket.off('error', handleError);
       socket.off('ai_typing_start');
       socket.off('ai_typing_end');
     };
@@ -68,7 +76,7 @@ const HistoryChatbox = () => {
       {messages.length > 0 ? (
         messages.map((message) => {
           const senderId = message.sender?._id || message.sender;
-          const isUserMessage = senderId === authUser._id;
+          const isUserMessage = message?.userType && message.userType !== 'ai';
           console.log('senderId:', senderId, 'celebrityId:', useSelectedCeleb?._id);
           return (
 <div
