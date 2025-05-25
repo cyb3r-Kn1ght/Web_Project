@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
-const BASE_URL = /*"https://celebritychatbot.up.railway.app"*/ "http://localhost:3001";
+const BASE_URL = "https://celebritychatbot.up.railway.app" /*"http://localhost:3001"*/;
 //persist để lưu trữ thông tin xác thực và đăng kí, đăng nhập của người dùng vào localStorage
 export const useAuthStore = create(persist((set, get) => ({
 //useAuthStore là một hàm chứa các biến kiểm tra trạng thái người dùng và kiểm tra thông tin xác thực
