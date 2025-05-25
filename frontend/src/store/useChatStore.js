@@ -75,25 +75,28 @@ export const useChatStore = create((set, get) => ({
 
     subscribeToMessages: () => {
         const socket = useAuthStore.getState().socket;
-        
+        if (!socket) return;
+
         const handleNewMessage = (newMessage) => {
-          set((state) => ({
-            messages: [
-              ...state.messages.filter(msg => 
-                msg._id !== newMessage._id && 
-                (!msg.isOptimistic || msg.sender !== newMessage.sender) // Loại bỏ tin nhắn tạm
-              ),
-              {
-                ...newMessage,
-                userType: newMessage.userType || (newMessage.isUserMessage ? 'user' : 'ai')
-              }
-            ]
-          }));
+            set((state) => ({
+                messages: [
+                    // 1) keep all existing non-optimistic messages
+                    ...state.messages.filter(msg =>
+                        // drop any optimistic placeholder that matches this AI reply
+                        !(msg._id === newMessage._id) 
+                        ),
+                    // 2) append the real AI reply
+                        {
+                        ...newMessage,
+                        userType: newMessage.userType || 'ai'
+                        }
+                ]
+                }));
         };
-      
+
         socket.on('newMessage', handleNewMessage);
         return () => socket.off('newMessage', handleNewMessage);
-      },
+    },
 
     unsubscribeFromMessages: () => {
         const socket = useAuthStore.getState().socket;
