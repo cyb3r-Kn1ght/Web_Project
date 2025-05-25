@@ -7,6 +7,11 @@ const chatSchema = new mongoose.Schema({
 },
   sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userType: {
+    type: String,
+    enum: ['user', 'google_user', 'ai'],
+    required: true
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -1,6 +1,7 @@
 // File: controllers/message.controller.js
 import Celeb from '../models/celebs.model.js';
 import Chat from '../models/chat.model.js';
+import User from '../models/users.model.js';
 import axios from 'axios';
 
 //hiển thị người nổi tiếng ở sidebar bên trái
@@ -42,18 +43,23 @@ export const sendMessage = async (req, res) => {
     const celebId = req.params.id;
 
     const userId = req.user._id;
+    const user = await User.findById(userId);
     const messageText = req.body.message;
 
     const userMessage = await Chat.create({
       message: messageText,
       sender: userId,
-      receiver: celebId // CelebId được suy ra từ receiver
+      receiver: celebId, // CelebId được suy ra từ receiver
+      userType: user.GoogleId ? 'google_user' : 'user'
     });
 
     // Phát tin nhắn mới tới room celebId để frontend nhận ngay
     const io = req.app.get('io');
     io.to(`user_${userId}`).emit('ai_typing_start');
-    io.to(`user_${userId}`).emit('newMessage', userMessage);
+    io.to(`user_${userId}`).emit('newMessage', {
+      ...userMessage.toObject(),
+      userType: user.GoogleId ? 'google_user' : 'user'
+    });
     // 2) Lấy prompt của celeb và gọi AI trả lời
     const celeb = await Celeb.findById(celebId);
     const openrouterResp = await axios.post(
@@ -81,7 +87,8 @@ export const sendMessage = async (req, res) => {
     const aiMessage = await Chat.create({
       message: aiText,
       sender: celebId,
-      receiver: userId
+      receiver: userId,
+      userType: 'ai'
     }).then(msg => msg.populate('sender')); // Populate thông tin người gửi
     //Populate trong Mongoose là một phương thức giúp tự động thay thế các trường tham chiếu (references) trong MongoDB bằng các documents thực tế từ collection được tham chiếu. Điều này giúp truy vấn và làm việc với dữ liệu liên quan trở nên dễ dàng và hiệu quả hơn.
     // Gửi tin nhắn AI qua socket
@@ -91,6 +98,11 @@ export const sendMessage = async (req, res) => {
 
     res.status(201).json({ userMessage, aiMessage });
   } catch (error) {
+    console.error("Message handling error:", error);
+    
+    // Send typing end event in case of error
+    const io = req.app.get('io');
+    io.to(`user_${req.user._id}`).emit('ai_typing_end');
     next(error);
   }
 };
