@@ -39,7 +39,7 @@ export const getMessages = async (req, res) => {
 // Xử lý gửi tin nhắn: lưu message của user, gọi AI và lưu message trả lời
 export const sendMessage = async (req, res) => {
   try {
-    
+    console.log('Req.body ➞', req.body);
     const celebId = req.params.id;
 
     const userId = req.user._id;

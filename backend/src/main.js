@@ -24,19 +24,19 @@ import cors from 'cors';
 
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
-app.use(express.json());
-app.use(cookieParser());
-
 const corsOptions = {
   origin: 'https://web-project-flame-five.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Length', 'X-Powered-By']
 };
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
+app.use(express.json());
+app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -81,11 +81,10 @@ app.use("/api/vnpay", vnpayHandler);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res
-    .status(err.status)
-    .json({
-      error: err.message
-    });
+  // Thêm headers CORS vào response lỗi
+  res.header("Access-Control-Allow-Origin", "https://web-project-flame-five.vercel.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.status(err.status || 500).json({ error: err.message });
 });
 
 server.listen(port,"0.0.0.0", () => {
