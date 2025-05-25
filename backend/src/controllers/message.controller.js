@@ -50,7 +50,8 @@ export const sendMessage = async (req, res) => {
       message: messageText,
       sender: userId,
       receiver: celebId, // CelebId được suy ra từ receiver
-      userType: user.GoogleId ? 'google_user' : 'user'
+      userType: user.GoogleId ? 'google_user' : 'user',
+      timestamp: Date.now()
     });
 
     // Phát tin nhắn mới tới room celebId để frontend nhận ngay
@@ -58,7 +59,8 @@ export const sendMessage = async (req, res) => {
     io.to(`user_${userId}`).emit('ai_typing_start');
     io.to(`user_${userId}`).emit('newMessage', {
       ...userMessage.toObject(),
-      userType: user.GoogleId ? 'google_user' : 'user'
+      userType: user.GoogleId ? 'google_user' : 'user',
+      isUserMessage: true
     });
     // 2) Lấy prompt của celeb và gọi AI trả lời
     const celeb = await Celeb.findById(celebId);
@@ -79,7 +81,10 @@ export const sendMessage = async (req, res) => {
           "X-Title": "AI Celeb Chat App"
         }
       }
-    );
+    ).catch(error => {
+      console.error("OpenRouter API error:", error.response?.data);
+      throw error;
+    });
 
     const aiText = openrouterResp.data.choices[0].message.content.trim();
 

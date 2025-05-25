@@ -36,8 +36,9 @@ export const useChatStore = create((set, get) => ({
         const authUser = useAuthStore.getState().authUser;
         const socket = useAuthStore.getState().socket; // Lấy socket từ useAuthStore
         //tin nhắn tạm(hỗ trợ chat real-life)
+        let tempMessage;
         try {
-            const tempMessage = {
+            tempMessage = {
                 _id: Date.now().toString(),
                 message: messageData.message,
                 sender: authUser._id,
@@ -62,9 +63,10 @@ export const useChatStore = create((set, get) => ({
         } catch (error) {
             console.error("Error sending message:", error);
             set((state) => ({
-                messages: state.messages.filter(msg => msg._id !== tempMessage._id)
+                messages: state.messages.filter(msg => msg._id !== tempMessage?._id)
             }));
-            useChatStore.getState().socket.emit('ai_typing_end');
+            const socket = useAuthStore.getState().socket; 
+            if (socket) socket.emit('ai_typing_end');
             
         }
     },
@@ -77,9 +79,12 @@ export const useChatStore = create((set, get) => ({
             messages: [
               ...state.messages.filter(msg => 
                 msg._id !== newMessage._id && 
-                !msg.isOptimistic
+                (!msg.isOptimistic || msg.sender !== newMessage.sender) // Loại bỏ tin nhắn tạm
               ),
-              newMessage
+              {
+                ...newMessage,
+                userType: newMessage.userType || (newMessage.isUserMessage ? 'user' : 'ai')
+              }
             ]
           }));
         };

@@ -79,12 +79,14 @@ const HistoryChatbox = () => {
           const isUserMessage = message?.userType && message.userType !== 'ai';
           console.log('senderId:', senderId, 'celebrityId:', useSelectedCeleb?._id);
           return (
-<div
-      className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
-      key={message._id || `temp-${message.timestamp}`}
-    >
+            <div
+              className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
+              key={message._id || `temp-${message.timestamp}`}
+            >
               <p>{message.message}</p>
-                       
+              <small className="message-debug">
+                {isUserMessage ? 'User' : 'AI'} - Type: {message.userType}
+              </small>
             </div>
           );
         })

@@ -118,6 +118,11 @@ export const useAuthStore = create(persist((set, get) => ({
       console.log("Socket disconnected");
       set({ socket: null });
     });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+      set({ isSocketConnecting: false });
+    });
   },
 
   // Hàm đóng kết nối socket
