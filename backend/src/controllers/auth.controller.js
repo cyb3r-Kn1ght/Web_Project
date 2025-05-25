@@ -202,34 +202,48 @@ export const resetPassword = async (req, res) => {
 export const googleAuth = (req, res, next) => {
     // gọi hàm authenticate của passport với strategy là "google"
     passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
-        // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
-        if (err || !user) {
-            return res.status(400).send("Authentication failed");
-        }
-        // lấy thông tin cần thiết từ user
-        const { id, displayName, emails } = user;
-        
-        // kiểm tra xem user đã tồn tại trong csdl chưa
-        let existingUser = await User.findOne({ GoogleId: id });
-        if (!existingUser) {
-            existingUser = new User({
-                username: displayName,
-                email: emails[0].value,
-                GoogleId: id
-            });
-            await existingUser.save();
-        }
+        try {    
+            // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
+            if (err || !user) {
+                return res.status(400).send("Authentication failed");
+            }
+            // lấy thông tin cần thiết từ user
+            const { id, displayName, emails } = user;
+            
+            // kiểm tra xem user đã tồn tại trong csdl chưa
+            let existingUser = await User.findOne({ GoogleId: id });
+            if (!existingUser) {
+                existingUser = new User({
+                    username: displayName,
+                    email: emails[0].value,
+                    GoogleId: id
+                });
+                await existingUser.save();
+            }
 
-        // tạo token
-        const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
-        // Set cookie
-        res.cookie('jwt', token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 60 * 60 * 1000
-        });
-        res.redirect(`https://web-project-flame-five.vercel.app/chat`);
+            // res.json({
+            //     user: {
+            //         _id: existingUser._id,
+            //         username: existingUser.username,
+            //         email: existingUser.email,
+            //         GoogleId: existingUser.GoogleId
+            //     }
+            // });
+
+            // tạo token
+            const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
+            // Set cookie
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 60 * 60 * 1000
+            });
+            res.redirect(`https://web-project-flame-five.vercel.app/chat`);
+        } catch (error) {
+            console.error("Error in Google authentication:", error.message);
+            return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
+        }
     })(req, res, next);
 };
 

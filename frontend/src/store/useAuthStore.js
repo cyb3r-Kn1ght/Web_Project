@@ -20,7 +20,7 @@ export const useAuthStore = create(persist((set, get) => ({
     try {
       const res = await axiosInstance.get("/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
       set({ authUser: res.data });
-      set({ authUser: res.data });
+      //set({ authUser: res.data });
       get().connectSocket();
     } catch (error) {
       console.log("Error in checkAuth: ", error);
@@ -127,7 +127,8 @@ export const useAuthStore = create(persist((set, get) => ({
       socket.disconnect();
       set({ socket: null });
     }
-  }
+  },
+  
 }), {
   name: "auth-storage", // key lưu vào localStorage
   partialize: (state) => ({ authUser: state.authUser }), // chỉ lưu authUser, không lưu socket
