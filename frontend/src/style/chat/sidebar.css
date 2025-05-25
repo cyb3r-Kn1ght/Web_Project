@@ -2,6 +2,7 @@
 .sidebar-wrapper {
   background-color: #4a90e2;
   min-height: 100vh;
+  width: 100%;
   transition: width 0.3s ease;
   position: relative;
   flex-shrink: 0;
