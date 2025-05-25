@@ -63,6 +63,14 @@ app.use((req, res, next) => {
     next();
 });
 
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok',
+    timestamp: Date.now()
+  });
+});
+
 //lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
 app.use("/api/auth", authRoutes); 
 

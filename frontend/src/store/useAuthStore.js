@@ -18,7 +18,7 @@ export const useAuthStore = create(persist((set, get) => ({
   // Hàm kiểm tra xác thực, nếu thành công sẽ gọi connectSocket
   checkAuth: async () => {
     try {
-      const res = await axiosInstance.get("/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
+      const res = await axiosInstance.get("/api/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
       set({ authUser: res.data });
       //set({ authUser: res.data });
       get().connectSocket();
@@ -35,7 +35,7 @@ export const useAuthStore = create(persist((set, get) => ({
   SignUp: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/auth/signup", data);
+      const res = await axiosInstance.post("/api/auth/signup", data);
             //thêm thông báo tạo tài khoản thành công
       //set({ authUser: res.data.user });
       //get().connectSocket();
@@ -51,7 +51,7 @@ export const useAuthStore = create(persist((set, get) => ({
   // Hàm đăng xuất, đóng kết nối socket và xóa authUser
   LogOut: async () => {
     try {
-      await axiosInstance.post("/auth/logout");
+      await axiosInstance.post("/api/auth/logout");
       set({ authUser: null });
       get().disconnectSocket();
     } catch (error) {
@@ -63,7 +63,7 @@ export const useAuthStore = create(persist((set, get) => ({
   LogIn: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data, {
+      const res = await axiosInstance.post("/api/auth/login", data, {
         withCredentials: true, // Đảm bảo gửi cookie xác thực
       });
        //thêm thông báo tạo tài khoản thành công

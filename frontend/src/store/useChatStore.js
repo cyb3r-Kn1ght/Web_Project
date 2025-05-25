@@ -12,7 +12,7 @@ export const useChatStore = create((set, get) => ({
     getCelebs: async () => {
         set({ isCelebsLoading: true });
         try {
-            const res = await axiosInstance("/chat"); 
+            const res = await axiosInstance("/api/chat"); 
             set({ celebs: res.data });
         } catch (error) {
             // Xử lý lỗi
@@ -24,7 +24,7 @@ export const useChatStore = create((set, get) => ({
     getMessages: async (myId) => {
         if (!myId) return;
         try {
-            const res = await axiosInstance(`/chat/get/${myId}`);
+            const res = await axiosInstance(`/api/chat/get/${myId}`);
             set({ messages: res.data });
         } catch (error) {
             console.error("Error fetching messages:", error);
@@ -52,7 +52,7 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...messages, tempMessage] });
                 // Bật trạng thải "đang trả lời"
             socket.emit('ai_typing_start');
-           const res= await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData, {
+           const res= await axiosInstance.post(`/api/chat/send/${useSelectedCeleb._id}`, messageData, {
             withCredentials: true
            });
             set((state) => ({
