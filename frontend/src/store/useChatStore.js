@@ -80,18 +80,13 @@ export const useChatStore = create((set, get) => ({
         const handleNewMessage = (newMessage) => {
             set((state) => ({
                 messages: [
-                    // 1) keep all existing non-optimistic messages
-                    ...state.messages.filter(msg =>
-                        // drop any optimistic placeholder that matches this AI reply
-                        !(msg._id === newMessage._id) 
-                        ),
-                    // 2) append the real AI reply
-                        {
-                        ...newMessage,
-                        userType: newMessage.userType || 'ai'
-                        }
-                ]
-                }));
+                ...state.messages.filter(msg => 
+                    // Only filter out optimistic messages
+                    !msg.isOptimistic
+                ),
+                newMessage
+            ]
+            }));
         };
 
         socket.on('newMessage', handleNewMessage);
