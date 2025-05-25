@@ -8,18 +8,21 @@ import { faBars, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 
 // component này đại diện cho sidebar, bao gồm header, nội dung và footer
-const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar}) => {
+const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar: toggleSidebarProp}) => {
   // State để lưu trạng thái thu gọn hoặc mở rộng sidebar
   const [collapsed, setCollapsed] = useState(false);
   // Hàm để thay đổi trạng thái thu gọn hoặc mở rộng sidebar
-  const toggleSidebar = () => setCollapsed(!collapsed);
+  const handleToggleSidebar = () => {
+    setCollapsed(!collapsed);
+    toggleSidebarProp(); // Call the prop function if needed
+  };
   return (
     <div className={`sidebar-wrapper ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
         {/* Tiêu đề của sidebar */}
         <h2 className="sidebar-title">AI Chatbot</h2>
         {/* Button giờ sẽ gọi hàm toggleSidebar từ props của cha */}
-        <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+        <button className="sidebar-toggle-btn" onClick={handleToggleSidebar}>
           {/* Thay đổi icon dựa trên prop isCollapsed */}
           <FontAwesomeIcon icon={isCollapsed ? faBars : faEllipsisVertical} />
         </button>
