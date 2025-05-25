@@ -133,6 +133,3 @@ export const useAuthStore = create(persist((set, get) => ({
   name: "auth-storage", // key lưu vào localStorage
   partialize: (state) => ({ authUser: state.authUser }), // chỉ lưu authUser, không lưu socket
 }));
-useEffect(() => {
-  useAuthStore.getState().checkAuth();
-}, []);
