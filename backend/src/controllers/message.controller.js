@@ -103,7 +103,10 @@ export const sendMessage = async (req, res) => {
     //Populate trong Mongoose là một phương thức giúp tự động thay thế các trường tham chiếu (references) trong MongoDB bằng các documents thực tế từ collection được tham chiếu. Điều này giúp truy vấn và làm việc với dữ liệu liên quan trở nên dễ dàng và hiệu quả hơn.
     // Gửi tin nhắn AI qua socket
 
-    io.to(`user_${userId}`).emit('newMessage', aiMessage);
+    io.to(`user_${userId}`).emit('newMessage', {
+      ...aiMessage.toObject(),
+      isUserMessage: false
+    });
     io.to(`user_${userId}`).emit('ai_typing_end');
 
     res.status(201).json({ userMessage, aiMessage });

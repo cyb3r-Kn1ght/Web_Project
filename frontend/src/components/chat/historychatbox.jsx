@@ -84,9 +84,6 @@ const HistoryChatbox = () => {
               key={message._id || `temp-${message.timestamp}`}
             >
               <p>{message.message}</p>
-              <small className="message-debug">
-                {isUserMessage ? 'User' : 'AI'} - Type: {message.userType}
-              </small>
             </div>
           );
         })

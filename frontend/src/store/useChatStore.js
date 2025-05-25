@@ -80,12 +80,12 @@ export const useChatStore = create((set, get) => ({
         const handleNewMessage = (newMessage) => {
             set((state) => ({
                 messages: [
-                ...state.messages.filter(msg => 
-                    // Only filter out optimistic messages
-                    !msg.isOptimistic
-                ),
-                newMessage
-            ]
+                    ...state.messages.filter(msg => 
+                        // Xóa tin nhắn tạm (nếu có)
+                        !msg.isOptimistic || msg.receiver !== newMessage.sender?._id
+                    ),
+                    newMessage
+                ]
             }));
         };
 
