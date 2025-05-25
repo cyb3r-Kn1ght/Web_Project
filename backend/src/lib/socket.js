@@ -33,6 +33,8 @@ const io = new Server(server, {
     */
 });
 
+app.set('io', io);
+
 const aiSocketMap = {}; // {celebId: socketId}
 
 const userSocketMap = {}; // {userId: socketId}
