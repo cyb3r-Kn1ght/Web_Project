@@ -35,6 +35,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -58,9 +59,9 @@ app.use(passport.session());
 
 //debug
 app.use((req, res, next) => {
-    console.log('Request from:', req.headers.origin);
-    console.log('Request method:', req.method);
-    next();
+  console.log('▶ Origin:', req.headers.origin);
+  console.log('▶ Method:', req.method, '▶ URL:', req.originalUrl);
+  next();
 });
 
 
@@ -80,11 +81,11 @@ app.use("/api/vnpay", vnpayHandler);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({
-    error: process.env.NODE_ENV === 'development' 
-      ? err.message 
-      : 'Internal Server Error'
-  });
+  res
+    .status(err.status)
+    .json({
+      error: err.message
+    });
 });
 
 server.listen(port,"0.0.0.0", () => {

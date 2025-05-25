@@ -64,27 +64,31 @@ export const sendMessage = async (req, res) => {
     });
     // 2) Lấy prompt của celeb và gọi AI trả lời
     const celeb = await Celeb.findById(celebId);
-    const openrouterResp = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        model: "google/gemma-3-1b-it:free",
-        messages: [
-          { role: 'system', content: celeb.prompt },
-          { role: 'user',   content: messageText }
-        ],
-        temperature: 0.7
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "HTTP-Referer": "http://localhost:3000",
-          "X-Title": "AI Celeb Chat App"
+    let openrouterResp;
+    try {
+      openrouterResp  = await axios.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          model: "google/gemma-3-1b-it:free",
+          messages: [
+            { role: 'system', content: celeb.prompt },
+            { role: 'user',   content: messageText }
+          ],
+          temperature: 0.7
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "AI Celeb Chat App"
+          }
         }
-      }
-    ).catch(error => {
-      console.error("OpenRouter API error:", error.response?.data);
-      throw error;
-    });
+      );
+    } catch (err) {
+      console.error("OpenRouter API error:", err.response?.data || err.message);
+      // send back a 502 with JSON so CORS middleware can still run
+      return res.status(502).json({ error: "AI engine unreachable" });
+    }
 
     const aiText = openrouterResp.data.choices[0].message.content.trim();console.log("Status:", openrouterResp.status);
     console.log("Headers:", openrouterResp.headers);
