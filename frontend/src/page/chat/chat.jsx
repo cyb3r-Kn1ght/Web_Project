@@ -14,7 +14,6 @@ const Chat = () => {
   const { connectSocket, socket, authUser } = useAuthStore();      // kết nối socket
   const { celebs, selectedCeleb, setSelectedCeleb, getCelebs } = useChatStore();
   const [isSocketReady, setIsSocketReady] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     getCelebs();                                                   // lấy danh sách celeb
@@ -38,20 +37,14 @@ const Chat = () => {
 
   const handleSelect = (celeb) => setSelectedCeleb(celeb);          // chọn celeb
 
-  const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
   return (
     <div className="chat-container">
       <div className="sidebar-wrapper">
-      <Sidebar
-        celebs={celebs}
-        selectedCeleb={selectedCeleb}
-        handleSelect={handleSelect}
-        isCollapsed={isSidebarCollapsed} // Truyền trạng thái
-        toggleSidebar={toggleSidebar}   // Truyền hàm toggle
-      />
+        <Sidebar
+          celebs={celebs}
+          selectedCeleb={selectedCeleb}
+          handleSelect={handleSelect}
+        />
       </div>
       <div className="chatbox">
         <Chatbox isSocketReady={isSocketReady} />
