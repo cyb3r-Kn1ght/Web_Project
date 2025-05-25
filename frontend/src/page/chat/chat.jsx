@@ -53,7 +53,7 @@ const Chat = () => {
         toggleSidebar={toggleSidebar}   // Truyền hàm toggle
       />
       </div>
-      <div>
+      <div className="chatbox-wrapper">
         <Chatbox isSocketReady={isSocketReady} />
       </div>
     </div>

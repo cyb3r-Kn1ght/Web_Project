@@ -12,4 +12,11 @@
     font-family: "Poppins", sans-serif;
     margin: 0 0;
   }
+
+.chatbox-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    flex-grow: 1;
+}
   
