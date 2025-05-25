@@ -44,7 +44,6 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <div>
       <Sidebar
         celebs={celebs}
         selectedCeleb={selectedCeleb}
@@ -52,10 +51,7 @@ const Chat = () => {
         isCollapsed={isSidebarCollapsed} // Truyền trạng thái
         toggleSidebar={toggleSidebar}   // Truyền hàm toggle
       />
-      </div>
-      <div className="chatbox-wrapper">
         <Chatbox isSocketReady={isSocketReady} />
-      </div>
     </div>
   );
 };
