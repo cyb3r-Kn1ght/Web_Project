@@ -16,7 +16,7 @@
   .sidebar-container {
     flex-shrink: 0;
     width: 30%;
-    min-height: 100dvh;
+    height: 100dvh;
   }
   
   .chatbox-container {
