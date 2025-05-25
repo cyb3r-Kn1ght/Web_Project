@@ -75,20 +75,19 @@ export const useChatStore = create((set, get) => ({
 
     subscribeToMessages: () => {
         const socket = useAuthStore.getState().socket;
-        if (!socket) return;
-
+        
         const handleNewMessage = (newMessage) => {
             set((state) => ({
                 messages: [
                     ...state.messages.filter(msg => 
-                        // Xóa tin nhắn tạm (nếu có)
-                        !msg.isOptimistic || msg.receiver !== newMessage.sender?._id
+                    msg._id !== newMessage._id && 
+                    !msg.isOptimistic
                     ),
                     newMessage
                 ]
             }));
         };
-
+      
         socket.on('newMessage', handleNewMessage);
         return () => socket.off('newMessage', handleNewMessage);
     },
