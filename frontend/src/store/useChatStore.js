@@ -76,17 +76,13 @@ export const useChatStore = create((set, get) => ({
     subscribeToMessages: () => {
         const socket = useAuthStore.getState().socket;
         if (!socket) return;
-        
+            
         const handleNewMessage = (newMessage) => {
-            set((state) => ({
-                messages: [
-                    ...state.messages.filter(msg => 
-                    msg._id !== newMessage._id && 
-                    !msg.isOptimistic
-                    ),
-                    newMessage
-                ]
-            }));
+            if (newMessage.userType === 'ai') {
+                set((state) => ({
+                    messages: [...state.messages, newMessage]
+                }));
+            }
         };
       
         socket.on('newMessage', handleNewMessage);

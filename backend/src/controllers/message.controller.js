@@ -105,7 +105,8 @@ export const sendMessage = async (req, res) => {
 
     io.to(`user_${userId}`).emit('newMessage', {
       ...aiMessage.toObject(),
-      isUserMessage: false
+      isUserMessage: false,
+      userType: 'ai'
     });
     io.to(`user_${userId}`).emit('ai_typing_end');
 

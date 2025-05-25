@@ -36,6 +36,21 @@ const Chat = () => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (socket && authUser) {
+      // Join room của user khi vào trang chat
+      const userRoom = `user_${authUser._id}`;
+      socket.emit('joinRoom', userRoom);
+    }
+
+    return () => {
+      // Rời room khi component unmount
+      if (socket && authUser) {
+        socket.emit('leaveRoom', `user_${authUser._id}`);
+      }
+    };
+  }, [socket, authUser]);
+
   const handleSelect = (celeb) => setSelectedCeleb(celeb);          // chọn celeb
 
   const toggleSidebar = () => {
