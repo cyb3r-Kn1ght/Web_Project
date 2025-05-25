@@ -1,6 +1,6 @@
 /* ------------ Sidebar Wrapper ------------ */
 .sidebar-wrapper {
-  width: 30dvw;
+  width: 20dvw;
   min-height: 100dvh;
   background-color: #4a90e2;
   transition: width 0.3s ease;

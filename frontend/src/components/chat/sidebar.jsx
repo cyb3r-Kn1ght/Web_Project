@@ -12,7 +12,7 @@ const Sidebar = ({ celebs, selectedCeleb, handleSelect }) => {
   // State để lưu trạng thái thu gọn hoặc mở rộng sidebar
   const [collapsed, setCollapsed] = useState(false);
   // Hàm để thay đổi trạng thái thu gọn hoặc mở rộng sidebar
-  const toggleSidebar = () => setCollapsed((window.innerWidth < 768 ? collapsed : !collapsed));
+  const toggleSidebar = () => setCollapsed((collapsed));
   return (
     <div className={`sidebar-wrapper ${collapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
