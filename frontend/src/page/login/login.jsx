@@ -65,10 +65,14 @@ const Login = () => {
     setError("");
 
     const user = await SignUp(formData);
+
     console.log(user);
     if (user) {
-      navigate("/chat"); // chuyển hướng sang trang chat
+      navigate("/auth/login");
     }
+    // if (user) {
+    //   navigate("/chat"); // chuyển hướng sang trang chat
+    // }
   };
 
   return (
