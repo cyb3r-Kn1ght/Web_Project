@@ -86,8 +86,9 @@ export const sendMessage = async (req, res) => {
       throw error;
     });
 
-    const aiText = openrouterResp.data.choices[0].message.content.trim();
-
+    const aiText = openrouterResp.data.choices[0].message.content.trim();console.log("Status:", openrouterResp.status);
+    console.log("Headers:", openrouterResp.headers);
+    console.log("Data:", JSON.stringify(openrouterResp.data, null, 2));
     // 3) Lưu tin nhắn bot vào DB với receiver là userId
     const aiMessage = await Chat.create({
       message: aiText,

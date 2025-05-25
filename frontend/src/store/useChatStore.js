@@ -52,7 +52,9 @@ export const useChatStore = create((set, get) => ({
             set({ messages: [...messages, tempMessage] });
                 // Bật trạng thải "đang trả lời"
             socket.emit('ai_typing_start');
-           const res= await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
+           const res= await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData, {
+            withCredentials: true
+           });
             set((state) => ({
                 messages: state.messages.map(msg =>
                   msg._id === tempMessage._id ? res.data.userMessage : msg
