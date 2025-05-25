@@ -99,6 +99,7 @@ export const useAuthStore = create(persist((set, get) => ({
     const newSocket = io(BASE_URL, {
       query: { userId: authUser._id },
       withCredentials: true, // Đảm bảo gửi cookie xác thực
+      transports: ["websocket"], // Sử dụng WebSocket
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 3000,

@@ -27,12 +27,8 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = [
-  'https://web-project-flame-five.vercel.app',
-];
-
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: 'https://web-project-flame-five.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
