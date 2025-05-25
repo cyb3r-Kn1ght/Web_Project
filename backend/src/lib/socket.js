@@ -74,6 +74,8 @@ io.on("connection", async (socket) => {
             aiSocketMap[celeb._id.toString()] = socket.id;
             socket.data.userType = 'ai';
             socket.data.celebId = celeb._id.toString();
+
+            socket.join(`celeb_${celeb._id}`);
             console.log(`AI connected: ${celeb.celebName} (${socket.id})`);
         } else {
             console.log(`Unknown connection type for userId: ${userId}`);
@@ -86,20 +88,29 @@ io.on("connection", async (socket) => {
 
     socket.on('sendMessage', async (messageData) => {
         try {
+            // Thêm điều kiện kiểm tra user đã join room
+            const userRoom = `user_${messageData.sender}`;
+            const userSockets = await io.in(userRoom).fetchSockets();
+            
+            if (userSockets.length === 0) {
+                console.log(`User ${messageData.sender} chưa join room!`);
+                return;
+            }
+
             io.to(`user_${messageData.sender}`).emit('ai_typing_start');
             const newMessage = new Chat({
                 message: messageData.content,
                 sender: messageData.sender,
                 receiver: messageData.receiver
-              });
+            });
               
-// Khi lưu tin nhắn, populate sender
-    const savedMessage = await newMessage.save()
-    .then(msg => msg.populate('sender')); // Thêm populate
+            // Khi lưu tin nhắn, populate sender
+            const savedMessage = await newMessage.save()
+            .then(msg => msg.populate('sender')); // Thêm populate
 
-// Gửi tin nhắn đã populate đến client
-    io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
-            
+            // Gửi tin nhắn đã populate đến client
+            io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
+                    
         } catch (error) {
             console.log("🔴 Error sending message:", error);
         }
@@ -118,6 +129,10 @@ io.on("connection", async (socket) => {
     app.set('io', io);
     socket.on("disconnect", () => {
         try {
+            // Rời tất cả rooms
+            const rooms = Object.keys(socket.rooms);
+            rooms.forEach(room => socket.leave(room));
+
             if (socket.data.userType === 'ai') {
                 delete aiSocketMap[socket.data.celebId];
                 console.log(`AI disconnected: ${socket.data.celebId} (${socket.id})`);
