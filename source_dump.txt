@@ -1,0 +1,2546 @@
+# ==================================================
+# Path: G:\PC\Coding\Github\Web_Projectv3\Web_Project
+# Detected tech: javascript, python, react, typescript
+# ==================================================
+
+## DIRECTORY STRUCTURE
+```
+Web_Project/
+├── .git/
+├── .vscode/
+├── backend/
+│   ├── node_modules/
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   ├── auth.controller.js
+│   │   │   └── message.controller.js
+│   │   ├── lib/
+│   │   ├── middleware/
+│   │   │   └── auth.middleware.js
+│   │   ├── models/
+│   │   │   ├── celebs.model.js
+│   │   │   ├── chat.model.js
+│   │   │   ├── token.model.js
+│   │   │   └── users.model.js
+│   │   ├── routes/
+│   │   │   ├── auth.route.js
+│   │   │   ├── message.route.js
+│   │   │   └── vnpay.route.js
+│   │   └── main.js
+│   ├── .env
+│   ├── package-lock.json
+│   └── package.json
+├── frontend/
+│   ├── node_modules/
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   └── vite.svg
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── chat/
+│   │   │   │   ├── barack-obama.jpg
+│   │   │   │   ├── donald-trump.jpg
+│   │   │   │   └── elon-musk.jpg
+│   │   │   ├── login/
+│   │   │   │   ├── facebook.svg
+│   │   │   │   └── google.svg
+│   │   │   └── web_page/
+│   │   │       └── chongxoa.txt
+│   │   ├── components/
+│   │   │   ├── chat/
+│   │   │   │   ├── alertdemo.jsx
+│   │   │   │   ├── bodysidebar.jsx
+│   │   │   │   ├── celebs.jsx
+│   │   │   │   ├── chatbox.jsx
+│   │   │   │   ├── footersidebar.jsx
+│   │   │   │   ├── headerchatbox.jsx
+│   │   │   │   ├── headersidebar.jsx
+│   │   │   │   ├── historychatbox.jsx
+│   │   │   │   ├── sidebar.jsx
+│   │   │   │   └── typechatbox.jsx
+│   │   │   ├── login/
+│   │   │   │   ├── Form4all.jsx
+│   │   │   │   └── Input_Fields.jsx
+│   │   │   └── web_page/
+│   │   │       ├── container-button.jsx
+│   │   │       ├── footer.jsx
+│   │   │       ├── navbar.jsx
+│   │   │       └── tittle.jsx
+│   │   ├── context/
+│   │   │   └── CuThamKhao/
+│   │   │       ├── SelectedAvatarContext.js
+│   │   │       ├── SelectedCelebContext.js
+│   │   │       └── UsernameContext.js
+│   │   ├── feature/
+│   │   │   └── login/
+│   │   │       └── login.js
+│   │   ├── lib/
+│   │   ├── page/
+│   │   │   ├── chat/
+│   │   │   │   ├── chat.jsx
+│   │   │   │   └── filechatcuthamkhao.jsx
+│   │   │   ├── login/
+│   │   │   │   ├── filelogincuthamkhao.jsx
+│   │   │   │   ├── forgot_password.jsx
+│   │   │   │   ├── login.jsx
+│   │   │   │   └── resetpassword.jsx
+│   │   │   └── web_page/
+│   │   │       └── Home.jsx
+│   │   ├── store/
+│   │   │   ├── useAuthStore.js
+│   │   │   └── useChatStore.js
+│   │   ├── style/
+│   │   │   ├── chat/
+│   │   │   │   ├── chat.css
+│   │   │   │   ├── chatbox.css
+│   │   │   │   └── sidebar.css
+│   │   │   ├── login/
+│   │   │   │   └── login.css
+│   │   │   └── web_page/
+│   │   │       ├── ContainerButton.css
+│   │   │       ├── Home_module.css
+│   │   │       ├── footer.css
+│   │   │       ├── navbar.css
+│   │   │       └── tittle.css
+│   │   ├── App.jsx
+│   │   ├── Appthamkhao.jsx
+│   │   ├── checkrestpass.jsx
+│   │   ├── main.jsx
+│   │   ├── reportWebVitals.js
+│   │   └── setupTests.js
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── vercel.json
+│   └── vite.config.js
+├── .gitignore
+├── README.md
+├── package-lock.json
+└── package.json
+```
+
+## FILE CONTENTS
+
+### backend\src\main.js
+```js
+// const express = require('express');
+
+// mặc định type đang sử dụng là node, nếu muốn sử dụng require()
+// có thể đổi type thành commonjs trong package.json
+
+import express from 'express';
+//sử dụng server và expressjs app đã được tạo từ socket.js
+import { server, app } from './lib/socket.js';
+
+import authRoutes from './routes/auth.route.js';
+import messageRoutes from './routes/message.route.js';
+import vnpayHandler from './routes/vnpay.route.js';
+
+import { ConnectDB } from './lib/db.js';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
+import session from 'express-session';
+import MongoStore from 'connect-mongo'; // lưu trữ session vào MongoDB
+import passport from 'passport';
+import './lib/passport.js'; // file này sẽ cấu hình Google & Facebook login
+import cors from 'cors';
+
+const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
+
+app.use(express.json());
+app.use(cookieParser());
+
+const allowedOrigins = [
+  'https://web-project-flame-five.vercel.app',
+];
+
+app.use(cors({
+  origin: allowedOrigins, // Direct array reference
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Đáp ứng preflight OPTIONS cho tất cả route
+app.options('*', cors());
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60 // Session TTL (1 day)
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none', // Required for cross-domain cookies
+    maxAge: 86400000
+  }
+}));
+
+// Cấu hình session cho Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+//debug
+app.use((req, res, next) => {
+    console.log('Request from:', req.headers.origin);
+    console.log('Request method:', req.method);
+    next();
+});
+
+//lệnh này sẽ xử lí khi người dùng muốn đăng nhập, đăng kí hay đăng xuất tại đường dẫn /api/auth
+app.use("/api/auth", authRoutes); 
+
+app.use("/api/chat", messageRoutes);
+
+app.use("/api/vnpay", vnpayHandler);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: process.env.NODE_ENV === 'development' 
+      ? err.message 
+      : 'Internal Server Error'
+  });
+});
+
+server.listen(port,"0.0.0.0", () => {
+    console.log(`Example app listening at http://localhost:${port}/api/auth/signup`);
+    ConnectDB(); // tiến hành kết nối database
+}); // cần có phương thức listen() để phía server có thể nhận req từ client
+```
+
+### backend\src\controllers\auth.controller.js
+```js
+//nơi này định nghĩa hàm để xử lí tín hiệu đăng nhập, đăng xuất, đăng kí
+import User from '../models/users.model.js'
+import Token from '../models/token.model.js'
+import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào trong csdl
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import cryto, { randomBytes } from 'crypto'; // random token reset mật khẩu
+import nodemailer from 'nodemailer'; // thư viện gửi gmail
+import passport from 'passport';
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// xử lý quên mật khẩu
+const sendEmail = async (email, reset_link) => {
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD
+        },
+    });
+
+    await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Reset Password",
+        text: `Click on the link để reset mật khẩu: ${reset_link}`
+    });
+}
+
+export const signup = async (req, res) => {
+    console.log("Received request at signup:", req.body);
+
+    const { username, password, email } = req.body;
+
+    // kiểm tra xem người dùng đã nhập đủ thông tin chưa
+    if (!username || !password || !email) {
+        res.status(400).send("Missing required information");
+        return;
+    }
+
+    // kiểm tra xem người dùng có trùng username không
+    if (await User.findOne({ username })) {
+        res.status(400).send("Username already exists");
+        return;
+    }
+
+    // kiểm tra mật khẩu
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)){
+        res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
+        return;
+    }
+
+    // kiểm tra email
+    const emailRegex = /.+\@.+\..+/;
+    if (!emailRegex.test(email)){
+        res.status(400).send("Invalid email address");
+        return;
+    }
+    // kiểm tra xem email có trùng không
+    if (await User.findOne({ email })) {
+        res.status(400).send("Email already exists");
+        return;
+    }
+
+    // mã hóa mật khẩu
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    // tạo một user mới
+    const newUser = new User({ username, password: hashedPassword, email });
+    // lưu user mới vào trong csdl
+    await newUser.save();
+    res.send("User created successfully");
+}
+
+export const login = async (req, res) => {
+    console.log("Received request at login:", req.body);
+
+    const { email, password } = req.body;
+    if (!email || !password) {
+        res.status(400).send("Missing required information");
+        return;
+    }
+    
+    // kiểm tra xem người dùng có tồn tại không
+    const user = await User.findOne({ email });
+    if (!user){
+        res.status(400).send("Email does not exist");
+        return;
+    }
+
+    // kiểm tra xem mật khẩu có đúng không
+    if (!bcrypt.compareSync(password, user.password)){
+        res.status(400).send("Invalid password");
+        return;
+    }
+
+    // tạo token
+    const token = jwt.sign({ _id: user._id, email }, JWT_SECRET, { expiresIn: "1h" });
+    res.cookie('jwt', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 60 * 60 * 1000
+    });
+    console.log("Login successful");
+    res.json({ token, user });
+}
+
+export const logout = (req, res) => {
+    res.clearCookie('jwt');  // xóa cookie JWT
+    res.json({ message: "Logout successful" });
+}
+
+export const checkAuth = (req, res) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        console.log("Error in checkAuth controller", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// xử lý quên mật khẩu
+export const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    if (!email){
+        res.status(400).send("Missing required information");
+        return;
+    }
+
+    const user = await User.findOne({ email: req.body.email });
+    if (!user){
+        res.status(400).send("Email does not exist");
+        return;
+    }
+
+    console.log("User ID:", user._id);
+
+    // tạo token
+    const reset_token = crypto.randomBytes(32).toString("hex");
+
+    // lưu token vào trong csdl
+    const newToken = new Token({
+        userId: user._id,
+        token: reset_token,
+        expiresAt: Date.now() + 15 * 60 * 1000
+    });
+    await newToken.save();
+
+    const reset_link = `${process.env.FRONTEND_URL}/reset-password/${reset_token}`;
+    await sendEmail(email, reset_link);
+    res.json({ message: "Reset link has been sent to your email" });
+}
+
+// reset password
+export const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    // kiểm tra nếu chưa có newPassword
+    if (!newPassword) {
+        return res.status(400).send("Missing new password");
+    }
+
+    // kiểm tra độ mạnh của mật khẩu mới
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
+    }
+
+    try {
+        // tìm token đã lưu trong csdl
+        const tokenRecord = await Token.findOne({ token });
+        if (!tokenRecord || tokenRecord.expiresAt < Date.now()) {
+            if (tokenRecord) await tokenRecord.remove();
+            return res.status(400).send("Invalid or expired token");
+        }
+
+        // tìm user dựa trên userId được lưu trong tokenRecord
+        const user = await User.findById(tokenRecord.userId);
+        if (!user) {
+            return res.status(400).send("User not found");
+        }
+
+        // hash mật khẩu mới và cập nhật cho user
+        user.password = bcrypt.hashSync(newPassword, 10);
+        await user.save();
+
+        // xóa token sau khi cập nhật mật khẩu thành công
+        await tokenRecord.remove();
+
+        res.send("Password has been reset successfully");
+    } catch (err) {
+        console.error("Error resetting password: ", err);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+// xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
+export const googleAuth = (req, res, next) => {
+    // gọi hàm authenticate của passport với strategy là "google"
+    passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
+        try {    
+            // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
+            if (err || !user) {
+                return res.status(400).send("Authentication failed");
+            }
+            // lấy thông tin cần thiết từ user
+            const { id, displayName, emails } = user;
+            
+            // kiểm tra xem user đã tồn tại trong csdl chưa
+            let existingUser = await User.findOne({ GoogleId: id });
+            if (!existingUser) {
+                existingUser = new User({
+                    username: displayName,
+                    email: emails[0].value,
+                    GoogleId: id
+                });
+                await existingUser.save();
+            }
+
+            // res.json({
+            //     user: {
+            //         _id: existingUser._id,
+            //         username: existingUser.username,
+            //         email: existingUser.email,
+            //         GoogleId: existingUser.GoogleId
+            //     }
+            // });
+
+            // tạo token
+            const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
+            // Set cookie
+            res.cookie('jwt', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+                maxAge: 60 * 60 * 1000
+            });
+            res.redirect(`https://web-project-flame-five.vercel.app/chat`);
+        } catch (error) {
+            console.error("Error in Google authentication:", error.message);
+            return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
+        }
+    })(req, res, next);
+};
+
+// xử lý đăng nhập bằng Facebook OAuth thông qua Passport.js.
+export const facebookAuth = (req, res, next) => {
+    passport.authenticate("facebook", { failureRedirect: "/login", session: false }, async (err, user) => {
+        if (err || !user) {
+            return res.status(400).send("Authentication failed");
+        }
+
+        // lấy thông tin cần thiết từ user
+        const { id, displayName } = user;
+                // kiểm tra xem user đã tồn tại trong csdl chưa
+                let existingUserFB = await User.findOne({ FacebookId: id });
+                if (!existingUserFB) {
+                    existingUserFB = new User({
+                        username: displayName,
+                        FacebookId: id
+                    });
+                    await existingUserFB.save();
+                }
+        
+                // tạo token
+                const tokenFB = jwt.sign({ _id: existingUserFB._id }, JWT_SECRET, { expiresIn: "1h" });
+                res.cookie('jwt', tokenFB, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                    maxAge: 60 * 60 * 1000
+                });
+                res.redirect(`https://web-project-flame-five.vercel.app/chat`);
+            })(req, res, next);
+        };
+        
+```
+
+### backend\src\controllers\message.controller.js
+```js
+// File: controllers/message.controller.js
+import Celeb from '../models/celebs.model.js';
+import Chat from '../models/chat.model.js';
+import User from '../models/users.model.js';
+import axios from 'axios';
+
+//hiển thị người nổi tiếng ở sidebar bên trái
+export const getCelebsForSidebar = async (req, res) => {
+  try {// tìm tất cả Celeb có trong collection và hiển thị thông báo thành công
+    const allCelebs = await Celeb.find({}); // select * from Celeb
+
+    res.status(200).json(allCelebs);
+  } catch (error) {
+    console.error("Error in getting getCelebsForSidebar:", error.message);
+    next(error);
+  }
+};
+
+//khi mở một đoạn chat có sẵn, hiện ra lịch sử tin nhắn
+export const getMessages = async (req, res) => {
+  try {// lấy ID user và Celeb được chọn, và tìm tất cả tin nhắn do hai bên gửi và nhận
+    const celebId = req.params.id;
+    const userId = req.user._id;
+
+    const messages = await Chat.find({
+      $or: [
+        { sender: userId, receiver: celebId },
+        { sender: celebId, receiver: userId }
+      ]
+    }).sort({ createdAt: 1 }).populate('sender', 'username avatar');;
+
+    res.status(200).json(messages);
+  } catch (error)  {
+    console.error("Error in getMessages:", error.message);
+    next(error);
+  }
+};
+
+// Xử lý gửi tin nhắn: lưu message của user, gọi AI và lưu message trả lời
+export const sendMessage = async (req, res) => {
+  try {
+    
+    const celebId = req.params.id;
+
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    const messageText = req.body.message;
+
+    const userMessage = await Chat.create({
+      message: messageText,
+      sender: userId,
+      receiver: celebId, // CelebId được suy ra từ receiver
+      userType: user.GoogleId ? 'google_user' : 'user',
+      timestamp: Date.now()
+    });
+
+    // Phát tin nhắn mới tới room celebId để frontend nhận ngay
+    const io = req.app.get('io');
+    io.to(`user_${userId}`).emit('ai_typing_start');
+    io.to(`user_${userId}`).emit('newMessage', {
+      ...userMessage.toObject(),
+      userType: user.GoogleId ? 'google_user' : 'user',
+      isUserMessage: true
+    });
+    // 2) Lấy prompt của celeb và gọi AI trả lời
+    const celeb = await Celeb.findById(celebId);
+    const openrouterResp = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "google/gemma-3-1b-it:free",
+        messages: [
+          { role: 'system', content: celeb.prompt },
+          { role: 'user',   content: messageText }
+        ],
+        temperature: 0.7
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "HTTP-Referer": "http://localhost:3000",
+          "X-Title": "AI Celeb Chat App"
+        }
+      }
+    ).catch(error => {
+      console.error("OpenRouter API error:", error.response?.data);
+      throw error;
+    });
+
+    const aiText = openrouterResp.data.choices[0].message.content.trim();
+
+    // 3) Lưu tin nhắn bot vào DB với receiver là userId
+    const aiMessage = await Chat.create({
+      message: aiText,
+      sender: celebId,
+      receiver: userId,
+      userType: 'ai'
+    }).then(msg => msg.populate('sender')); // Populate thông tin người gửi
+    //Populate trong Mongoose là một phương thức giúp tự động thay thế các trường tham chiếu (references) trong MongoDB bằng các documents thực tế từ collection được tham chiếu. Điều này giúp truy vấn và làm việc với dữ liệu liên quan trở nên dễ dàng và hiệu quả hơn.
+    // Gửi tin nhắn AI qua socket
+
+    io.to(`user_${userId}`).emit('newMessage', aiMessage);
+    io.to(`user_${userId}`).emit('ai_typing_end');
+
+    res.status(201).json({ userMessage, aiMessage });
+  } catch (error) {
+    console.error("Message handling error:", error);
+    
+    // Send typing end event in case of error
+    const io = req.app.get('io');
+    io.to(`user_${req.user._id}`).emit('ai_typing_end');
+    next(error);
+  }
+};
+```
+
+### backend\src\middleware\auth.middleware.js
+```js
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+// xác thực JWT token
+// export const verifyToken = async (req, res) => {
+//     const token = req.header("authorization"); // lấy token từ header
+
+//     // nếu không có token thì trả về lỗi
+//     if (!token) {
+//         res.status(403).send("Token not provided");
+//         return;
+//     }
+    
+//     // kiểm tra token
+//     try {
+//         const verified = jwt.verify(token, process.env.JWT_SECRET);
+//         req.user = verified;
+//         next();
+//     } catch (err) {
+//         res.status(401).send("Invalid token");
+//     }
+// };
+
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
+// xác thực JWT token
+export const verifyToken = async (req, res, next) => {
+    try {
+        const token = req.cookies.jwt;
+    
+        if (!token) {
+          return res.status(401).json({ error: 'No token' });
+        }
+    
+        // kiểm tra token
+        const decoded = jwt.verify(token, JWT_SECRET);
+        // Lưu user info vào req
+        req.user = decoded;
+        //console.log(req.user);
+        next();
+      } catch (err) {
+        console.error(err);
+        return res.status(403).json({ error: 'Invalid token' });
+      }
+};
+```
+
+### backend\src\models\celebs.model.js
+```js
+import mongoose from 'mongoose';
+
+const celebSchema = new mongoose.Schema({
+    celebName: {
+        type: String,
+        required: true
+    },
+    profilePic: {
+        type: String,
+        default: ""
+    },
+    prompt: {
+        type: String,
+        required: true,
+        default: "Bạn là một trợ lý AI, trả lời ngắn gọn và lịch sự." 
+    },
+}, { timestamps: true });
+
+const Celeb = mongoose.model("Celeb", celebSchema);
+
+export default Celeb;
+```
+
+### backend\src\models\chat.model.js
+```js
+import mongoose from 'mongoose';
+
+const chatSchema = new mongoose.Schema({
+  message: {
+    type: String,
+    required: true
+},
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userType: {
+    type: String,
+    enum: ['user', 'google_user', 'ai'],
+    required: true
+  },
+  createdAt: { type: Date, default: Date.now }
+});
+
+export default mongoose.model('Chat', chatSchema);
+```
+
+### backend\src\models\token.model.js
+```js
+import mongoose from "mongoose";
+
+const tokenSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    token: {
+        type: String,
+        required: true
+    },
+    expireAt: {
+        type: Date,
+        default: Date.now,
+        index: {expires: "1d"}
+    }
+}, {timestamps: true});
+
+const Token = new mongoose.model("Token", tokenSchema);
+export default Token; //export Token để có thể sử dụng ở các file khác
+```
+
+### backend\src\models\users.model.js
+```js
+//định nghĩa collection users
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: function(){
+            return !this.GoogleId && !this.FacebookId;
+        },
+
+        minlength: [8, 'Mật khẩu cần phải có ít nhất 8 ký tự!'],
+    },
+    email: {
+        type: String,
+        required: function(){
+            return !this.GoogleId && !this.FacebookId;
+        },
+        unique: true,
+        // match: [/.+\@.+\..+/, 'Plesae fill a valid email address']
+    },
+    GoogleId: {
+        type: String // Không required
+    },
+      FacebookId: {
+        type: String // Không required
+    },
+    profilePic: {
+        type: String,
+        default: ""
+    }
+}, { timestamps: true } 
+);
+
+const User = new mongoose.model("User", userSchema);
+
+export default User;
+```
+
+### backend\src\routes\auth.route.js
+```js
+// nơi này để xử lí thông tin đăng kí, đăng nhập và đăng xuất
+import express from 'express';
+import passport from 'passport';
+import {
+    signup,
+    login,
+    logout,
+    forgotPassword,
+    resetPassword,
+    googleAuth,
+    facebookAuth,
+    checkAuth
+} from '../controllers/auth.controller.js';
+import { verifyToken } from '../middleware/auth.middleware.js';
+
+const router = express.Router();
+
+router.post("/signup", signup);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
+router.get("/check", verifyToken, checkAuth);
+
+// Đăng nhập với Google
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/google/callback", googleAuth);
+
+// Đăng nhập với Facebook
+router.get("/facebook", passport.authenticate("facebook"));
+router.get("/facebook/callback", facebookAuth);
+
+export default router;
+
+```
+
+### backend\src\routes\message.route.js
+```js
+// File: routes/message.route.js
+import express from 'express';
+import { verifyToken } from '../middleware/auth.middleware.js';
+import {
+    getCelebsForSidebar,
+    getMessages,
+    sendMessage
+} from '../controllers/message.controller.js';
+
+const router = express.Router();
+router.post('/send', async (req, res) => {
+    try {
+      const { message, receiver } = req.body;
+      
+      const newMessage = new Chat({
+        message,
+        sender: req.user._id, // Lấy từ middleware xác thực
+        receiver
+      });
+  
+      const savedMessage = await newMessage.save();
+      
+      // Gửi real-time
+      const io = req.app.get('io');
+      io.to(userSocketMap[receiver]).emit('receiveMessage', savedMessage);
+      
+      res.status(201).json(savedMessage);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+router.get("/", verifyToken, getCelebsForSidebar); //hiện danh sách người nổi tiếng ở sidebar
+router.get("/get/:id", verifyToken, getMessages);//hiện tin nhắn tại chat có sẵn
+router.post("/send/:id", verifyToken, sendMessage);//gửi tin nhắn tại đoạn chat cụ thể
+
+export default router;
+
+```
+
+### backend\src\routes\vnpay.route.js
+```js
+import express from 'express';
+import { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat } from 'vnpay';
+
+const router = express.Router();
+
+router.post('/create-qr', async (req, res) => {
+    const vnpay = new VNPay({
+        tmnCode: 'SNBUG3T2',
+        secureSecret: '1VIULX38MI6P6YB5P04A8WRJVFCBZRQ4',
+        vnpayHost: 'https://sandbox.vnpayment.vn',
+        testMode: true,
+        hashAlgorithm: 'sha512',
+        ignoreLogger: ignoreLogger,
+    });
+
+    const vnpayReponse = await vnpay.buildPaymentUrl({
+        vnp_Amount: 500000,
+        vnp_IpAddr: req.ip || '127.0.0.1',
+        vnp_TxnRef: Date.now().toString(), // Mã giao dịch duy nhất
+        vnp_OrderInfo: '123456',
+        vnp_OrderType: ProductCode.Other,
+        vnp_ReturnUrl: "https://celebritychatbot.up.railway.app/api/vnpay/check-payment", /*"http://localhost:3001/api/vnpay/check-payment",*/
+        vnp_Locale: VnpLocale.VN,
+        vnp_CreateDate: dateFormat(new Date()),
+        vnp_ExpireDate: dateFormat(new Date(new Date().getTime() + 60 * 60 * 1000)),
+    });
+
+    return res.status(201).json(vnpayReponse);
+});
+
+router.get('/check-payment', async (req, res) => {
+    //logic xử lý dữ liệu đơn hàng
+    console.log(req.query);
+
+    const vnp_Params = req.query;
+    const vnpay = new VNPay({
+        tmnCode: 'SNBUG3T2',
+        secureSecret: '1VIULX38MI6P6YB5P04A8WRJVFCBZRQ4',
+        vnpayHost: 'https://sandbox.vnpayment.vn',
+        testMode: true,
+    });
+
+    try {
+        // Verify the payment response
+        const isValidSignature = vnpay.verifySignature(vnp_Params);
+
+        if (isValidSignature) {
+            const vnp_ResponseCode = vnp_Params['vnp_ResponseCode'];
+            
+            if (vnp_ResponseCode === '00') {
+                // Payment successful - redirect to frontend chat page with success notif
+                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
+            } else {
+                // Payment failed - redirect with error
+                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=failed');
+            }
+        } else {
+            // Invalid signature - redirect with error
+            return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=invalid');
+        }
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=error');
+    }
+});
+
+export default router;
+
+```
+
+### frontend\eslint.config.js
+```js
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+
+export default [
+  { ignores: ['dist'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+]
+
+```
+
+### frontend\vite.config.js
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+
+```
+
+### frontend\src\App.jsx
+```jsx
+import Home from "./page/web_page/Home.jsx";
+import Login from "./page/login/login.jsx";
+import Chat from "./page/chat/chat.jsx";
+
+import { Routes, Route } from "react-router-dom";
+function App() {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth/login" element={<Login />} />
+        <Route path="/chat" element={<Chat />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
+
+```
+
+### frontend\src\Appthamkhao.jsx
+```jsx
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import LoginApp from "./page/loginApp"; // giao diện login;
+import ChatApp from "./page/chatApp"; // giao diện chat box;
+
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/auth/login"
+          element={<LoginApp onLoginSuccess={handleLoginSuccess} />}
+        />
+        {/* Nếu chưa đăng nhập, cố gắng truy cập /chat sẽ chuyển hướng về /login */}
+        <Route
+          path="/chat"
+          element={
+            isAuthenticated ? <ChatApp /> : <Navigate to="/auth/login" />
+          }
+        />
+        <Route path="*" element={<Navigate to="/auth/login" />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+
+```
+
+### frontend\src\checkrestpass.jsx
+```jsx
+import page_reset from "./page/login/forgot_password";
+import { Routes, Route } from "react-router-dom";
+function App() {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<page_reset />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
+
+```
+
+### frontend\src\main.jsx
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App.jsx";
+import React from "react";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Router>
+      <App />
+    </Router>
+  </StrictMode>
+);
+
+```
+
+### frontend\src\reportWebVitals.js
+```js
+const reportWebVitals = (onPerfEntry) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import("web-vitals").then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+};
+
+export default reportWebVitals;
+
+```
+
+### frontend\src\setupTests.js
+```js
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import "@testing-library/jest-dom";
+
+```
+
+### frontend\src\components\chat\alertdemo.jsx
+```jsx
+import React from 'react';
+
+const AlertDemo = () => {
+  return (
+    // Đây là một thông báo demo, hiển thị ở dưới cùng của chatbox.
+    <div className="alert-demo" style={{ fontSize: '0.85rem', textAlign: 'center', marginTop: '0.5rem', color: '#555' }}>
+      Đây là phiên bản thử nghiệm, các tính năng có thể không hoạt động như mong đợi.
+    </div>
+  );
+};
+
+export default AlertDemo;
+
+```
+
+### frontend\src\components\chat\bodysidebar.jsx
+```jsx
+import React, { useState } from 'react';
+import Celebs from './celebs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+
+// Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
+const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
+  // State để lưu giá trị tìm kiếm
+  const [search, setSearch] = useState('');
+
+  // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
+  const filtered = celebs.filter((c) =>
+    c.celebName.toLowerCase().includes(search.toLowerCase())
+  );
+  return (
+    <div className="sidebar-body">
+      <div className="search-bar">
+        {/*Thanh tìm kiếm*/}
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+        <input
+        /* Input tìm kiếm */
+          className="search-input"
+          type="text"
+          placeholder="Tìm kiếm nhân vật"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      {/*Danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm*/}
+      <Celebs
+        celebs={filtered}
+        useSelectedCeleb={useSelectedCeleb}
+        handleSelect={handleSelect}
+      />
+    </div>
+  );
+};
+
+export default BodySidebar;
+
+```
+
+### frontend\src\components\chat\celebs.jsx
+```jsx
+import React from 'react';
+
+// Component để hiển thị danh sách các nhân vật nổi tiếng (celebs) trong sidebar của chatbox.
+const Celebs = ({ celebs, selectedCeleb, handleSelect }) => {
+  return (
+    <div className="celebs">
+      {/* Map các nhân vật nổi tiếng (celebs) và hiển thị chúng */}
+      {celebs.map((celeb) => (
+        <div
+          key={celeb._id}
+          // Nếu celeb được chọn thì thêm class 'selected' để xác định trạng thái được chọn
+          className={`celebs-item ${selectedCeleb?._id === celeb._id ? 'selected' : ''}`}
+          // Khi nhấn vào celeb, gọi hàm handleSelect để xử lý sự kiện chọn celeb
+          onClick={() => handleSelect(celeb)}
+        >
+          {/*Hiển thị ảnh đại diện và tên của celeb*/}
+          <img src={celeb.profilePic} alt={celeb.celebName} className="celebs-avatar" />
+          <span className="celebs-name">{celeb.celebName}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Celebs;
+
+```
+
+### frontend\src\components\chat\chatbox.jsx
+```jsx
+import React from 'react';
+import HeaderChatbox from './headerchatbox';
+import HistoryChatbox from './historychatbox';
+import TypeChatbox from './typechatbox';
+import AlertDemo from './alertdemo';
+import { useChatStore } from '../../store/useChatStore.js';
+import { useAuthStore } from '../../store/useAuthStore.js';
+import '../../style/chat/chatbox.css';
+
+const Chatbox = () => {
+  const {useSelectedCeleb} = useChatStore();
+  return (
+    <div className="chatbox">
+      <HeaderChatbox selectedCeleb={useSelectedCeleb} />
+      <HistoryChatbox />
+      <TypeChatbox />
+      <AlertDemo />
+    </div>
+  );
+};
+
+export default Chatbox;
+
+```
+
+### frontend\src\components\chat\footersidebar.jsx
+```jsx
+import React from 'react';
+
+// component để hiển thị thông tin ở footer của sidebar
+const FooterSidebar = () => {
+  return (
+    <div className="sidebar-footer">
+      <p>Developed by group 4</p>
+    </div>
+  );
+};
+
+export default FooterSidebar;
+
+```
+
+### frontend\src\components\chat\headerchatbox.jsx
+```jsx
+import React from 'react';
+
+// component này đại diện cho header của chatbox, bao gồm ảnh đại diện và tên của người nổi tiếng được chọn
+const HeaderChatbox = ({ selectedCeleb }) => {
+  return (
+    <div className="chatbox-header">
+      {selectedCeleb ? (
+        <>
+          <img
+            src={selectedCeleb.profilePic}
+            alt={selectedCeleb.name}
+            className="chatbox-avatar"
+          />
+          <span className="chatbox-name">{selectedCeleb.celebName}</span>
+        </>
+      ) : (
+        <span className="placeholder-text">Chào mừng bạn!</span>
+      )}
+    </div>
+  );
+};
+
+export default HeaderChatbox;
+
+```
+
+### frontend\src\components\chat\headersidebar.jsx
+```jsx
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+
+// component này đại diện cho header của sidebar, bao gồm tiêu đề và nút thu gọn/ mở rộng sidebar
+const HeaderSidebar = ({ isCollapsed, onToggle }) => {
+  return (
+    <div className="sidebar-header">
+      <h3 className="sidebar-title">AI Chatbot</h3>
+      {/* Button để thu gọn hoặc mở rộng sidebar */}
+      <button className="sidebar-toggle-btn" onClick={onToggle}>
+        {/* Hiển thị button tương ứng với trạng thái của sidebar (đang thu gọn hoặc mở rộng) */}
+        <FontAwesomeIcon icon={isCollapsed ? faEllipsisVertical : faBars} />
+      </button>
+    </div>
+  );
+};
+
+export default HeaderSidebar;
+
+```
+
+### frontend\src\components\chat\historychatbox.jsx
+```jsx
+import React, { useEffect, useRef,useState } from 'react';
+import '../../style/chat/chatbox.css';
+import { useAuthStore } from "../../store/useAuthStore.js";
+import { useChatStore } from "../../store/useChatStore.js";
+
+const HistoryChatbox = () => {
+  const [isAITyping, setIsAITyping] = useState(false); // Thêm state để theo dõi trạng thái AI
+  const {
+    messages,
+    getMessages,
+    useSelectedCeleb,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
+  const { authUser, socket } = useAuthStore();
+  const bottomRef = useRef(null);
+
+  // Xử lý scroll xuống dưới cùng khi có tin nhắn mới
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  //đưa user và celeb hiện tại vào room chat
+  // và lấy tin nhắn giữa hai bên
+  useEffect(() => {
+    if (!socket || !useSelectedCeleb || !authUser?._id) return;
+    const userRoom = `user_${authUser._id}`;
+  
+    socket.emit('joinRoom', userRoom);
+    getMessages(useSelectedCeleb._id);
+  
+    return () => {
+      socket.emit('leaveRoom', userRoom);
+    };
+  }, [socket, authUser._id, useSelectedCeleb]);
+  //Đăng kí sự kiện cho socket để nhận tin nhắn mới
+  // và hủy đăng kí khi component bị hủy
+  useEffect(() => {
+    if (!socket) return;
+    subscribeToMessages();
+    return () => unsubscribeFromMessages();
+  }, [socket]);
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleError = (error) => {
+      console.error('Socket error:', error);
+      setIsAITyping(false); // Reset typing state on error
+    };
+
+    //error handling
+    socket.on('error', handleError);
+    // Lắng nghe sự kiện AI đang trả lời
+    socket.on('ai_typing_start', () => {
+      setIsAITyping(true);
+    });
+
+    // Lắng nghe sự kiện AI đã trả lời xong
+    socket.on('ai_typing_end', () => {
+      setIsAITyping(false);
+    });
+
+    return () => {
+      socket.off('error', handleError);
+      socket.off('ai_typing_start');
+      socket.off('ai_typing_end');
+    };
+  }, [socket]);
+  //Khi có tin nhắn mới, tự động cuộn xuống dưới cùng
+  // và cập nhật lại danh sách tin nhắn
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  return (
+    <div className="historychatbox">
+      {messages.length > 0 ? (
+        messages.map((message) => {
+          const senderId = message.sender?._id || message.sender;
+          const isUserMessage = message?.userType && message.userType !== 'ai';
+          console.log('senderId:', senderId, 'celebrityId:', useSelectedCeleb?._id);
+          return (
+            <div
+              className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
+              key={message._id || `temp-${message.timestamp}`}
+            >
+              <p>{message.message}</p>
+              <small className="message-debug">
+                {isUserMessage ? 'User' : 'AI'} - Type: {message.userType}
+              </small>
+            </div>
+          );
+        })
+      ) : (
+        <div className="empty-chat">
+          <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
+        </div>
+      )}
+      <div ref={bottomRef} />
+      {isAITyping && (
+        <div className="ai-typing-indicator">
+          <span>{useSelectedCeleb?.celebName} đang trả lời</span>
+          <div className="typing-dots">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default HistoryChatbox;
+```
+
+### frontend\src\components\chat\sidebar.jsx
+```jsx
+import React, { useState } from 'react';
+import BodySidebar from './bodysidebar';
+import FooterSidebar from './footersidebar';
+import '../../style/chat/sidebar.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+
+
+// component này đại diện cho sidebar, bao gồm header, nội dung và footer
+const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar}) => {
+  // State để lưu trạng thái thu gọn hoặc mở rộng sidebar
+  const [collapsed, setCollapsed] = useState(false);
+  // Hàm để thay đổi trạng thái thu gọn hoặc mở rộng sidebar
+  const toggleSidebar = () => setCollapsed(!collapsed);
+  return (
+    <div className={`sidebar-wrapper ${isCollapsed ? 'collapsed' : ''}`}>
+      <div className="sidebar-header">
+        {/* Tiêu đề của sidebar */}
+        <h2 className="sidebar-title">AI Chatbot</h2>
+        {/* Button giờ sẽ gọi hàm toggleSidebar từ props của cha */}
+        <button className="sidebar-toggle-btn" onClick={toggleSidebar}>
+          {/* Thay đổi icon dựa trên prop isCollapsed */}
+          <FontAwesomeIcon icon={isCollapsed ? faBars : faEllipsisVertical} />
+        </button>
+      </div>
+      {/* Nếu sidebar không bị thu gọn thì hiển thị nội dung bên trong */}
+      {!isCollapsed && (
+        <div className="sidebar-content">
+          {/* Phần giữa của sidebar */}
+          <BodySidebar
+            celebs={celebs}
+            selectedCeleb={selectedCeleb}
+            handleSelect={handleSelect}
+          />
+          {/* Phần dưới của sidebar */}
+          <FooterSidebar />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Sidebar;
+
+```
+
+### frontend\src\components\chat\typechatbox.jsx
+```jsx
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { useChatStore } from "../../store/useChatStore.js";
+
+const TypeChatbox = () => {
+  const [message, setMessage] = useState('');
+  const { sendMessage } = useChatStore();
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+    setMessage("");
+    try {
+      await sendMessage({
+        message: message.trim(),
+      });
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSend(e);
+    }
+  };
+
+  return (
+    <div className="typechatbox">
+      <button className='button-text-to-speech' >
+        <FontAwesomeIcon icon="fa-solid fa-circle-play" />
+      </button>
+
+      <input
+        className="typechatbox-input"
+        placeholder="Nhập tin nhắn..."
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown} 
+      />
+      <button
+        className="typechatbox-send"
+        onClick={handleSend}
+        disabled={!message.trim()}
+      >
+        <FontAwesomeIcon icon={faPaperPlane} />
+      </button>
+    </div>
+  );
+};
+
+export default TypeChatbox;
+
+```
+
+### frontend\src\components\login\Form4all.jsx
+```jsx
+
+```
+
+### frontend\src\components\login\Input_Fields.jsx
+```jsx
+import { useState } from "react";
+
+// ham nay dinh nghia cac fields co trong form
+export default function Input_Field({ icon, type, placeholder, onChange }) {
+  const [isPasswordShown, setIsPasswordShown] = useState(false);
+  // bien nay duoc khai bao de kiem tra xem password co duoc hien hay an
+
+  return (
+    <div className="input-field">
+      <i className="material-symbols-rounded">{icon}</i>
+      <input // xu li input dau vao
+        type={isPasswordShown && type === "password" ? "text" : type}
+        placeholder={placeholder}
+        onChange={onChange}
+        required
+        {...(type === "email"
+          ? {
+              // format nhap email
+              pattern: "^[a-zA-Z0-9._%+-]+@gmail.com$",
+            }
+          : type === "password"
+          ? {
+              minLength: 8,
+            }
+          : {})}
+      />
+
+      {type === "password" && (
+        <i
+          onClick={() => setIsPasswordShown((prev) => !prev)}
+          className="material-symbols-rounded eye-icon"
+          style={{ cursor: "pointer" }}
+        >
+          {isPasswordShown ? "visibility" : "visibility_off"}
+        </i>
+      )}
+    </div>
+  );
+}
+
+```
+
+### frontend\src\components\web_page\container-button.jsx
+```jsx
+import "../../style/web_page/ContainerButton.css";
+import { Link } from "react-router-dom";
+
+function ContainerButton() {
+  return (
+    <div className="container-button">
+      <Link className="button-part" to="/auth/login">
+        <h3> Bắt đầu ngay </h3>
+        <p> demo </p>
+      </Link>
+      <div className="button-part">
+        <h3> Hướng dẫn sử dụng </h3>
+        <p> demo </p>
+      </div>
+    </div>
+  );
+}
+export default ContainerButton;
+
+```
+
+### frontend\src\components\web_page\footer.jsx
+```jsx
+import React from "react";
+import "../../style/web_page/footer.css";
+
+const footer = () => {
+  const currentYear = new Date().getFullYear();
+  {
+    /* Chưa link bất cứ trang nào */
+  }
+
+  return (
+    <footer className="footer">
+      <div className="footer-content">
+        <div className="footer-section">
+          <h3>About Us</h3>
+          <ul>
+            <li>
+              <a href="/about">Our Story</a>
+            </li>
+            <li>
+              <a href="/team">Team</a>
+            </li>
+            <li>
+              <a href="/careers">Careers</a>
+            </li>
+            <li>
+              <a href="mailto:ndtnetdautruong@gmail.com">Contact: ndtnetdautruong@gmail.com</a>
+
+            </li>
+          </ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>Services</h3>
+          <ul>
+            <li>
+              <a href="/services">Our Services</a>
+            </li>
+            <li>
+              <a href="/pricing">Pricing</a>
+            </li>
+            <li>
+              <a href="/support">Support</a>
+            </li>
+            <li>
+              <a href="/faq">FAQ</a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="footer-section">
+          <h3>Legal</h3>
+          <ul>
+            <li>
+              <a href="/privacy">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/terms">Terms of Service</a>
+            </li>
+            <li>
+              <a href="/cookies">Cookie Policy</a>
+            </li>
+            <li>
+              <a href="/disclaimer">Disclaimer</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <p>&copy; {currentYear} Group 4 NT208.P22.ANTT. All rights reserved.</p>
+      </div>
+    </footer>
+  );
+};
+
+export default footer;
+
+```
+
+### frontend\src\components\web_page\navbar.jsx
+```jsx
+import { useState, useEffect } from "react";
+import "../../style/web_page/navbar.css";
+import { Link } from "react-router-dom";
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
+      <div className="logo-text">AI ChatBot</div>
+      <div className="nav-links">
+        <Link to="/auth/login" className="api-link">
+          Login↗
+        </Link>
+      </div>
+    </nav>
+  );
+};
+export default Navbar;
+
+```
+
+### frontend\src\components\web_page\tittle.jsx
+```jsx
+//Tieu de
+import "../../style/web_page/tittle.css";
+function title() {
+  return (
+    <section className="Tittle-section">
+      <h1 className="MainTittle">AI ChatBot</h1>
+      <h2 className="debcribe">Trò chuyện cùng các Idol</h2>
+    </section>
+  );
+}
+export default title;
+
+```
+
+### frontend\src\context\CuThamKhao\SelectedAvatarContext.js
+```js
+/* Import các hàm cần thiết từ react */
+import React, { createContext, useContext, useState } from "react";
+/* Tạo context để chia sẻ dữ liệu "SelectedAvatar" (avatar của Celeb) */
+const SelectedAvatarContext = createContext();
+/* Provider bọc quanh app để cung cấp selected Avatar cho mọi component thành phần */
+export const SelectedAvatarProvider = ({ children }) => {
+  /* Tạo state để lưu avatar được chọn */
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  return (
+    /* Truyền state và hàm cập nhật xuống các components thành phần qua context */
+    <SelectedAvatarContext.Provider
+      value={{ selectedAvatar, setSelectedAvatar }}
+    >
+      {children}
+    </SelectedAvatarContext.Provider>
+  );
+};
+
+/* Custom hook để lấy selectedAvatar và setSelectedAvatar dễ dàng */
+export const useSelectedAvatar = () => useContext(SelectedAvatarContext);
+
+```
+
+### frontend\src\context\CuThamKhao\SelectedCelebContext.js
+```js
+import React, { createContext, useContext, useState } from "react";
+
+/* Tạo context để chia sẻ dữ liệu SelectedCeleb (celeb được chọn) */
+const SelectedCelebContext = createContext();
+/* Tạo provider để cung cấp selectedCeleb và setSelectedCeleb trong các components thành phần */
+export const SelectedCelebProvider = ({ children }) => {
+  /* tạo state để lưu celeb được chọn */
+  const [selectedCeleb, setSelectedCeleb] = useState(null);
+  return (
+    /* Truyền state xuống các components thành phần qua context */
+    <SelectedCelebContext.Provider value={{ selectedCeleb, setSelectedCeleb }}>
+      {children}
+    </SelectedCelebContext.Provider>
+  );
+};
+/* Custom hook để lấy state dễ dàng hơn */
+export const useSelectedCeleb = () => useContext(SelectedCelebContext);
+
+```
+
+### frontend\src\context\CuThamKhao\UsernameContext.js
+```js
+import React, { createContext, useContext, useState } from "react";
+/* Tạo context để chia sẻ dữ liệu username */
+const usernameContext = createContext();
+/* Tạo provider để cung cấp username cho mọi components thành phần */
+export const UsernameProvider = ({ children }) => {
+  /* Tạo state để lưu username người dùng */
+  //const loggedUser = authUser.Username;
+  const [username, setUsername] =
+    useState(""); /* Thay username mặc định bằng user name người dùng ở đây */
+  return (
+    /* Truyền xuống các components thành phần qua context */
+    <usernameContext.Provider value={{ username, setUsername }}>
+      {children}
+    </usernameContext.Provider>
+  );
+};
+/* Custom hook để lấy được thông tin ở các components dễ hơn */
+export const useUsername = () => {
+  return useContext(usernameContext);
+};
+
+```
+
+### frontend\src\feature\login\login.js
+```js
+// const sign_in_btn = document.querySelector("#sign-in-btn");
+// const sign_up_btn = document.querySelector("#sign-up-btn");
+// const container = document.querySelector(".container");
+
+// sign_up_btn.addEventListener("click", () => {
+//   container.classList.add("sign-up-mode");
+// });
+
+// sign_in_btn.addEventListener("click", () => {
+//   container.classList.remove("sign-up-mode");
+// });
+
+export function initLoginHandlers() {
+  const sign_in_btn = document.querySelector("#sign-in-btn");
+  const sign_up_btn = document.querySelector("#sign-up-btn");
+  const container = document.querySelector(".container");
+
+  if (sign_up_btn && container) {
+    sign_up_btn.addEventListener("click", () => {
+      container.classList.add("sign-up-mode");
+    });
+  } else {
+    console.warn("Không tìm thấy nút đăng ký hoặc container.");
+  }
+
+  if (sign_in_btn && container) {
+    sign_in_btn.addEventListener("click", () => {
+      container.classList.remove("sign-up-mode");
+    });
+  } else {
+    console.warn("Không tìm thấy nút đăng nhập hoặc container.");
+  }
+}
+
+```
+
+### frontend\src\page\chat\chat.jsx
+```jsx
+import React, { useEffect, useState } from "react";
+import "../../style/chat/chat.css";
+import "../../style/chat/chatbox.css";
+import "../../style/chat/sidebar.css";
+
+import Sidebar from "../../components/chat/sidebar";
+import Chatbox from "../../components/chat/chatbox";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useChatStore } from "../../store/useChatStore";
+
+document.title = "AI Chatbot";
+
+const Chat = () => {
+  const { connectSocket, socket, authUser } = useAuthStore();      // kết nối socket
+  const { celebs, selectedCeleb, setSelectedCeleb, getCelebs } = useChatStore();
+  const [isSocketReady, setIsSocketReady] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    getCelebs();                                                   // lấy danh sách celeb
+  }, [getCelebs]);
+
+  useEffect(() => {
+    if (authUser && (!socket || !socket.connected)) {
+      connectSocket();                                             // khởi tạo socket khi có authUser
+    }
+  }, [authUser, connectSocket, socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("connect", () => setIsSocketReady(true));
+    socket.on("disconnect", () => setIsSocketReady(false));
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, [socket]);
+
+  const handleSelect = (celeb) => setSelectedCeleb(celeb);          // chọn celeb
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  return (
+    <div className="chat-container">
+      <Sidebar
+        celebs={celebs}
+        selectedCeleb={selectedCeleb}
+        handleSelect={handleSelect}
+        isCollapsed={isSidebarCollapsed} // Truyền trạng thái
+        toggleSidebar={toggleSidebar}   // Truyền hàm toggle
+      />
+        <Chatbox isSocketReady={isSocketReady} />
+    </div>
+  );
+};
+
+export default Chat;
+```
+
+### frontend\src\page\chat\filechatcuthamkhao.jsx
+```jsx
+import Sidebar from "../components/Chat/Sidebar";
+import Chatbox from "../components/Chat/Chatbox";
+import { UsernameProvider } from "../contexts/UsernameContext";
+import "../styles/chatBox/App.css";
+import { SelectedCelebProvider } from "../contexts/SelectedCelebContext";
+import { SelectedAvatarProvider } from "../contexts/SelectedAvatarContext";
+function App() {
+  return (
+    <UsernameProvider>
+      <SelectedCelebProvider>
+        <SelectedAvatarProvider>
+          <div className="app">
+            <Sidebar />
+            <Chatbox />
+          </div>
+        </SelectedAvatarProvider>
+      </SelectedCelebProvider>
+    </UsernameProvider>
+  );
+}
+
+export default App;
+
+```
+
+### frontend\src\page\login\filelogincuthamkhao.jsx
+```jsx
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import InputField from "../components/login/InputField";
+import SocialLogin from "../components/login/SocialLogin";
+import "../styles/login/index.css";
+import { useAuthStore } from "../store/useAuthStore";
+
+const LoginApp = ({ onLoginSuccess }) => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const { LogIn } = useAuthStore();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Giả sử bạn có kiểm tra hợp lệ dữ liệu nhập vào (email và password) ở đây.
+    // Nếu hợp lệ:
+    const user = await LogIn(formData);
+    console.log(user);
+    if (user) {
+      onLoginSuccess();
+      navigate("/chat"); // chuyển hướng sang trang Chat
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="img-background"></div>
+
+      <div className="right-container">
+        <div className="login-bar">
+          <h2 className="form-title">Login with </h2>
+          <SocialLogin />
+          <p className="separator">
+            <span>or</span>
+          </p>
+
+          <form onSubmit={handleLogin} action="#" className="login-form">
+            <InputField
+              type="email"
+              placeholder="Email address"
+              icon="mail"
+              //hỗ trợ tính năng kiểm tra ở thời gian thực
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+            <InputField
+              type="password"
+              placeholder="Password"
+              icon="key"
+              //hỗ trợ tính năng kiểm tra ở thời gian thực
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+            />
+            <a href="#" className="forget-pass-link">
+              Forgot password?
+            </a>
+            <button className="login-button">Log In</button>
+          </form>
+
+          <p className="signup-text">
+            Don't have an account? <a href="#">Sign up now</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginApp;
+
+```
+
+### frontend\src\page\login\forgot_password.jsx
+```jsx
+import React, { useEffect } from "react";
+import "../style/login/login.css";
+import React, { useEffect } from 'react';
+import Input_Field from "../components/login/Input_Fields.jsx";
+
+function Forgot_Password() {
+  return (
+    <>
+      <div className="forms-container">
+        <div className="signin-signup"></div>
+        <form action="#" className="sign-in-form">
+          <h2 className="title">Forgot Password</h2>
+
+          {/* su dung component vao thuc te */}
+          <Input_Field
+            icon="mail"
+            type="email"
+            placeholder="Email"
+            // value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+            // onChange={(e) =>
+            //   setFormData({ ...formData, email: e.target.value })
+            // }
+          />
+        </form>
+      </div>
+    </>
+  );
+}
+
+export default Forgot_Password;
+
+```
+
+### frontend\src\page\login\login.jsx
+```jsx
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { initLoginHandlers } from "../../feature/login/login.js";
+import GoogleIcon from "../../assets/login/google.svg";
+import FacebookIcon from "../../assets/login/facebook.svg";
+import "../../style/login/login.css";
+import Input_Field from "../../components/login/Input_Fields.jsx";
+import { useAuthStore } from "../../store/useAuthStore.js";
+import { axiosInstance } from "../../lib/axios.js";
+
+const Login = () => {
+  const {LogIn, SignUp} = useAuthStore();
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    document.title = 'Login';
+  }, []);
+
+  useEffect(() => {
+    // Gọi hàm chuyển cảnh sau khi component render xong
+    initLoginHandlers();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const user = await LogIn(formData);
+    console.log(user);
+    if (user) {
+      navigate("/chat"); // chuyển hướng sang trang chat
+    }
+
+    //   // Gửi request POST đến endpoint /login của server
+    //   const response = await axiosInstance.post("/login", {
+    //     username,
+    //     password,
+    //   });
+
+    //   // Giả sử server trả về { success: true, user: {...} } khi đăng nhập thành công
+    //   if (response.data.success) {
+    //     // Lưu thông tin phiên làm việc, ví dụ: lưu vào localStorage hoặc Context
+    //     localStorage.setItem("user", JSON.stringify(response.data.user));
+    //     // Chuyển hướng đến trang chatbox hoặc trang chính của ứng dụng
+    //     navigate("/chatbox");
+    //   } else {
+    //     setError(response.data.message || "Đăng nhập thất bại!");
+    //   }
+    // } catch (err) {
+    //   setError("Có lỗi xảy ra, vui lòng thử lại!");
+    //   console.error(err);
+    // }
+  };
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    const user = await SignUp(formData);
+
+    console.log(user);
+    if (user) {
+      navigate("/auth/login");
+    }
+    // if (user) {
+    //   navigate("/chat"); // chuyển hướng sang trang chat
+    // }
+  };
+
+  return (
+    <>
+      <div className="container">
+        <div className="forms-container">
+          <div className="signin-signup">
+            <form action="#" className="sign-in-form" onSubmit={handleSubmit}>
+              <h2 className="title">Sign in</h2>
+
+              {/* su dung component vao thuc te */}
+              <Input_Field
+                icon="mail"
+                type="email"
+                placeholder="Email"
+                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+
+              <Input_Field
+                icon="key"
+                type="password"
+                placeholder="Password"
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+
+              <p className="forget-password">
+                {/* Forget password <Link to="/forgot-password">click here!</Link> */}
+              </p>
+              <input type="submit" value="Login" className="btn solid" />
+              <p className="social-text">Or sign in with social platforms</p>
+              <div className="social-media">
+                <a
+                  href="https://celebritychatbot.up.railway.app/api/auth/facebook"
+                  className="social-icon"
+                >
+                  <img
+                    src={FacebookIcon}
+                    alt="FacebookIcon"
+                    className="icon-facebook"
+                  />
+                </a>
+
+                <a href="https://celebritychatbot.up.railway.app/api/auth/google" className="social-icon">
+                  <img
+                    src={GoogleIcon}
+                    alt="GoogleIcon"
+                    className="icon-google"
+                  />
+                </a>
+              </div>
+            </form>
+
+            <form action="#" className="sign-up-form" onSubmit={handleSignUp}>
+              <h2 className="title">Sign up</h2>
+
+              <Input_Field
+                icon="account_circle"
+                type="text"
+                placeholder="Username"
+                value={formData.username} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+              />
+
+              <Input_Field
+                icon="mail"
+                type="email"
+                placeholder="Email"
+                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+
+              <Input_Field
+                icon="key"
+                type="password"
+                placeholder="Password"
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+
+              <Input_Field
+                icon="verified_user"
+                type="password"
+                placeholder="Confirm Password"
+                value={formData.password} // doan nay can BE check lai
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+              />
+
+              <input type="submit" className="btn" value="Sign up" />
+            </form>
+          </div>
+        </div>
+
+        <div className="panels-container">
+          <div className="panel left-panel">
+            <div className="content">
+              <h3>New here ?</h3>
+              <p>Create account to chat with me!</p>
+              <button className="btn transparent" id="sign-up-btn">
+                Sign up
+              </button>
+            </div>
+          </div>
+          <div className="panel right-panel">
+            <div className="content">
+              <h3>One of us ?</h3>
+              <p>Welcome back!</p>
+              <button className="btn transparent" id="sign-in-btn">
+                Sign in
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Login;
+
+```
+
+### frontend\src\page\login\resetpassword.jsx
+```jsx
+
+```
+
+### frontend\src\page\web_page\Home.jsx
+```jsx
+import Navbar from "../../components/web_page/navbar.jsx";
+import Footer from "../../components/web_page/footer";
+import ContainerButton from "../../components/web_page/container-button.jsx";
+import React, { useEffect } from 'react';
+import Tittle from "../../components/web_page/tittle.jsx";
+import "../../style/web_page/Home_module.css";
+function Home() {
+  useEffect(() => {
+    document.title = 'AI ChatBot-Home';
+  }, []);
+  return (
+    <>
+      <Navbar />
+      <Tittle />
+      <ContainerButton />
+      <Footer />
+    </>
+  );
+}
+
+export default Home;
+
+```
+
+### frontend\src\store\useAuthStore.js
+```js
+//lưu trữ thông tin xác thực và đăng kí, đăng nhập của người dùng 
+import { create } from "zustand";
+import { axiosInstance } from "../lib/axios.js";
+import { io } from "socket.io-client";
+import { persist } from "zustand/middleware";
+const BASE_URL = "https://celebritychatbot.up.railway.app" /*"http://localhost:3001"*/;
+//persist để lưu trữ thông tin xác thực và đăng kí, đăng nhập của người dùng vào localStorage
+export const useAuthStore = create(persist((set, get) => ({
+//useAuthStore là một hàm chứa các biến kiểm tra trạng thái người dùng và kiểm tra thông tin xác thực
+  authUser: null,
+  isLoggingIn: false,
+  isSigningUp: false,
+
+  isCheckingAuth: true,
+  socket: null,
+  isSocketConnecting: false, // Flag để tránh gọi connectSocket nhiều lần
+
+  // Hàm kiểm tra xác thực, nếu thành công sẽ gọi connectSocket
+  checkAuth: async () => {
+    try {
+      const res = await axiosInstance.get("/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
+      set({ authUser: res.data });
+      //set({ authUser: res.data });
+      get().connectSocket();
+    } catch (error) {
+      console.log("Error in checkAuth: ", error);
+      set({ authUser: null });
+    } finally {
+       //thực thi bất kể code ban đầu được thực thi ở try hay là catch
+      set({ isCheckingAuth: false });
+    }
+  },
+
+  // Hàm đăng ký, sau đó kết nối socket
+  SignUp: async (data) => {
+    set({ isSigningUp: true });
+    try {
+      const res = await axiosInstance.post("/auth/signup", data);
+            //thêm thông báo tạo tài khoản thành công
+      //set({ authUser: res.data.user });
+      //get().connectSocket();
+      return res.data;
+    } catch (error) {
+       //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+      console.log("Error in SignUp:", error);
+    } finally {
+      set({ isSigningUp: false });
+    }
+  },
+
+  // Hàm đăng xuất, đóng kết nối socket và xóa authUser
+  LogOut: async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      set({ authUser: null });
+      get().disconnectSocket();
+    } catch (error) {
+      console.log("Error in LogOut:", error);
+    }
+  },
+
+  // Hàm đăng nhập, sau đó kết nối socket
+  LogIn: async (data) => {
+    set({ isLoggingIn: true });
+    try {
+      const res = await axiosInstance.post("/auth/login", data, {
+        withCredentials: true, // Đảm bảo gửi cookie xác thực
+      });
+       //thêm thông báo tạo tài khoản thành công
+      set({ authUser: res.data.user });
+      get().connectSocket();
+      console.log("Logged in successfully!");
+      return res.data;
+    } catch (error) {
+      //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+      console.log("Error in LogIn:", error);
+    } finally {
+      set({ isLoggingIn: false });
+    }
+  },
+
+  // Hàm kết nối socket
+  connectSocket: () => {
+    const { authUser, socket: currentSocket, isSocketConnecting } = get();
+    if (!authUser) return;
+    
+    // Nếu đang trong quá trình kết nối hoặc đã có socket đang kết nối thì không tạo mới
+    if (isSocketConnecting || (currentSocket && currentSocket.connected)) return;
+    
+    // Nếu có socket tồn tại nhưng chưa kết nối, đóng nó lại
+    if (currentSocket) {
+      currentSocket.disconnect();
+    }
+    
+    // Đánh dấu bắt đầu kết nối
+    set({ isSocketConnecting: true });
+    
+    // Tạo socket mới
+    const newSocket = io(BASE_URL, {
+      query: { userId: authUser._id },
+      withCredentials: true, // Đảm bảo gửi cookie xác thực
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 3000,
+    });
+    
+    // Không cần gọi newSocket.connect() vì khi khởi tạo với io() nó tự động kết nối,
+    // nhưng nếu muốn chắc chắn, có thể gọi newSocket.connect();
+    newSocket.connect();
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected:", newSocket.id);
+      // Lưu socket mới và reset flag kết nối
+      set({ socket: newSocket, isSocketConnecting: false });
+    });
+
+    newSocket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      set({ socket: null });
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("Socket connection error:", err);
+      set({ isSocketConnecting: false });
+    });
+  },
+
+  // Hàm đóng kết nối socket
+  disconnectSocket: () => {
+    const { socket } = get();
+    if (socket) {
+      socket.disconnect();
+      set({ socket: null });
+    }
+  },
+  
+}), {
+  name: "auth-storage", // key lưu vào localStorage
+  partialize: (state) => ({ authUser: state.authUser }), // chỉ lưu authUser, không lưu socket
+}));
+```
+
+### frontend\src\store\useChatStore.js
+```js
+// File: client/src/store/useChatStore.js
+import { create } from 'zustand';
+import { axiosInstance } from '../lib/axios.js';
+import { useAuthStore } from "./useAuthStore.js";
+
+export const useChatStore = create((set, get) => ({
+    messages: [],
+    celebs: [],
+    useSelectedCeleb: null,
+    isCelebsLoading: false,
+
+    getCelebs: async () => {
+        set({ isCelebsLoading: true });
+        try {
+            const res = await axiosInstance("/chat"); 
+            set({ celebs: res.data });
+        } catch (error) {
+            // Xử lý lỗi
+        } finally {
+            set({ isCelebsLoading: false });
+        }
+    },
+
+    getMessages: async (myId) => {
+        if (!myId) return;
+        try {
+            const res = await axiosInstance(`/chat/get/${myId}`);
+            set({ messages: res.data });
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        }
+    },
+
+    sendMessage: async (messageData) => {
+        const { useSelectedCeleb, messages } = get();
+        const authUser = useAuthStore.getState().authUser;
+        const socket = useAuthStore.getState().socket; // Lấy socket từ useAuthStore
+        //tin nhắn tạm(hỗ trợ chat real-life)
+        let tempMessage;
+        try {
+            tempMessage = {
+                _id: Date.now().toString(),
+                message: messageData.message,
+                sender: authUser._id,
+                receiver: useSelectedCeleb._id,
+                userType: authUser.GoogleId ? 'google_user' : 'user',
+                createdAt: new Date().toISOString(),
+                isOptimistic: true
+            };
+
+            // Optimistic update tin nhắn tạm (real-time)
+            set({ messages: [...messages, tempMessage] });
+                // Bật trạng thải "đang trả lời"
+            socket.emit('ai_typing_start');
+           const res= await axiosInstance.post(`/chat/send/${useSelectedCeleb._id}`, messageData);
+            set((state) => ({
+                messages: state.messages.map(msg =>
+                  msg._id === tempMessage._id ? res.data.userMessage : msg
+                )
+              }));
+            
+            // Socket sẽ tự động cập nhật tin nhắn AI qua newMessage
+        } catch (error) {
+            console.error("Error sending message:", error);
+            set((state) => ({
+                messages: state.messages.filter(msg => msg._id !== tempMessage?._id)
+            }));
+            const socket = useAuthStore.getState().socket; 
+            if (socket) socket.emit('ai_typing_end');
+            
+        }
+    },
+
+    subscribeToMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        
+        const handleNewMessage = (newMessage) => {
+          set((state) => ({
+            messages: [
+              ...state.messages.filter(msg => 
+                msg._id !== newMessage._id && 
+                (!msg.isOptimistic || msg.sender !== newMessage.sender) // Loại bỏ tin nhắn tạm
+              ),
+              {
+                ...newMessage,
+                userType: newMessage.userType || (newMessage.isUserMessage ? 'user' : 'ai')
+              }
+            ]
+          }));
+        };
+      
+        socket.on('newMessage', handleNewMessage);
+        return () => socket.off('newMessage', handleNewMessage);
+      },
+
+    unsubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        if (socket) {
+            socket.off("newMessage");
+        }
+    },
+
+    setSelectedCeleb: (useSelectedCeleb) => set({ useSelectedCeleb }),
+}))
+```
