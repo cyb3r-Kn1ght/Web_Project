@@ -69,6 +69,7 @@ const HistoryChatbox = () => {
         messages.map((message) => {
           const senderId = message.sender?._id || message.sender;
           const isUserMessage = senderId === authUser._id;
+          console.log('senderId:', senderId, 'celebrityId:', useSelectedCeleb?._id);
           return (
 <div
       className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
