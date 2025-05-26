@@ -10,7 +10,6 @@ export const useAuthStore = create(persist((set, get) => ({
   authUser: null,
   isLoggingIn: false,
   isSigningUp: false,
-
   isCheckingAuth: true,
   socket: null,
   isSocketConnecting: false, // Flag để tránh gọi connectSocket nhiều lần

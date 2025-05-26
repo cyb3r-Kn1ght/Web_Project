@@ -57,6 +57,7 @@ io.on("connection", async (socket) => {
         // First check if it's a regular user
         if (user) {
             userSocketMap[userId] = socket.id;
+            socket.join(`user_${userId}`);
             socket.data.userType = user.GoogleId ? 'google_user' : 'user'; // Determine user type
             socket.data.userId = userId;
             socket.data.authType = user.GoogleId ? 'google_user' : 'user'; // Determine auth type
@@ -110,7 +111,13 @@ io.on("connection", async (socket) => {
 
             // Gửi tin nhắn đã populate đến client
             io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
-                    
+             const receiverId = messageData.receiver;
+             if (aiSocketMap[receiverId]) {
+       io.to(aiSocketMap[receiverId]).emit('receiveMessage', savedMessage);
+    } else if (userSocketMap[receiverId]) {
+      // receiver là một user bình thường
+     io.to(`user_${receiverId}`).emit('newMessage', savedMessage);
+   }
         } catch (error) {
             console.log("🔴 Error sending message:", error);
         }
