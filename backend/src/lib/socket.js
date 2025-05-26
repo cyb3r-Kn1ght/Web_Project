@@ -64,8 +64,8 @@ io.on("connection", async (socket) => {
             console.log(`User connected: ${userId} (${socket.id})`);
         }
 
-        // Kiểm tra xem có phải AI (Celeb)
-        const celeb = await Celeb.findOne({
+       else
+       { const celeb = await Celeb.findOne({
             _id: new mongoose.Types.ObjectId(userId)
         });
 
@@ -80,7 +80,8 @@ io.on("connection", async (socket) => {
         } else {
             console.log(`Unknown connection type for userId: ${userId}`);
             socket.disconnect();
-        }
+             return; // chỉ return nếu không phải user hoặc celeb
+        }}
     } catch (error) {
         console.log("Connection error:", error);
         socket.disconnect();
