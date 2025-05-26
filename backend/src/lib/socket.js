@@ -62,7 +62,6 @@ io.on("connection", async (socket) => {
             socket.data.userId = userId;
             socket.data.authType = user.GoogleId ? 'google_user' : 'user'; // Determine auth type
             console.log(`User connected: ${userId} (${socket.id})`);
-            return; // Exit early if it's a user
         }
 
         // Kiểm tra xem có phải AI (Celeb)
@@ -111,13 +110,7 @@ io.on("connection", async (socket) => {
 
             // Gửi tin nhắn đã populate đến client
             io.to(`user_${messageData.sender}`).emit('newMessage', savedMessage);
-             const receiverId = messageData.receiver;
-             if (aiSocketMap[receiverId]) {
-       io.to(aiSocketMap[receiverId]).emit('receiveMessage', savedMessage);
-    } else if (userSocketMap[receiverId]) {
-      // receiver là một user bình thường
-     io.to(`user_${receiverId}`).emit('newMessage', savedMessage);
-   }
+
         } catch (error) {
             console.log("🔴 Error sending message:", error);
         }
