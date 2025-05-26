@@ -85,10 +85,32 @@ export const sendMessage = async (req, res) => {
         }
       );
     } catch (err) {
-      console.error("OpenRouter API error:", err.response?.data || err.message);
-      // send back a 502 with JSON so CORS middleware can still run
-      return res.status(502).json({ error: "AI engine unreachable" });
-    }
+  // 1. Log header và body của request đã gửi
+  console.error("=== OpenRouter Request Config ===");
+  console.error(JSON.stringify(err.config, null, 2));
+
+  // 2. Nếu có response, log status, headers, body
+  if (err.response) {
+    console.error("=== OpenRouter Response Status ===");
+    console.error(err.response.status);
+    console.error("=== OpenRouter Response Headers ===");
+    console.error(JSON.stringify(err.response.headers, null, 2));
+    console.error("=== OpenRouter Response Body ===");
+    console.error(JSON.stringify(err.response.data, null, 2));
+  } else {
+    // 3. Nếu không có response (network/CORS error)
+    console.error("=== No response received ===");
+    console.error(err.message);
+  }
+
+  // 4. Trả thêm details về client để nhìn trực tiếp trong DevTools → Network → Response
+  return res
+    .status(502)
+    .json({
+      error: "AI engine unreachable",
+      details: err.response?.data || err.message,
+    });
+}
 
     const aiText = openrouterResp.data.choices[0].message.content.trim();console.log("Status:", openrouterResp.status);
     console.log("Headers:", openrouterResp.headers);
