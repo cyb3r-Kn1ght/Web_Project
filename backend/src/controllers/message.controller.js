@@ -69,7 +69,7 @@ export const sendMessage = async (req, res) => {
       openrouterResp  = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
         {
-          model: "google/gemma-3-1b-it:free",
+          model: "google/gemma-3-4b-it:free",
           messages: [
             { role: 'system', content: celeb.prompt },
             { role: 'user',   content: messageText }
