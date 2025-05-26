@@ -17,7 +17,7 @@ export const useAuthStore = create(persist((set, get) => ({
   // Hàm kiểm tra xác thực, nếu thành công sẽ gọi connectSocket
   checkAuth: async () => {
     try {
-      const res = await axiosInstance.get("/api/auth/check",{ withCredentials: true }); //gửi HTTP request GET thông tin xác thực người dùng
+      const res = await axiosInstance.get("/api/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
       set({ authUser: res.data });
       //set({ authUser: res.data });
       get().connectSocket();
