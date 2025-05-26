@@ -19,7 +19,12 @@ const Chat = () => {
   useEffect(() => {
     getCelebs();                                                   // lấy danh sách celeb
   }, [getCelebs]);
-
+useEffect(() => {
+  // Sau khi component mount
+  if (!authUser) {
+    useAuthStore.getState().checkAuth();
+  }
+}, []);
   useEffect(() => {
     if (authUser && (!socket || !socket.connected)) {
       connectSocket();                                             // khởi tạo socket khi có authUser
@@ -35,6 +40,7 @@ const Chat = () => {
       socket.off("disconnect");
     };
   }, [socket]);
+
 
   useEffect(() => {
     if (socket && authUser) {
