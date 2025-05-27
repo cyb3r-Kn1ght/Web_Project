@@ -15,7 +15,7 @@ const navigate = useNavigate();
 
 const handleLogout = async () => {
   await Logout();
-  navigate('auth/login');
+  navigate('/auth/login');
 }
 
   // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
