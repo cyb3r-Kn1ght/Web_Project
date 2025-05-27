@@ -11,10 +11,18 @@ const Chatbox = () => {
   const {useSelectedCeleb} = useChatStore();
   return (
     <div className="chatbox">
-      <HeaderChatbox selectedCeleb={useSelectedCeleb} />
-      <HistoryChatbox />
-      <TypeChatbox />
-      <AlertDemo />
+      {useSelectedCeleb ? (
+      <>
+        <HeaderChatbox selectedCeleb={useSelectedCeleb} />
+        <HistoryChatbox />
+        <TypeChatbox />
+        <AlertDemo />
+      </>
+      ) : (
+        <div className="chatbox-placeholder">
+          <span className="placeholder">Chào mừng bạn đến với AI Chatbot!</span>
+        </div>
+      )}
     </div>
   );
 };
