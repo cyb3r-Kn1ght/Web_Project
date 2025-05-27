@@ -186,7 +186,8 @@
   }
 
   .button-text-to-speech {
-    color: white;
+    color: #4a90e2;
+    background-color: #fff;
     border: none;
     padding: 0.5rem 0.75rem;
     border-radius: 50%;
