@@ -237,5 +237,8 @@
     .chatbox {
       min-height: 100dvh; 
     }
+    .historychatbox {
+      overflow-y: hidden;
+    }
   }
   

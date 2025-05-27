@@ -6,7 +6,7 @@
 .chat-container {
     display: flex;
     height: 100dvh;
-    width: 100dvw;
+    width: 100%;
     font-family: "Poppins", sans-serif;
     background-color: #f5f5f5;
     font-family: "Poppins", sans-serif;
