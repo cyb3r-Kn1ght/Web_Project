@@ -12,7 +12,7 @@ const celebSchema = new mongoose.Schema({
     prompt: {
         type: String,
         required: true,
-        default: "Bạn là một trợ lý AI, trả lời ngắn gọn và lịch sự." 
+        default: "" 
     },
 }, { timestamps: true });
 
