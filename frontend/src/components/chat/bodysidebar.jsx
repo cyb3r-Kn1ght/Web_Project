@@ -10,11 +10,11 @@ const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
 const [search, setSearch] = useState('');
 const [showMenu, setShowMenu] = useState(false);
-const { Logout } = useAuthStore();
+const { LogOut } = useAuthStore();
 const navigate = useNavigate();
 
 const handleLogout = async () => {
-  await Logout();
+  await LogOut();
   navigate('/auth/login');
 }
 
@@ -53,7 +53,7 @@ const handleLogout = async () => {
         {showMenu && (
           <div className="settings-dropdown">
             <button className="settings-option" onClick={() => navigate("/payment")}>Nâng cấp gói</button>
-            <button className="settings-option" onclick={handleLogout}>Đăng xuất</button>
+            <button className="settings-option" onClick={handleLogout}>Đăng xuất</button>
           </div>
         )}
       </div>
