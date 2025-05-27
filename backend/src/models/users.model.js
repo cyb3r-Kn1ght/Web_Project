@@ -32,7 +32,16 @@ const userSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default: ""
-    }
+    },
+    tier:{
+        type: String,
+        enum: ['free', 'premium'],
+        default: 'free'
+    },remainingMessages: {
+        type: Number,
+        default: 10 // Số tin nhắn miễn phí ban đầu
+    },
+
 }, { timestamps: true } 
 );
 

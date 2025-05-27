@@ -37,24 +37,24 @@ export const getMessages = async (req, res) => {
 };
 
 // Xử lý gửi tin nhắn: lưu message của user, gọi AI và lưu message trả lời
-export const sendMessage = async (req, res) => {
+export const sendMessage = async (req, res, next) => {
   try {
     console.log('Req.body ➞', req.body);
     const celebId = req.params.id;
-
     const userId = req.user._id;
     const user = await User.findById(userId);
     const messageText = req.body.message;
 
+    // 1. Lưu tin nhắn người dùng
     const userMessage = await Chat.create({
       message: messageText,
       sender: userId,
-      receiver: celebId, // CelebId được suy ra từ receiver
+      receiver: celebId,
       userType: user.GoogleId ? 'google_user' : 'user',
       timestamp: Date.now()
     });
 
-    // Phát tin nhắn mới tới room celebId để frontend nhận ngay
+    // 2. Phát tin nhắn người dùng tới frontend
     const io = req.app.get('io');
     io.to(`user_${userId}`).emit('ai_typing_start');
     io.to(`user_${userId}`).emit('newMessage', {
@@ -62,69 +62,51 @@ export const sendMessage = async (req, res) => {
       userType: user.GoogleId ? 'google_user' : 'user',
       isUserMessage: true
     });
-    // 2) Lấy prompt của celeb và gọi AI trả lời
+
+    // 3. Gọi model nội bộ (FastAPI)
     const celeb = await Celeb.findById(celebId);
-    let openrouterResp;
+    let aiText;
     try {
-      openrouterResp  = await axios.post(
-        "https://openrouter.ai/api/v1/chat/completions",
+      const modelResp = await axios.post(
+        "https://7cea-42-115-115-121.ngrok-free.app/generate",  // hoặc thay bằng ngrok link nếu cần
         {
-          model: "google/gemma-3-4b-it:free",
-          messages: [
-            { role: 'system', content: celeb.prompt },
-            { role: 'user',   content: messageText }
-          ],
-          temperature: 0.7
+          prompt: `${celeb.prompt}\n${messageText}`,
+          api_key: "memaybeo"
         },
         {
           headers: {
-            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            "HTTP-Referer": "http://localhost:3000",
-            "X-Title": "AI Celeb Chat App"
+            "Content-Type": "application/json"
           }
         }
       );
+
+      aiText = modelResp.data.response.trim();
     } catch (err) {
-  // 1. Log header và body của request đã gửi
-  console.error("=== OpenRouter Request Config ===");
-  console.error(JSON.stringify(err.config, null, 2));
+      console.error("=== AI Model Error ===");
+      if (err.response) {
+        console.error("Status:", err.response.status);
+        console.error("Headers:", err.response.headers);
+        console.error("Data:", err.response.data);
+      } else {
+        console.error("No response:", err.message);
+      }
 
-  // 2. Nếu có response, log status, headers, body
-  if (err.response) {
-    console.error("=== OpenRouter Response Status ===");
-    console.error(err.response.status);
-    console.error("=== OpenRouter Response Headers ===");
-    console.error(JSON.stringify(err.response.headers, null, 2));
-    console.error("=== OpenRouter Response Body ===");
-    console.error(JSON.stringify(err.response.data, null, 2));
-  } else {
-    // 3. Nếu không có response (network/CORS error)
-    console.error("=== No response received ===");
-    console.error(err.message);
-  }
+      io.to(`user_${userId}`).emit('ai_typing_end');
+      return res.status(502).json({
+        error: "Custom AI engine unreachable",
+        details: err.response?.data || err.message,
+      });
+    }
 
-  // 4. Trả thêm details về client để nhìn trực tiếp trong DevTools → Network → Response
-  return res
-    .status(502)
-    .json({
-      error: "AI engine unreachable",
-      details: err.response?.data || err.message,
-    });
-}
-
-    const aiText = openrouterResp.data.choices[0].message.content.trim();console.log("Status:", openrouterResp.status);
-    console.log("Headers:", openrouterResp.headers);
-    console.log("Data:", JSON.stringify(openrouterResp.data, null, 2));
-    // 3) Lưu tin nhắn bot vào DB với receiver là userId
+    // 4. Lưu tin nhắn AI
     const aiMessage = await Chat.create({
       message: aiText,
       sender: celebId,
       receiver: userId,
       userType: 'ai'
-    }).then(msg => msg.populate('sender')); // Populate thông tin người gửi
-    //Populate trong Mongoose là một phương thức giúp tự động thay thế các trường tham chiếu (references) trong MongoDB bằng các documents thực tế từ collection được tham chiếu. Điều này giúp truy vấn và làm việc với dữ liệu liên quan trở nên dễ dàng và hiệu quả hơn.
-    // Gửi tin nhắn AI qua socket
+    }).then(msg => msg.populate('sender'));
 
+    // 5. Phát tin nhắn AI tới frontend
     io.to(`user_${userId}`).emit('newMessage', {
       ...aiMessage.toObject(),
       isUserMessage: false,
@@ -132,11 +114,10 @@ export const sendMessage = async (req, res) => {
     });
     io.to(`user_${userId}`).emit('ai_typing_end');
 
+    // 6. Trả về response cho client
     res.status(201).json({ userMessage, aiMessage });
   } catch (error) {
     console.error("Message handling error:", error);
-    
-    // Send typing end event in case of error
     const io = req.app.get('io');
     io.to(`user_${req.user._id}`).emit('ai_typing_end');
     next(error);
