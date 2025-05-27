@@ -3,13 +3,13 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #000; /* dark background */
+  background-color: #fff; /* dark background */
 }
 
 .payment-card {
   width: 350px;
   padding: 24px;
-  background: #111;
+  background: #4a90e2;
   border-radius: 16px;
   position: relative;
   box-sizing: border-box;
@@ -92,5 +92,5 @@
 
 .feature-list p {
   margin: 0;
-  color: #ccc;
+  color: #333;
 }
