@@ -236,7 +236,7 @@ export const googleAuth = (req, res, next) => {
             res.cookie('jwt', token, {
                 httpOnly: true,
                 secure: true,
-                sameSite: 'none',
+                sameSite: 'lax',
                 maxAge: 60 * 60 * 1000
             });
             res.redirect(`https://web-project-flame-five.vercel.app/chat`);
