@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import Celebs from './celebs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faGear } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
+
 
 // Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
 const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
 const [search, setSearch] = useState('');
 const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
   // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
   const filtered = celebs.filter((c) =>
@@ -43,7 +46,7 @@ const [showMenu, setShowMenu] = useState(false);
 
         {showMenu && (
           <div className="settings-dropdown">
-            <button className="settings-option">Nâng cấp gói</button>
+            <button className="settings-option" onClick={() => navigate("/payment")}>Nâng cấp gói</button>
             <button className="settings-option">Đăng xuất</button>
           </div>
         )}
