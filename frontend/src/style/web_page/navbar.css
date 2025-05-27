@@ -2,11 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 10px 30px;
   width: 100vw;
   position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
   transition: 0.3s ease-in-out;
 }
 
@@ -31,13 +31,10 @@
 .navbar.scrolled .logo-text {
   color: white;
 }
-.api-link {
-  font-weight: 500;
-}
+
 .nav-links {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  gap: 30px;
 }
 
 .nav-links a {
@@ -55,17 +52,4 @@
 .nav-links a:hover {
   text-decoration: underline;
   opacity: 0.8;
-}
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
-
-  .navbar {
-    padding: 1rem;
-  }
-
-  .logo-text {
-    font-size: 1.4rem;
-  }
 }
