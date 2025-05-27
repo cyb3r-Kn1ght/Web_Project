@@ -14,21 +14,8 @@
   position: relative;
   box-sizing: border-box;
   color: #000000; /* text color */
-  border: 2px solid transparent;
+  border: 2px solid #85aaff; /* border color */
   background-clip: padding-box;
-}
-
-/* Gradient border overlay */
-.payment-card::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #4f8aff, #ff5ac5);
-  z-index: -1;
 }
 
 .payment-title {
