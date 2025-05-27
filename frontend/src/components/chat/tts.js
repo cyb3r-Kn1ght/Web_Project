@@ -11,9 +11,7 @@ export const fetchTTSAudio = async (text) => {
         "api-key": apiKey,
         "speed": "",
         "voice": "leminh",
-        "Content-Type": "text/plain"
       },
-      responseType: "json"
     });
 
     return response.data.async; // Link đến file âm thanh
