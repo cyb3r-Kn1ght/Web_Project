@@ -29,7 +29,7 @@ const TypeChatbox = () => {
   return (
     <div className="typechatbox">
       <button className='button-text-to-speech' >
-        <FontAwesomeIcon icon="fa-solid fa-circle-play" />
+        <FontAwesomeIcon icon={faFileAudio} />
       </button>
 
       <input
