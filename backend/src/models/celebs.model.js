@@ -12,6 +12,7 @@ const celebSchema = new mongoose.Schema({
     prompt: {
         type: String,
         required: true,
+        default: ""
     },
 }, { timestamps: true });
 
