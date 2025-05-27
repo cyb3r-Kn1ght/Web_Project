@@ -62,8 +62,13 @@
 
 /* Style chung cho cả 2 loại tin nhắn */
 .chat-message {
-  max-width: 60%;
+  max-width: 100%;
+  width: fit-content;
+  max-width: 80%;
   padding: 10px 14px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
   border-radius: 20px;
   word-break: break-word;
   font-size: 14px;
