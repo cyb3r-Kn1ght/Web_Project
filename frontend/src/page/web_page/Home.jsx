@@ -13,6 +13,7 @@ function Home() {
       <Navbar />
       <Tittle />
       <ContainerButton />
+      <br/>
       <Footer />
     </>
   );
