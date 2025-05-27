@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const fetchTTSAudio = async (text) => {
   const url = "https://api.fpt.ai/hmi/tts/v5";
-  const apiKey = "EJ4Bzk3hZl7ZNNQjmRC10le06gqg76Zj";
+  const apiKey = "paUquwb3Ud9IZyJZPy0xOAOe9oZGyMLC";
 
   try {
     const response = await axios.post(url, text, {
