@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../style/payment/payment.css';
 import { axiosInstance } from '../../lib/axios.js';
-import axios from 'axios';
 import toast from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +10,7 @@ function Payment() {
   const navigate = useNavigate();
   const handlePayment = async () => {
     try {
-      const res = await axiosInstance.post("/api/create-qr");
+      const res = await axiosInstance.post("/api/vnpay/create-qr");
 
       if (res?.data) {
         window.location.href = res.data;
