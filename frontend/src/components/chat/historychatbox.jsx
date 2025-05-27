@@ -1,7 +1,9 @@
-import React, { useEffect, useRef,useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../style/chat/chatbox.css';
 import { useAuthStore } from "../../store/useAuthStore.js";
 import { useChatStore } from "../../store/useChatStore.js";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 
 const HistoryChatbox = () => {
   const [isAITyping, setIsAITyping] = useState(false); // Thêm state để theo dõi trạng thái AI
@@ -25,10 +27,10 @@ const HistoryChatbox = () => {
   useEffect(() => {
     if (!socket || !useSelectedCeleb || !authUser?._id) return;
     const userRoom = `user_${authUser._id}`;
-  
+
     socket.emit('joinRoom', userRoom);
     getMessages(useSelectedCeleb._id);
-  
+
     return () => {
       socket.emit('leaveRoom', userRoom);
     };
@@ -84,6 +86,14 @@ const HistoryChatbox = () => {
               key={message._id || `temp-${message.timestamp}`}
             >
               <p>{message.message}</p>
+              {!isUserMessage && (
+                <button
+                  className="button-text-to-speech"
+                  title="Nghe"
+                >
+                  <FontAwesomeIcon icon={faHeadphones} />
+                </button>
+              )}
             </div>
           );
         })

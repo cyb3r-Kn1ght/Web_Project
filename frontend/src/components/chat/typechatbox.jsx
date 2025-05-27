@@ -40,9 +40,6 @@ const TypeChatbox = () => {
 
   return (
     <div className="typechatbox">
-      <button className='button-text-to-speech' onClick={handleTTS}>
-        <FontAwesomeIcon icon="fa-solid fa-circle-play" />
-      </button>
 
       <input
         className="typechatbox-input"
