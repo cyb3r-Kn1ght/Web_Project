@@ -4,7 +4,7 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { useChatStore } from "../../store/useChatStore.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
-import { fetchTTSAudio } from '../../context/CuThamKhao/tts.js';
+import { fetchTTSAudio } from './tts.js';
 
 const handleTTS = async (text) => {
   if (!text.trim()) return;

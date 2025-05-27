@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
-import { fetchTTSAudio } from '../../context/CuThamKhao/tts.js';
+import { fetchTTSAudio } from './tts.js';
 
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
