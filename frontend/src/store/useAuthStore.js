@@ -44,6 +44,7 @@ export const useAuthStore = create(persist((set, get) => ({
       return res.data;
     } catch (error) {
        //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+      toast.error(error.response.data.message);
       console.log("Error in SignUp:", error);
     } finally {
       set({ isSigningUp: false });

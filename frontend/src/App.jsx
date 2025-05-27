@@ -11,8 +11,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/chat" element={authUser ? <Chat /> : <Home />} />
+        <Route path="/auth/login" element={authUser ? <Home /> : <Login />} />
+        <Route path="/chat" element={authUser ? <Chat /> : <Login />} />
       </Routes>
 
       <Toaster />
