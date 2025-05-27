@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
+import toast from "react-hot-toast";
 const BASE_URL = "https://celebritychatbot.up.railway.app" /*"http://localhost:3001"*/;
 //persist để lưu trữ thông tin xác thực và đăng kí, đăng nhập của người dùng vào localStorage
 export const useAuthStore = create(persist((set, get) => ({
@@ -38,6 +39,8 @@ export const useAuthStore = create(persist((set, get) => ({
             //thêm thông báo tạo tài khoản thành công
       //set({ authUser: res.data.user });
       //get().connectSocket();
+
+      toast.success("Account created successfully, please log in to continue.");
       return res.data;
     } catch (error) {
        //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
@@ -69,9 +72,11 @@ export const useAuthStore = create(persist((set, get) => ({
       set({ authUser: res.data.user });
       get().connectSocket();
       console.log("Logged in successfully!");
+      toast.success("Logged in successfully");
       return res.data;
     } catch (error) {
       //thêm thông báo lỗi (lỗi cụ thể nằm ở các cách thức kiểm tra mật khẩu ở backend/src/controllers/auth.controller.js)
+      toast.error(error.response.data.message);
       console.log("Error in LogIn:", error);
     } finally {
       set({ isLoggingIn: false });
