@@ -1,38 +1,54 @@
 import React, { useState } from 'react';
 import Celebs from './celebs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faGear } from '@fortawesome/free-solid-svg-icons';
 
 // Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
 const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
-  const [search, setSearch] = useState('');
+const [search, setSearch] = useState('');
+const [showMenu, setShowMenu] = useState(false);
 
   // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
   const filtered = celebs.filter((c) =>
     c.celebName.toLowerCase().includes(search.toLowerCase())
   );
   return (
-    <div className="sidebar-body">
-      <div className="search-bar">
-        {/*Thanh tìm kiếm*/}
-        <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-        <input
-        /* Input tìm kiếm */
-          className="search-input"
-          type="text"
-          placeholder="Tìm kiếm nhân vật"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+    <>
+      <div className="sidebar-body">
+        <div className="search-bar">
+          {/*Thanh tìm kiếm*/}
+          <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+          <input
+            /* Input tìm kiếm */
+            className="search-input"
+            type="text"
+            placeholder="Tìm kiếm nhân vật"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        {/*Danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm*/}
+        <Celebs
+          celebs={filtered}
+          useSelectedCeleb={useSelectedCeleb}
+          handleSelect={handleSelect}
         />
       </div>
-      {/*Danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm*/}
-      <Celebs
-        celebs={filtered}
-        useSelectedCeleb={useSelectedCeleb}
-        handleSelect={handleSelect}
-      />
-    </div>
+      <div className="sidebar-settings">
+        <button className="settings-button" onClick={() => setShowMenu(!showMenu)}>
+          <FontAwesomeIcon icon={faGear} />
+          <span>Cài đặt</span>
+        </button>
+
+        {showMenu && (
+          <div className="settings-dropdown">
+            <button className="settings-option">Nâng cấp gói</button>
+            <button className="settings-option">Đăng xuất</button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
