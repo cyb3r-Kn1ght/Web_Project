@@ -2,11 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 30px;
+  padding: 1rem 2rem;
   width: 100vw;
   position: fixed;
   top: 0;
-  left: 0;
+  z-index: 100;
   transition: 0.3s ease-in-out;
 }
 
@@ -31,10 +31,13 @@
 .navbar.scrolled .logo-text {
   color: white;
 }
-
+.api-link {
+  font-weight: 500;
+}
 .nav-links {
   display: flex;
-  gap: 30px;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-links a {
@@ -54,23 +57,15 @@
   opacity: 0.8;
 }
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 10px 20px;
-  }
-
   .nav-links {
-    flex-direction: row;
-    gap: 10px;
+    display: none;
   }
 
-  .nav-links a {
-    font-size: 1rem;
-    margin-right: 0;
+  .navbar {
+    padding: 1rem;
   }
 
   .logo-text {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
   }
 }
