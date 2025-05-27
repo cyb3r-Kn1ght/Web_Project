@@ -62,8 +62,13 @@
 
 /* Style chung cho cả 2 loại tin nhắn */
 .chat-message {
-  max-width: 60%;
+  max-width: 100%;
+  width: fit-content;
+  max-width: 80%;
   padding: 10px 14px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
   border-radius: 20px;
   word-break: break-word;
   font-size: 14px;
@@ -181,15 +186,16 @@
   }
 
   .button-text-to-speech {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+    color: #4a90e2;
+    background-color: #fff;
     border: none;
     padding: 0.5rem 0.75rem;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-left: 0.5rem;
   }
   

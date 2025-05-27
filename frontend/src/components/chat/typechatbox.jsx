@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
 
 const TypeChatbox = () => {
@@ -29,7 +29,7 @@ const TypeChatbox = () => {
   return (
     <div className="typechatbox">
       <button className='button-text-to-speech' >
-        <FontAwesomeIcon icon="fa-solid fa-circle-play" />
+        <FontAwesomeIcon icon={faFileAudio} />
       </button>
 
       <input
