@@ -10,10 +10,10 @@ function Payment() {
   const navigate = useNavigate();
   const handlePayment = async () => {
     try {
-      const res = await axiosInstance.post("/api/vnpay/create-qr");
+      const res = await axiosInstance.post("/api/vnpay/create-payment");
 
       if (res?.data) {
-        window.location.href = res.data;
+        window.location.href = res.data.paymentUrl;
       } else {
         toast.error("Invalid payment URL received");
       }
