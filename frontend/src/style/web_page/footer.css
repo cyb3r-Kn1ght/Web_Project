@@ -76,6 +76,9 @@
     gap: 1rem;
     align-items: center;
   }
+  .footer-content {
+    gap:0rem;
+  }
 
   .footer-newsletter input {
     margin-right: 0;
