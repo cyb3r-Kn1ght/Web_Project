@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
 
 const TypeChatbox = () => {
