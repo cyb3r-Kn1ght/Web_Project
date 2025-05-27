@@ -4,6 +4,18 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { useChatStore } from "../../store/useChatStore.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
+import { fetchTTSAudio } from '../../context/CuThamKhao/tts.js';
+
+  const handleTTS = async () => {
+    if (!message.trim()) return;
+    try {
+      const audioUrl = await fetchTTSAudio(message.trim());
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (err) {
+      console.error("TTS playback error:", err);
+    }
+  };
 
 const HistoryChatbox = () => {
   const [isAITyping, setIsAITyping] = useState(false); // Thêm state để theo dõi trạng thái AI
@@ -89,7 +101,7 @@ const HistoryChatbox = () => {
               {!isUserMessage && (
                 <button
                   className="button-text-to-speech"
-                  title="Nghe"
+                  title="Nghe" onClick={() => handleTTS(message.message)}
                 >
                   <FontAwesomeIcon icon={faHeadphones} />
                 </button>

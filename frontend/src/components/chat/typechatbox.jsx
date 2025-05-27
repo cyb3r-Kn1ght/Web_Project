@@ -27,16 +27,7 @@ const TypeChatbox = () => {
     }
   };
 
-  const handleTTS = async () => {
-    if (!message.trim()) return;
-    try {
-      const audioUrl = await fetchTTSAudio(message.trim());
-      const audio = new Audio(audioUrl);
-      audio.play();
-    } catch (err) {
-      console.error("TTS playback error:", err);
-    }
-  };
+
 
   return (
     <div className="typechatbox">
