@@ -12,7 +12,7 @@
 .button-part {
   display: inline-block;
   padding: 24px;
-  height: 5.5rem;
+  height: 7.5rem;
   flex: 0 0 360px;
   background: #FFFFFF; /* Nền trắng */
   backdrop-filter: blur(10px);
@@ -62,6 +62,7 @@
   }
 
   .button-part {
+    flex:0 0 120px;
     width: 100%;
     height: auto;
     padding: 16px;
