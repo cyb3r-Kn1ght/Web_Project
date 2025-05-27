@@ -14,6 +14,7 @@ const handleTTS = async (text) => {
     audio.play();
   } catch (err) {
     console.error("TTS playback error:", err);
+    console.log("Audio URL:", response.data.async);
   }
 };
 
