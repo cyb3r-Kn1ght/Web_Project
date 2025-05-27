@@ -6,15 +6,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 import { fetchTTSAudio } from './tts.js';
 
+const waitForAudio = async (url, maxRetries = 5, delay = 1500) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const res = await fetch(url, { method: 'HEAD' });
+      if (res.ok) return true;
+    } catch {}
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+  throw new Error("Audio not ready after retries");
+};
+
 const handleTTS = async (text) => {
   if (!text.trim()) return;
   try {
     const audioUrl = await fetchTTSAudio(text.trim());
-    const audio = new Audio(audioUrl);
+    await waitForAudio(audioUrl);
+
+    const res = await fetch(audioUrl);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    const audio = new Audio(blobUrl);
     audio.play();
   } catch (err) {
     console.error("TTS playback error:", err);
-    console.log("Audio URL:", response.data.async);
   }
 };
 
