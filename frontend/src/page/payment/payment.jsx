@@ -1,7 +1,31 @@
 import React from 'react';
 import '../../style/payment/payment.css';
+import { axiosInstance } from '../../lib/axios.js';
+import axios from 'axios';
+import toast from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
+
+
 
 function Payment() {
+  const navigate = useNavigate();
+  const handlePayment = async () => {
+    try {
+      const res = await axiosInstance.post("/api/create-qr");
+
+      if (res?.data) {
+        window.location.href = res.data;
+      } else {
+        toast.error("Invalid payment URL received");
+      }
+    
+    } catch (err) {
+      toast.error("Error in payment");
+      console.log("Error in payment: ", err);
+      navigate("/chat");
+    }
+  };
+
   return (
     <div className="payment-container">
       <div className="payment-card">
@@ -15,7 +39,7 @@ function Payment() {
           <span className="new-price">250.000 ₫/tháng</span>
         </div>
 
-        <button className="payment-button">Đăng ký Celebrity Pro</button>
+        <button className="payment-button" onClick={handlePayment}>Đăng ký Celebrity Pro</button>
 
         <ul className="feature-list">
           <li>

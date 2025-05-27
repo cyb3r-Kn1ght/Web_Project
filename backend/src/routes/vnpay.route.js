@@ -14,7 +14,7 @@ router.post('/create-qr', async (req, res) => {
     });
 
     const vnpayReponse = await vnpay.buildPaymentUrl({
-        vnp_Amount: 500000,
+        vnp_Amount: 250000,
         vnp_IpAddr: req.ip || '127.0.0.1',
         vnp_TxnRef: Date.now().toString(), // Mã giao dịch duy nhất
         vnp_OrderInfo: '123456',
