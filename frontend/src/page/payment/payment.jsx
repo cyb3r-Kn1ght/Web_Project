@@ -13,6 +13,7 @@ function Payment() {
       const res = await axiosInstance.post("/api/vnpay/create-payment");
 
       if (res?.data) {
+        console.log(res.data.paymentUrl);
         window.location.href = res.data.paymentUrl;
       } else {
         toast.error("Invalid payment URL received");
