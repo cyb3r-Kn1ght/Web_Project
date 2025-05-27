@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
+import { fetchTTSAudio } from '../../context/CuThamKhao/tts.js';
 
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
@@ -26,10 +27,21 @@ const TypeChatbox = () => {
     }
   };
 
+  const handleTTS = async () => {
+    if (!message.trim()) return;
+    try {
+      const audioUrl = await fetchTTSAudio(message.trim());
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (err) {
+      console.error("TTS playback error:", err);
+    }
+  };
+
   return (
     <div className="typechatbox">
-      <button className='button-text-to-speech' >
-        <FontAwesomeIcon icon={faFileAudio} />
+      <button className='button-text-to-speech' onClick={handleTTS}>
+        <FontAwesomeIcon icon="fa-solid fa-circle-play" />
       </button>
 
       <input
