@@ -3,7 +3,7 @@ import Login from "./page/login/login.jsx";
 import Chat from "./page/chat/chat.jsx";
 
 import { useAuthStore } from "./store/useAuthStore";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 function App() {
   const { authUser } = useAuthStore();
