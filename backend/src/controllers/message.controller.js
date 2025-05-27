@@ -64,24 +64,30 @@ export const sendMessage = async (req, res, next) => {
     });
 
     // 3. Gọi model nội bộ (FastAPI)
-    const celeb = await Celeb.findById(celebId);
-    let aiText;
-    try {
-      const modelResp = await axios.post(
-        "https://7cea-42-115-115-121.ngrok-free.app/generate",  // hoặc thay bằng ngrok link nếu cần
-        {
-          prompt: `${celeb.prompt}\n${messageText}`,
-          api_key: "memaybeo"
-        },
-        {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
+   const celeb = await Celeb.findById(celebId);
+let aiText;
+try {
+  const modelResp = await axios.post(
+    "https://7cea-42-115-115-121.ngrok-free.app/chat", // Thay đổi endpoint thành /chat
+    {
+      persona_name: celeb.personaName, // Giả sử celeb model có trường personaName
+      user_input: messageText,
+      api_key: "memaybeo",
+      max_tokens: 200, // Có thể điều chỉnh theo nhu cầu
+      temperature: 0.7,
+      top_p: 0.85
+    },
+    {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+  );
 
-      aiText = modelResp.data.response.trim();
-    } catch (err) {
+  // Xử lý response mới
+  aiText = modelResp.data.response.trim(); // Lấy từ trường response thay vì trực tiếp
+
+} catch (err) {
       console.error("=== AI Model Error ===");
       if (err.response) {
         console.error("Status:", err.response.status);
