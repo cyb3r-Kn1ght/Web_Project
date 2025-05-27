@@ -9,7 +9,7 @@
 .payment-card {
   width: 350px;
   padding: 24px;
-  background: #4a90e2;
+  background: whitesmoke; /* dark background */
   border-radius: 16px;
   position: relative;
   box-sizing: border-box;
