@@ -28,3 +28,17 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   padding-top: 0px;
 }
+@media (max-width: 768px) {
+  .MainTittle {
+    font-size: 2rem;
+  }
+
+  .debcribe {
+    font-size: 1rem;
+  }
+
+  .Tittle-section {
+    margin-top: 8rem;
+    padding: 0 1rem;
+  }
+}
