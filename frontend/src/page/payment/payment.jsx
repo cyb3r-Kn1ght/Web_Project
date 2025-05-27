@@ -5,34 +5,30 @@ function Payment() {
   return (
     <div className="payment-container">
       <div className="payment-card">
-        <h1 className="payment-title">Google AI Pro</h1>
+        <h1 className="payment-title">Celebrity Pro</h1>
         <p className="payment-subtitle">
-          Khai thác thêm các tính năng mới và mạnh mẽ để tăng năng suất và khả năng sáng tạo
+          Trò chuyện không giới hạn cùng người nổi tiếng yêu thích của bạn
         </p>
 
         <div className="payment-price">
-          <span className="old-price">489.000 ₫</span>
-          <span className="new-price">0 ₫/tháng</span>
+          <span className="old-price">500.000 ₫</span>
+          <span className="new-price">250.000 ₫/tháng</span>
         </div>
 
-        <button className="payment-button">Đăng ký Google AI Pro</button>
+        <button className="payment-button">Đăng ký Celebrity Pro</button>
 
         <ul className="feature-list">
           <li>
-            <strong>Ứng dụng Gemini</strong>
-            <p>Khai thác thêm mô hình 2.5 mạnh nhất của Google, Deep Research trên 2.5 Pro và tính năng tạo video bằng Veo 2</p>
+            <strong>Nhắn tin không giới hạn</strong>
+            <p>Nhắn tin cùng người nổi tiếng yêu thích của bạn mà không bị giới hạn số lượng tin nhắn</p>
           </li>
           <li>
-            <strong>NotebookLM</strong>
-            <p>Trợ lý nghiên cứu và viết lách với số lượng bản tóm tắt bằng âm thanh và số ghi chú nhiều hơn gấp 5 lần, cùng nhiều lợi ích khác</p>
+            <strong>Text to speech</strong>
+            <p>Không chỉ dừng lại ở nhắn tin, bạn có thể nghe những phản hồi từ người nổi tiếng</p>
           </li>
           <li>
-            <strong>Gemini trong Gmail, Tài liệu, Vids</strong>
-            <p>Quyền truy cập vào Gemini ngay trong các ứng dụng của Google</p>
-          </li>
-          <li>
-            <strong>Bộ nhớ</strong>
-            <p>Tổng bộ nhớ 2 TB cho Photos, Drive và Gmail</p>
+            <strong>Mua một lần</strong>
+            <p>Chỉ cần mua gói một lần, bạn có thể tận hưởng toàn bộ tính năng vĩnh viễn</p>
           </li>
         </ul>
       </div>
