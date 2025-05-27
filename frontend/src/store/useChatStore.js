@@ -62,6 +62,8 @@ export const useChatStore = create((set, get) => ({
               }));
             
             // Socket sẽ tự động cập nhật tin nhắn AI qua newMessage
+            socket.emit('ai_typing_end');
+            
         } catch (error) {
             console.error("Error sending message:", error);
             set((state) => ({
