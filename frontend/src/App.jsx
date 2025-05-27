@@ -11,8 +11,11 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/auth/login" element={authUser ? <Chat /> : <Login />} />
-        <Route path="/chat" element={authUser ? <Chat /> : <Login />} />
+        <Route path="/auth/login" element={authUser ? <Navigate to="/chat" /> : <Login />} />
+        <Route 
+          path="/chat" 
+          element={authUser ? <Chat /> : <Navigate to="/auth/login" />} 
+        />
       </Routes>
 
       <Toaster />
