@@ -74,40 +74,57 @@ router.post("/create-payment", async (req, res) => {
   res.status(201).json({ paymentUrl });
 });
 
-// router.get('/check-payment', async (req, res) => {
-//     //logic xử lý dữ liệu đơn hàng
-//     console.log(req.query);
+router.get('/check-payment', async (req, res) => {
+    //logic xử lý dữ liệu đơn hàng
+    console.log(req.query);
 
-//     const vnp_Params = req.query;
-//     const vnpay = new VNPay({
-//         tmnCode: 'SNBUG3T2',
-//         secureSecret: '1VIULX38MI6P6YB5P04A8WRJVFCBZRQ4',
-//         vnpayHost: 'https://sandbox.vnpayment.vn',
-//         testMode: true,
-//     });
+    const vnp_Params = req.query;
+    const secretKey = "1VIULX38MI6P6YB5P04A8WRJVFCBZRQ4";
+    
+    // Get secure hash from request
+    const secureHash = vnp_Params['vnp_SecureHash'];
+    
+    // Remove hash from params before validation
+    delete vnp_Params['vnp_SecureHash'];
+    delete vnp_Params['vnp_SecureHashType'];
+    
+    // Sort parameters
+    const sortedParams = sortObject(vnp_Params);
 
-//     try {
-//         // Verify the payment response
-//         const isValidSignature = vnpay.verifySignature(vnp_Params);
+    // Create validation signature
+    const signData = Object.keys(sortedParams)
+        .map(key => `${key}=${sortedParams[key]}`)
+        .join('&');
+        
+    const hmac = crypto.createHmac("sha512", secretKey);
+    const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest("hex");
 
-//         if (isValidSignature) {
-//             const vnp_ResponseCode = vnp_Params['vnp_ResponseCode'];
+    // Compare signatures
+    const isValidSignature = secureHash === signed;
+
+    try {
+        if (isValidSignature) {
+            const vnp_ResponseCode = vnp_Params['vnp_ResponseCode'];
             
-//             if (vnp_ResponseCode === '00') {
-//                 // Payment successful - redirect to frontend chat page with success notif
-//                 return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
-//             } else {
-//                 // Payment failed - redirect with error
-//                 return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=failed');
-//             }
-//         } else {
-//             // Invalid signature - redirect with error
-//             return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=invalid');
-//         }
-//     } catch (error) {
-//         console.error('Payment verification error:', error);
-//         return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=error');
-//     }
-// });
+            if (vnp_ResponseCode === '00') {
+                // Payment successful
+                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
+            } else {
+                // Payment failed
+                console.log('Payment failed with code:', vnp_ResponseCode);
+                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=failed');
+            }
+        } else {
+            // Invalid signature
+            console.log('Invalid signature');
+            console.log('Expected:', signed);
+            console.log('Received:', secureHash);
+            return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=invalid');
+        }
+    } catch (error) {
+        console.error('Payment verification error:', error);
+        return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=error');
+    }
+});
 
 export default router;
