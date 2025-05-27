@@ -70,7 +70,7 @@ try {
   const modelResp = await axios.post(
     "https://7cea-42-115-115-121.ngrok-free.app/chat", // Thay đổi endpoint thành /chat
     {
-      persona_name: celeb.personaName, // Giả sử celeb model có trường personaName
+      persona_name: "Mỹ Tâm", // Giả sử celeb model có trường personaName
       user_input: messageText,
       api_key: "memaybeo",
       max_tokens: 200, // Có thể điều chỉnh theo nhu cầu
