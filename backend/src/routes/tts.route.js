@@ -5,16 +5,20 @@ const axios = require('axios');
 
 router.post('/', async (req, res) => {
   const text = req.body.text;
+  
+  if (!text) {
+    return res.status(400).json({ error: 'Text is required' });
+  }
 
   try {
     const response = await axios.post(
       'https://api.fpt.ai/hmi/tts/v5',
-      text, // đây là plain text
+      text,
       {
         headers: {
-          'api-key': '5xUbgeGDGvyPITGbcKO3J5ZYPdbDwtKJ',
-          'speed': '1',  // tùy chỉnh -3 đến 3 nếu cần
-          'voice': 'leminh', // đổi sang 'lannhi', 'leminh'...
+          'api-key': process.env.FPT_AI_API_KEY,
+          'speed': '1',
+          'voice': 'leminh',
           'Content-Type': 'text/plain'
         }
       }

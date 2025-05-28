@@ -9,6 +9,8 @@ import axios from 'axios';
 const HistoryChatbox = () => {
   const [isAITyping, setIsAITyping] = useState(false); // Thêm state để theo dõi trạng thái AI
   const [playingId, setPlayingId] = useState(null);
+  const [ttsLoading, setTtsLoading] = useState(null);
+  const [ttsError, setTtsError] = useState(null);
   const {
     messages,
     getMessages,
@@ -79,6 +81,9 @@ const HistoryChatbox = () => {
   // Hàm gọi API TTS và phát audio
   const handlePlayTTS = async (message, id) => {
     setPlayingId(id);
+    setTtsLoading(id);
+    setTtsError(null);
+    
     try {
       const res = await axios.post(
         'https://celebritychatbot.up.railway.app/api/tts',
@@ -89,15 +94,23 @@ const HistoryChatbox = () => {
       if (audioUrl) {
         const audio = new Audio(audioUrl);
         audio.play();
-        audio.onended = () => setPlayingId(null);
+        audio.onended = () => {
+          setPlayingId(null);
+          setTtsLoading(null);
+        };
+        audio.onerror = () => {
+          setTtsError(id);
+          setPlayingId(null);
+          setTtsLoading(null);
+        };
       } else {
-        setPlayingId(null);
-        alert('Không lấy được audio!');
+        throw new Error('No audio URL received');
       }
     } catch (err) {
+      setTtsError(id);
       setPlayingId(null);
-      alert('Lỗi TTS!');
-      console.error(err);
+      setTtsLoading(null);
+      console.error('TTS Error:', err);
     }
   };
 
@@ -116,13 +129,14 @@ const HistoryChatbox = () => {
               <p>{message.message}</p>
               {!isUserMessage && (
                 <button
-                  className="button-text-to-speech"
-                  title="Nghe"
+                  className={`button-text-to-speech ${ttsError === (message._id || `temp-${message.timestamp}`) ? 'error' : ''}`}
+                  title={ttsError === (message._id || `temp-${message.timestamp}`) ? "Lỗi phát âm thanh" : "Nghe"}
                   onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                  disabled={isPlaying}
+                  disabled={isPlaying || ttsLoading === (message._id || `temp-${message.timestamp}`)}
                 >
                   <FontAwesomeIcon icon={faHeadphones} />
-                  {isPlaying && <span className="tts-loading">...</span>}
+                  {ttsLoading === (message._id || `temp-${message.timestamp}`) && <span className="tts-loading">Đang tải...</span>}
+                  {isPlaying && <span className="tts-playing">Đang phát</span>}
                 </button>
               )}
             </div>
