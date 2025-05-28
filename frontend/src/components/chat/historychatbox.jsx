@@ -100,7 +100,8 @@ const HistoryChatbox = () => {
     setTtsError(null);
 
     try {
-      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts/tts', {
+      // Gửi request và nhận về blob (KHÔNG nhận về JSON)
+      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: message })
@@ -108,6 +109,7 @@ const HistoryChatbox = () => {
 
       if (!response.ok) throw new Error('TTS request failed');
 
+      // Lấy blob từ response
       const blob = await response.blob();
       const audioUrl = URL.createObjectURL(blob);
 

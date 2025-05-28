@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const router = express.Router();
 
-router.post('/tts', async (req, res) => {
+router.post('/', async (req, res) => {
   const text = req.body.text;
   if (!text) return res.status(400).json({ error: 'Text is required' });
 
