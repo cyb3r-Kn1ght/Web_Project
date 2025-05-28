@@ -65,7 +65,11 @@ const handleLogout = async () => {
                 <p className="tier">Trạng thái: <span>{authUser?.tier}</span></p>
               </div>
             </div>
-            <button className="settings-option" onClick={() => navigate("/payment")}>Nâng cấp gói</button>
+             {authUser?.tier !== 'premium' && (
+              <button className="settings-option" onClick={() => navigate('/payment')}>
+                Nâng cấp gói
+              </button>
+            )}
             <button className="settings-option" onClick={handleLogout}>Đăng xuất</button>
           </div>
         )}
