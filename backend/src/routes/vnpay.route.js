@@ -111,7 +111,7 @@ router.get('/check-payment', verifyToken, async (req, res) => {
                    await User.findByIdAndUpdate(
           req.user._id,
           { tier: 'premium' },
-          { new: true }s
+          { new: true }
         );
                 return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
             } else {
