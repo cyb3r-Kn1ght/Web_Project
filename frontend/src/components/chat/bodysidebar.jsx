@@ -61,7 +61,7 @@ const handleLogout = async () => {
                 className="avatar"
               />
               <div className="info-text">
-                <p className="name">{user.name}</p>
+                <p className="name">{user.username}</p>
                 <p className="tier">Trạng thái: <span>{user.tier}</span></p>
               </div>
             </div>
