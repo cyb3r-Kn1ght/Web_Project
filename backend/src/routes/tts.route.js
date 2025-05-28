@@ -1,9 +1,10 @@
 // backend/routes/tts.js
-const express = require('express');
-const router = express.Router();
-const axios = require('axios');
+import express from 'express';
+import axios from 'axios';
 
-router.post('/', async (req, res) => {
+const router = express.Router();
+
+router.post('/tts', async (req, res) => {
   const text = req.body.text;
   
   if (!text) {
@@ -41,4 +42,4 @@ export const fetchTTSAudio = async (text) => {
   }
 };
 
-module.exports = router;
+export default router;

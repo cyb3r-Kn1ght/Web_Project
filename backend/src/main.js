@@ -25,7 +25,7 @@ import cors from 'cors';
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
 // Tạo route cho TTS
-const ttsRoute = require('./routes/tts');
+import ttsRoute from './routes/tts.route.js';
 app.use('/api/tts', ttsRoute);
 
 
