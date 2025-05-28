@@ -89,11 +89,7 @@ const HistoryChatbox = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: message })
       });
-
-      if (!response.ok) throw new Error('TTS request failed');
       const blob = await response.blob();
-      if (!blob.type.startsWith('audio/')) throw new Error('Không nhận được file audio hợp lệ');
-
       const audioUrl = URL.createObjectURL(blob);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
