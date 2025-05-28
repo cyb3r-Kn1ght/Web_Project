@@ -78,32 +78,54 @@ const HistoryChatbox = () => {
       audioRef.current.pause();
       audioRef.current = null;
     }
+
     setPlayingId(id);
     setTtsLoading(id);
     setTtsError(null);
+
     try {
-      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts', {
+      // 1. Gọi API FPT AI để lấy URL file mp3
+      const response = await fetch('https://api.fpt.ai/hmi/tts/v5', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: message })
+        headers: {
+          'api-key': 'YOUR_FPT_API_KEY',
+          'speed': '1',
+          'voice': 'leminh',
+          'Content-Type': 'text/plain'
+        },
+        body: message
       });
-      if (!response.ok) throw new Error('TTS request failed');
-      const blob = await response.blob();
-      if (!blob.type.startsWith('audio/')) throw new Error('Không nhận được file audio hợp lệ');
-      const audioUrl = URL.createObjectURL(blob);
-      const audio = new Audio(audioUrl);
+
+      if (!response.ok) throw new Error('FPT TTS request failed');
+      const data = await response.json();
+      const audioUrl = data.async;
+
+      // 2. Chờ file mp3 sẵn sàng (FPT AI cần 1-2s)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // 3. Tải file mp3 về dạng blob
+      const audioRes = await fetch(audioUrl);
+      if (!audioRes.ok) throw new Error('Cannot fetch audio file');
+      const blob = await audioRes.blob();
+
+      // 4. Phát audio từ blob
+      const blobUrl = URL.createObjectURL(blob);
+      const audio = new Audio(blobUrl);
       audioRef.current = audio;
+
       audio.onended = () => {
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(audioUrl);
+        URL.revokeObjectURL(blobUrl);
       };
+
       audio.onerror = () => {
         setTtsError(id);
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(audioUrl);
+        URL.revokeObjectURL(blobUrl);
       };
+
       await audio.play();
     } catch (err) {
       setTtsError(id);
