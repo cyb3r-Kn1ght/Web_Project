@@ -11,6 +11,7 @@ const HistoryChatbox = () => {
   const [ttsLoading, setTtsLoading] = useState(null);
   const [ttsError, setTtsError] = useState(null);
   const [audioUrlMap, setAudioUrlMap] = useState({});
+  const [spinningId, setSpinningId] = useState(null);
   const {
     messages,
     getMessages,
@@ -79,9 +80,7 @@ const HistoryChatbox = () => {
       audioRef.current.pause();
       audioRef.current = null;
     }
-    setPlayingId(id);
-    setTtsLoading(id);
-    setTtsError(null);
+    setSpinningId(id);
 
     try {
       const response = await fetch('https://celebritychatbot.up.railway.app/api/tts', {
@@ -89,29 +88,25 @@ const HistoryChatbox = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: message })
       });
+      if (!response.ok) throw new Error('TTS request failed');
       const blob = await response.blob();
       const audioUrl = URL.createObjectURL(blob);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
       audio.onended = () => {
-        setPlayingId(null);
-        setTtsLoading(null);
+        setSpinningId(null);
         URL.revokeObjectURL(audioUrl);
       };
 
       audio.onerror = () => {
-        setTtsError(id);
-        setPlayingId(null);
-        setTtsLoading(null);
+        setSpinningId(null);
         URL.revokeObjectURL(audioUrl);
       };
 
       await audio.play();
     } catch (err) {
-      setTtsError(id);
-      setPlayingId(null);
-      setTtsLoading(null);
+      setSpinningId(null);
       console.error('TTS Error:', err);
     }
   };
@@ -134,14 +129,15 @@ const HistoryChatbox = () => {
               {!isUserMessage && (
                 <div>
                   <button
-                    className={`button-text-to-speech ${hasError ? 'error' : ''} ${isPlaying ? 'playing' : ''}`}
-                    title={hasError ? "Lỗi phát âm thanh" : isLoading ? "Đang tải..." : isPlaying ? "Đang phát" : "Nghe"}
+                    className="button-text-to-speech"
+                    title="Nghe"
                     onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                    disabled={isLoading || isPlaying}
+                    disabled={spinningId === (message._id || `temp-${message.timestamp}`)}
                   >
-                    <FontAwesomeIcon icon={faHeadphones} />
-                    {isLoading && <span className="tts-loading">Đang tải...</span>}
-                    {isPlaying && <span className="tts-playing">Đang phát</span>}
+                    <FontAwesomeIcon
+                      icon={faHeadphones}
+                      className={spinningId === (message._id || `temp-${message.timestamp}`) ? 'icon-spinning' : ''}
+                    />
                   </button>
                   {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
                     <audio
