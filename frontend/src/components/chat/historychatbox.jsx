@@ -4,38 +4,11 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { useChatStore } from "../../store/useChatStore.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
-import { fetchTTSAudio } from './tts.js';
-
-const waitForAudio = async (url, maxRetries = 5, delay = 1500) => {
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const res = await fetch(url, { method: 'HEAD' });
-      if (res.ok) return true;
-    } catch {}
-    await new Promise((resolve) => setTimeout(resolve, delay));
-  }
-  throw new Error("Audio not ready after retries");
-};
-
-const handleTTS = async (text) => {
-  if (!text.trim()) return;
-  try {
-    const audioUrl = await fetchTTSAudio(text.trim());
-    await waitForAudio(audioUrl);
-
-    const res = await fetch(audioUrl);
-    const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    const audio = new Audio(blobUrl);
-    audio.play();
-  } catch (err) {
-    console.error("TTS playback error:", err);
-  }
-};
+import axios from 'axios';
 
 const HistoryChatbox = () => {
   const [isAITyping, setIsAITyping] = useState(false); // Thêm state để theo dõi trạng thái AI
+  const [playingId, setPlayingId] = useState(null);
   const {
     messages,
     getMessages,
@@ -102,13 +75,39 @@ const HistoryChatbox = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Hàm gọi API TTS và phát audio
+  const handlePlayTTS = async (message, id) => {
+    setPlayingId(id);
+    try {
+      const res = await axios.post(
+        'https://celebritychatbot.up.railway.app/api/tts',
+        { text: message },
+        { withCredentials: false }
+      );
+      const audioUrl = res.data.audioUrl;
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
+        audio.onended = () => setPlayingId(null);
+      } else {
+        setPlayingId(null);
+        alert('Không lấy được audio!');
+      }
+    } catch (err) {
+      setPlayingId(null);
+      alert('Lỗi TTS!');
+      console.error(err);
+    }
+  };
+
   return (
     <div className="historychatbox">
       {messages.length > 0 ? (
         messages.map((message) => {
           const senderId = message.sender?._id || message.sender;
           const isUserMessage = message?.userType && message.userType !== 'ai';
-          //console.log('senderId:', senderId, 'celebrityId:', useSelectedCeleb?._id);
+          const isPlaying = playingId === (message._id || `temp-${message.timestamp}`);
           return (
             <div
               className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
@@ -118,9 +117,12 @@ const HistoryChatbox = () => {
               {!isUserMessage && (
                 <button
                   className="button-text-to-speech"
-                  title="Nghe" onClick= {() => handleTTS(message.message)}
+                  title="Nghe"
+                  onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
+                  disabled={isPlaying}
                 >
                   <FontAwesomeIcon icon={faHeadphones} />
+                  {isPlaying && <span className="tts-loading">...</span>}
                 </button>
               )}
             </div>
