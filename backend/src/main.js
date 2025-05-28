@@ -10,6 +10,7 @@ import { server, app } from './lib/socket.js';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import vnpayHandler from './routes/vnpay.route.js';
+import ttsRoute from './routes/tts.route.js';
 
 import { ConnectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
@@ -25,8 +26,6 @@ import cors from 'cors';
 const port = process.env.PORT || 4000; //port mặc định phòng trường hợp không có biến PORT trong .env
 
 // Tạo route cho TTS
-import ttsRoute from './routes/tts.route.js';
-app.use('/api/tts', ttsRoute);
 
 
 const corsOptions = {
@@ -83,6 +82,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/chat", messageRoutes);
 
 app.use("/api/vnpay", vnpayHandler);
+
+app.use('/api/tts', ttsRoute);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

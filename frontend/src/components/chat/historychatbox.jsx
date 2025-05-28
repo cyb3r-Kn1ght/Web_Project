@@ -10,6 +10,7 @@ const HistoryChatbox = () => {
   const [playingId, setPlayingId] = useState(null);
   const [ttsLoading, setTtsLoading] = useState(null);
   const [ttsError, setTtsError] = useState(null);
+  const [audioUrlMap, setAudioUrlMap] = useState({});
   const {
     messages,
     getMessages,
@@ -72,58 +73,42 @@ const HistoryChatbox = () => {
     };
   }, []);
 
-  // TTS handler: always fetch blob from backend
+  // Hàm gọi TTS backend và phát audio
   const handlePlayTTS = async (message, id) => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-
     setPlayingId(id);
     setTtsLoading(id);
     setTtsError(null);
 
     try {
-      // 1. Gọi API FPT AI để lấy URL file mp3
-      const response = await fetch('https://api.fpt.ai/hmi/tts/v5', {
+      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts', {
         method: 'POST',
-        headers: {
-          'api-key': 'YOUR_FPT_API_KEY',
-          'speed': '1',
-          'voice': 'leminh',
-          'Content-Type': 'text/plain'
-        },
-        body: message
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: message })
       });
 
-      if (!response.ok) throw new Error('FPT TTS request failed');
-      const data = await response.json();
-      const audioUrl = data.async;
+      if (!response.ok) throw new Error('TTS request failed');
+      const blob = await response.blob();
+      if (!blob.type.startsWith('audio/')) throw new Error('Không nhận được file audio hợp lệ');
 
-      // 2. Chờ file mp3 sẵn sàng (FPT AI cần 1-2s)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // 3. Tải file mp3 về dạng blob
-      const audioRes = await fetch(audioUrl);
-      if (!audioRes.ok) throw new Error('Cannot fetch audio file');
-      const blob = await audioRes.blob();
-
-      // 4. Phát audio từ blob
-      const blobUrl = URL.createObjectURL(blob);
-      const audio = new Audio(blobUrl);
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
       audio.onended = () => {
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(audioUrl);
       };
 
       audio.onerror = () => {
         setTtsError(id);
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(blobUrl);
+        URL.revokeObjectURL(audioUrl);
       };
 
       await audio.play();
@@ -151,16 +136,25 @@ const HistoryChatbox = () => {
             >
               <p>{message.message}</p>
               {!isUserMessage && (
-                <button
-                  className={`button-text-to-speech ${hasError ? 'error' : ''} ${isPlaying ? 'playing' : ''}`}
-                  title={hasError ? "Lỗi phát âm thanh" : isLoading ? "Đang tải..." : isPlaying ? "Đang phát" : "Nghe"}
-                  onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                  disabled={isLoading || isPlaying}
-                >
-                  <FontAwesomeIcon icon={faHeadphones} />
-                  {isLoading && <span className="tts-loading">Đang tải...</span>}
-                  {isPlaying && <span className="tts-playing">Đang phát</span>}
-                </button>
+                <div>
+                  <button
+                    className={`button-text-to-speech ${hasError ? 'error' : ''} ${isPlaying ? 'playing' : ''}`}
+                    title={hasError ? "Lỗi phát âm thanh" : isLoading ? "Đang tải..." : isPlaying ? "Đang phát" : "Nghe"}
+                    onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
+                    disabled={isLoading || isPlaying}
+                  >
+                    <FontAwesomeIcon icon={faHeadphones} />
+                    {isLoading && <span className="tts-loading">Đang tải...</span>}
+                    {isPlaying && <span className="tts-playing">Đang phát</span>}
+                  </button>
+                  {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
+                    <audio
+                      controls
+                      src={audioUrlMap[message._id || `temp-${message.timestamp}`]}
+                      style={{ marginLeft: 8, verticalAlign: 'middle' }}
+                    />
+                  )}
+                </div>
               )}
             </div>
           );
