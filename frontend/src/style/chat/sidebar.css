@@ -186,7 +186,29 @@
 .settings-option:hover {
   background-color: #f0f0f0;
 }
-
+/* Account info */
+.account-info {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+.account-info .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  object-fit: cover;
+}
+.account-info .info-text .name {
+  font-weight: 500;
+  margin: 0;
+}
+.account-info .info-text .tier {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin: 0.25rem 0 0;
+}
 /* ------------ Responsive ------------ */
 @media (max-width: 768px) {
   .sidebar-wrapper {
