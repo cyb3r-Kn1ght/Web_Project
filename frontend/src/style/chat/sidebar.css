@@ -138,7 +138,6 @@
   padding: 0.75rem;
   background-color: #4a90e2;
   color: white;
-  text-align: center;
   position: relative;
 }
 
@@ -201,6 +200,7 @@
   object-fit: cover;
 }
 .account-info .info-text .name {
+  color:darkcyan;
   font-weight: 500;
   margin: 0;
 }
