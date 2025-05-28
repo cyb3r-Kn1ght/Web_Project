@@ -2,7 +2,8 @@ import express from 'express';
 import qs from "qs";
 import crypto from "crypto";
 import moment from 'moment';
-
+import { verifyToken } from '../middleware/auth.middleware.js';  
+import User from '../models/users.model.js'; 
 const router = express.Router();
 
 function sortObject(obj){
@@ -74,7 +75,7 @@ router.post("/create-payment", async (req, res) => {
   res.status(201).json({ paymentUrl });
 });
 
-router.get('/check-payment', async (req, res) => {
+router.get('/check-payment', verifyToken, async (req, res) => {
     //logic xử lý dữ liệu đơn hàng
     console.log(req.query);
 
@@ -107,7 +108,11 @@ router.get('/check-payment', async (req, res) => {
             const vnp_ResponseCode = vnp_Params['vnp_ResponseCode'];
             
             if (vnp_ResponseCode === '00') {
-                // Payment successful
+                   await User.findByIdAndUpdate(
+          req.user._id,
+          { tier: 'premium' },
+          { new: true }s
+        );
                 return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
             } else {
                 // Payment failed
