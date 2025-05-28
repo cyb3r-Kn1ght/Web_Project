@@ -5,6 +5,17 @@ import { useChatStore } from "../../store/useChatStore.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 
+const spinStyle = `
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+.icon-spinning {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+`;
+
 const HistoryChatbox = () => {
   const [isAITyping, setIsAITyping] = useState(false);
   const [playingId, setPlayingId] = useState(null);
@@ -112,62 +123,65 @@ const HistoryChatbox = () => {
   };
 
   return (
-    <div className="historychatbox">
-      {messages.length > 0 ? (
-        messages.map((message) => {
-          const senderId = message.sender?._id || message.sender;
-          const isUserMessage = message?.userType && message.userType !== 'ai';
-          const isPlaying = playingId === (message._id || `temp-${message.timestamp}`);
-          const isLoading = ttsLoading === (message._id || `temp-${message.timestamp}`);
-          const hasError = ttsError === (message._id || `temp-${message.timestamp}`);
-          return (
-            <div
-              className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
-              key={message._id || `temp-${message.timestamp}`}
-            >
-              <p>{message.message}</p>
-              {!isUserMessage && (
-                <div>
-                  <button
-                    className="button-text-to-speech"
-                    title="Nghe"
-                    onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                    disabled={spinningId === (message._id || `temp-${message.timestamp}`)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faHeadphones}
-                      className={spinningId === (message._id || `temp-${message.timestamp}`) ? 'icon-spinning' : ''}
-                    />
-                  </button>
-                  {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
-                    <audio
-                      controls
-                      src={audioUrlMap[message._id || `temp-${message.timestamp}`]}
-                      style={{ marginLeft: 8, verticalAlign: 'middle' }}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })
-      ) : (
-        <div className="empty-chat">
-          <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
-        </div>
-      )}
-      <div ref={bottomRef} />
-      {isAITyping && (
-        <div className="ai-typing-indicator">
-          <span>{useSelectedCeleb?.celebName} đang trả lời</span>
-          <div className="typing-dots">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
+    <>
+      <style>{spinStyle}</style>
+      <div className="historychatbox">
+        {messages.length > 0 ? (
+          messages.map((message) => {
+            const senderId = message.sender?._id || message.sender;
+            const isUserMessage = message?.userType && message.userType !== 'ai';
+            const isPlaying = playingId === (message._id || `temp-${message.timestamp}`);
+            const isLoading = ttsLoading === (message._id || `temp-${message.timestamp}`);
+            const hasError = ttsError === (message._id || `temp-${message.timestamp}`);
+            return (
+              <div
+                className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
+                key={message._id || `temp-${message.timestamp}`}
+              >
+                <p>{message.message}</p>
+                {!isUserMessage && (
+                  <div>
+                    <button
+                      className="button-text-to-speech"
+                      title="Nghe"
+                      onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
+                      disabled={spinningId === (message._id || `temp-${message.timestamp}`)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeadphones}
+                        className={spinningId === (message._id || `temp-${message.timestamp}`) ? 'icon-spinning' : ''}
+                      />
+                    </button>
+                    {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
+                      <audio
+                        controls
+                        src={audioUrlMap[message._id || `temp-${message.timestamp}`]}
+                        style={{ marginLeft: 8, verticalAlign: 'middle' }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div className="empty-chat">
+            <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+        <div ref={bottomRef} />
+        {isAITyping && (
+          <div className="ai-typing-indicator">
+            <span>{useSelectedCeleb?.celebName} đang trả lời</span>
+            <div className="typing-dots">
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
