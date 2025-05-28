@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faGear } from '@fortawesome/free-solid-svg-icons';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
+import '../../assets/chat/default-avatar.png';
+import '../../style/chat/bodysidebar.css';
 
 // Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
 const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
@@ -54,7 +56,7 @@ const handleLogout = async () => {
           <div className="settings-dropdown">
             <div className="account-info">
               <img
-                src={user.avatarUrl || '/default-avatar.png'}
+                src={user.profilePic || '/default-avatar.png'}
                 alt="avatar"
                 className="avatar"
               />
