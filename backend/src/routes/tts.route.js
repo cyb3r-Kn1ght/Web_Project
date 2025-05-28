@@ -1,6 +1,7 @@
 // backend/routes/tts.js
 import express from 'express';
 import axios from 'axios';
+import { Readable } from 'stream';
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.post('/tts', async (req, res) => {
   }
 
   try {
+    // Gọi FPT AI API để lấy URL audio
     const response = await axios.post(
       'https://api.fpt.ai/hmi/tts/v5',
       text,
@@ -25,7 +27,25 @@ router.post('/tts', async (req, res) => {
       }
     );
 
-    res.json({ audioUrl: response.data.async });
+    const audioUrl = response.data.async;
+    
+    // Đợi file audio được tạo (thường mất 1-2 giây)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Tải file audio từ FPT
+    const audioResponse = await axios.get(audioUrl, {
+      responseType: 'arraybuffer'
+    });
+
+    // Set headers cho audio stream
+    res.setHeader('Content-Type', 'audio/mpeg');
+    res.setHeader('Content-Length', audioResponse.data.length);
+    res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+
+    // Stream audio data
+    const stream = Readable.from(audioResponse.data);
+    stream.pipe(res);
+
   } catch (error) {
     console.error('TTS Error:', error.response?.data || error.message);
     res.status(500).json({ error: 'TTS failed' });

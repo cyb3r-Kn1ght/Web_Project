@@ -20,6 +20,7 @@ const HistoryChatbox = () => {
   } = useChatStore();
   const { authUser, socket } = useAuthStore();
   const bottomRef = useRef(null);
+  const audioRef = useRef(null);
 
   // Xử lý scroll xuống dưới cùng khi có tin nhắn mới
   const scrollToBottom = () => {
@@ -78,34 +79,60 @@ const HistoryChatbox = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Hàm gọi API TTS và phát audio
+  // Cleanup audio when component unmounts
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
   const handlePlayTTS = async (message, id) => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
     setPlayingId(id);
     setTtsLoading(id);
     setTtsError(null);
     
     try {
-      const res = await axios.post(
-        'https://celebritychatbot.up.railway.app/api/tts',
-        { text: message },
-        { withCredentials: false }
-      );
-      const audioUrl = res.data.audioUrl;
-      if (audioUrl) {
-        const audio = new Audio(audioUrl);
-        audio.play();
-        audio.onended = () => {
-          setPlayingId(null);
-          setTtsLoading(null);
-        };
-        audio.onerror = () => {
-          setTtsError(id);
-          setPlayingId(null);
-          setTtsLoading(null);
-        };
-      } else {
-        throw new Error('No audio URL received');
+      // Tạo URL với blob để tránh CORS
+      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: message })
+      });
+
+      if (!response.ok) {
+        throw new Error('TTS request failed');
       }
+
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setPlayingId(null);
+        setTtsLoading(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      audio.onerror = () => {
+        setTtsError(id);
+        setPlayingId(null);
+        setTtsLoading(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      await audio.play();
     } catch (err) {
       setTtsError(id);
       setPlayingId(null);
@@ -121,6 +148,9 @@ const HistoryChatbox = () => {
           const senderId = message.sender?._id || message.sender;
           const isUserMessage = message?.userType && message.userType !== 'ai';
           const isPlaying = playingId === (message._id || `temp-${message.timestamp}`);
+          const isLoading = ttsLoading === (message._id || `temp-${message.timestamp}`);
+          const hasError = ttsError === (message._id || `temp-${message.timestamp}`);
+
           return (
             <div
               className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
@@ -129,13 +159,13 @@ const HistoryChatbox = () => {
               <p>{message.message}</p>
               {!isUserMessage && (
                 <button
-                  className={`button-text-to-speech ${ttsError === (message._id || `temp-${message.timestamp}`) ? 'error' : ''}`}
-                  title={ttsError === (message._id || `temp-${message.timestamp}`) ? "Lỗi phát âm thanh" : "Nghe"}
+                  className={`button-text-to-speech ${hasError ? 'error' : ''} ${isPlaying ? 'playing' : ''}`}
+                  title={hasError ? "Lỗi phát âm thanh" : isLoading ? "Đang tải..." : isPlaying ? "Đang phát" : "Nghe"}
                   onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                  disabled={isPlaying || ttsLoading === (message._id || `temp-${message.timestamp}`)}
+                  disabled={isLoading || isPlaying}
                 >
                   <FontAwesomeIcon icon={faHeadphones} />
-                  {ttsLoading === (message._id || `temp-${message.timestamp}`) && <span className="tts-loading">Đang tải...</span>}
+                  {isLoading && <span className="tts-loading">Đang tải...</span>}
                   {isPlaying && <span className="tts-playing">Đang phát</span>}
                 </button>
               )}
