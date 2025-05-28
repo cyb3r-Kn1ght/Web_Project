@@ -56,7 +56,7 @@ const handleLogout = async () => {
           <div className="settings-dropdown">
             <div className="account-info">
               <img
-                src={user.profilePic || defaultAvatar}
+                src={defaultAvatar}
                 alt="avatar"
                 className="avatar"
               />
