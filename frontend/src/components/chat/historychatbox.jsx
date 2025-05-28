@@ -90,6 +90,7 @@ const HistoryChatbox = () => {
   }, []);
 
   const handlePlayTTS = async (message, id) => {
+    // Stop any currently playing audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -100,36 +101,32 @@ const HistoryChatbox = () => {
     setTtsError(null);
     
     try {
-      // Tạo URL với blob để tránh CORS
-      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts/tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: message })
-      });
+      // Get audio URL from backend
+      const response = await axios.post(
+        'https://celebritychatbot.up.railway.app/api/tts/tts',
+        { text: message }
+      );
 
-      if (!response.ok) {
-        throw new Error('TTS request failed');
+      if (!response.data.audioUrl) {
+        throw new Error('No audio URL received');
       }
 
-      const blob = await response.blob();
-      const audioUrl = URL.createObjectURL(blob);
-      
-      const audio = new Audio(audioUrl);
+      // Wait for audio to be ready (FPT AI needs some time to generate)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Create and play audio
+      const audio = new Audio(response.data.audioUrl);
       audioRef.current = audio;
 
       audio.onended = () => {
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(audioUrl);
       };
 
       audio.onerror = () => {
         setTtsError(id);
         setPlayingId(null);
         setTtsLoading(null);
-        URL.revokeObjectURL(audioUrl);
       };
 
       await audio.play();
