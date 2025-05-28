@@ -12,7 +12,7 @@ const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
 const [search, setSearch] = useState('');
 const [showMenu, setShowMenu] = useState(false);
-const { user, LogOut } = useAuthStore();
+const { authUser , LogOut } = useAuthStore();
 const navigate = useNavigate();
 
 const handleLogout = async () => {
@@ -56,13 +56,13 @@ const handleLogout = async () => {
           <div className="settings-dropdown">
             <div className="account-info">
               <img
-                src={defaultAvatar}
+                src={authUser?.profilePic||defaultAvatar}
                 alt="avatar"
                 className="avatar"
               />
               <div className="info-text">
-                <p className="name">{user.username}</p>
-                <p className="tier">Trạng thái: <span>{user.tier}</span></p>
+                <p className="name">{authUser?.username}</p>
+                <p className="tier">Trạng thái: <span>{authUser?.tier}</span></p>
               </div>
             </div>
             <button className="settings-option" onClick={() => navigate("/payment")}>Nâng cấp gói</button>
