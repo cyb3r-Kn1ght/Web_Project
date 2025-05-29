@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
 import { toast } from 'react-hot-toast';
-
+import { useAuthStore } from "../../store/useAuthStore.js";
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
   const { sendMessage } = useChatStore();
