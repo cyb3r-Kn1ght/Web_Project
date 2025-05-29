@@ -150,7 +150,7 @@ const HistoryChatbox = () => {
                       toast.error('Tính năng Text-to-Speech chỉ dành cho tài khoản premium. Vui lòng nâng cấp.');
                       return;
                        }
-                      handleTTS(message.message);}}
+                      handlePlayTTS(message.message);}}
                     >
                       <FontAwesomeIcon
                         icon={faHeadphones}
