@@ -4,6 +4,7 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 import { useChatStore } from "../../store/useChatStore.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-hot-toast';
 
 const spinStyle = `
 @keyframes spin {
@@ -144,8 +145,12 @@ const HistoryChatbox = () => {
                     <button
                       className="button-text-to-speech"
                       title="Nghe"
-                      onClick={() => handlePlayTTS(message.message, message._id || `temp-${message.timestamp}`)}
-                      disabled={spinningId === (message._id || `temp-${message.timestamp}`)}
+                      onClick={async () => {
+                      if (authUser.tier !== 'premium') {
+                      toast.error('Tính năng Text-to-Speech chỉ dành cho tài khoản premium. Vui lòng nâng cấp.');
+                      return;
+                       }
+                      handleTTS(message.message);}}
                     >
                       <FontAwesomeIcon
                         icon={faHeadphones}

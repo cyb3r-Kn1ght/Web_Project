@@ -105,6 +105,12 @@ export const login = async (req, res) => {
         maxAge: 60 * 60 * 1000
     });
     console.log("Login successful");
+      const today = new Date().toDateString();
+      if (user.lastReset.toDateString() !== today) {
+ user.remainingMessages = 10;
+ user.lastReset = new Date();
+  await user.save();
+ }
     res.json({ token, user });
 }
 

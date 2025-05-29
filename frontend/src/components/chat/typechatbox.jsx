@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAudio, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { useChatStore } from "../../store/useChatStore.js";
+import { toast } from 'react-hot-toast';
 
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
   const { sendMessage } = useChatStore();
-
+  const { authUser } = useAuthStore(); // giả sử toast từ react-hot-toast
   const handleSend = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
+       if (authUser.tier === 'free' && authUser.remainingMessages <= 0) {
+     toast.error('Bạn đã hết số lần nhắn tin miễn phí trong ngày. Vui lòng nâng cấp gói premium để tiếp tục.');
+     return;
+   }
     setMessage("");
     try {
       await sendMessage({

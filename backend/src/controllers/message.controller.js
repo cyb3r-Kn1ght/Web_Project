@@ -42,8 +42,18 @@ export const sendMessage = async (req, res, next) => {
     console.log('Req.body ➞', req.body);
     const celebId = req.params.id;
     const userId = req.user._id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('tier remainingMessages');
+      // Nếu đang free và đã dùng hết lượt
+  if (user.tier === 'free' && user.remainingMessages <= 0) {
+     return res.status(403).json({
+       error: 'Bạn đã hết số lần nhắn tin miễn phí trong ngày. Vui lòng nâng cấp gói premium để tiếp tục.'
+    });
+   }
     const messageText = req.body.message;
+       if (user.tier === 'free') {
+        user.remainingMessages -= 1;
+        await user.save();
+  }
 
     // 1. Lưu tin nhắn người dùng
     const userMessage = await Chat.create({

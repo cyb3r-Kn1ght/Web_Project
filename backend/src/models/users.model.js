@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 10 // Số tin nhắn miễn phí ban đầu
     },
+    lastReset: { type: Date, default: () => new Date() },
 
 }, { timestamps: true } 
 );
