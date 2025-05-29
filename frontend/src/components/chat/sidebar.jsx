@@ -11,6 +11,7 @@ import { faBars, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar: toggleSidebarProp}) => {
   // State để lưu trạng thái thu gọn hoặc mở rộng sidebar
   const [collapsed, setCollapsed] = useState(false);
+  const isMobile = window.innerWidth <= 768; // Kiểm tra nếu là thiết bị di động
   // Hàm để thay đổi trạng thái thu gọn hoặc mở rộng sidebar
   const handleToggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -34,7 +35,12 @@ const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSideb
           <BodySidebar
             celebs={celebs}
             selectedCeleb={selectedCeleb}
-            handleSelect={handleSelect}
+            handleSelect={(celebs) => {
+              handleSelect(celebs);
+              if (isMobile) {
+                toggleSidebarProp();
+              }
+            }}
           />
           {/* Phần dưới của sidebar */}
           <FooterSidebar />
