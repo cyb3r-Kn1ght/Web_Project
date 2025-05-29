@@ -78,7 +78,7 @@ export const sendMessage = async (req, res, next) => {
 let aiText;
 try {
   const modelResp = await axios.post(
-    "https://dc67-115-79-235-184.ngrok-free.app", // Thay đổi endpoint thành /chat
+    "https://dc67-115-79-235-184.ngrok-free.app/generate", // Thay đổi endpoint thành /chat
     {
       prompt: messageText,
       api_key: "memaybeo",
