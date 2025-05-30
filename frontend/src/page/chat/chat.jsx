@@ -10,6 +10,12 @@ import { useChatStore } from "../../store/useChatStore";
 import { toast } from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 document.title = "AI Chatbot";
+
+const Chat = () => {
+  const { connectSocket, socket, authUser } = useAuthStore();      // kết nối socket
+  const { celebs, selectedCeleb, setSelectedCeleb, getCelebs } = useChatStore();
+  const [isSocketReady, setIsSocketReady] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 const location = useLocation();
 const navigate = useNavigate();
 const checkAuth = useAuthStore(state => state.checkAuth);
@@ -33,12 +39,6 @@ useEffect(() => {
   params.delete('payment');
   navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
 }, [location.search, navigate, checkAuth]);
-
-const Chat = () => {
-  const { connectSocket, socket, authUser } = useAuthStore();      // kết nối socket
-  const { celebs, selectedCeleb, setSelectedCeleb, getCelebs } = useChatStore();
-  const [isSocketReady, setIsSocketReady] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     getCelebs();                                                   // lấy danh sách celeb
