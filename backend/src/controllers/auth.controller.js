@@ -214,8 +214,20 @@ export const resetPassword = async (req, res) => {
 export const googleAuth = (req, res, next) => {
   passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
     try {    
+    
       if (err || !user) return res.redirect('https://web-project-flame-five.vercel.app/login?error=auth_failed');
       
+      const { id, displayName, emails } = user;
+      let existingUser = await User.findOne({ GoogleId: id });
+      if (!existingUser) {
+        existingUser = new User({
+          username: displayName,
+          email: emails && emails.length > 0 ? emails[0].value : '',
+          GoogleId: id
+        });
+        await existingUser.save();
+      }
+
       // Tạo JWT và set vào HTTP-only cookie (như hiện tại)
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "1h" });
       res.cookie('jwt', token, {
