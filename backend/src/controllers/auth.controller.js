@@ -229,7 +229,7 @@ export const googleAuth = (req, res, next) => {
       }
 
       // Tạo JWT và set vào HTTP-only cookie (như hiện tại)
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+      const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
       res.cookie('jwt', token, {
         httpOnly: true,
         secure: true,
