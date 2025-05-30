@@ -212,37 +212,34 @@ export const resetPassword = async (req, res) => {
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
 export const googleAuth = (req, res, next) => {
-    // gọi hàm authenticate của passport với strategy là "google"
     passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
-        try {    
-            // nếu có lỗi hoặc không có user thì trả về thông báo lỗi
+        try {
             if (err || !user) {
-                return res.status(400).send("Authentication failed");
+                return res.redirect('https://web-project-flame-five.vercel.app/login?error=auth_failed');
             }
-            // lấy thông tin cần thiết từ user
             const { id, displayName, emails } = user;
-            
-            // kiểm tra xem user đã tồn tại trong csdl chưa
             let existingUser = await User.findOne({ GoogleId: id });
             if (!existingUser) {
                 existingUser = new User({
                     username: displayName,
-                    email: emails[0].value,
+                    email: emails && emails.length > 0 ? emails[0].value : '',
                     GoogleId: id
                 });
                 await existingUser.save();
             }
             // tạo token
             const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
-            // Set cookie
-            res.cookie('jwt', token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'none',
-                maxAge: 60 * 60 * 1000
-            });
-            res.redirect(`https://web-project-flame-five.vercel.app/chat`);
-            res.json({ token, user: existingUser });
+            // Trả về HTML script redirect kèm token trên URL
+            res.send(`
+                <html>
+                  <head><title>Redirecting...</title></head>
+                  <body>
+                    <script>
+                      window.location.href = "https://web-project-flame-five.vercel.app/chat?token=${token}";
+                    </script>
+                  </body>
+                </html>
+            `);
         } catch (error) {
             console.error("Error in Google authentication:", error.message);
             return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
