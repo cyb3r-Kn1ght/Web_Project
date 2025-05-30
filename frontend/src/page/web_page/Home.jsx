@@ -14,9 +14,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Suspense>
-        <Tittle />
-      </Suspense>
+      <Tittle />
       <Suspense>
         <ContainerButton />
       </Suspense>
