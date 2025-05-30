@@ -13,7 +13,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <Tittle />
         <ContainerButton />
         <br />
