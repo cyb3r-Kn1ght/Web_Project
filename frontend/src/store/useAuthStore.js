@@ -17,19 +17,19 @@ export const useAuthStore = create(persist((set, get) => ({
 
   // Hàm kiểm tra xác thực, nếu thành công sẽ gọi connectSocket
   checkAuth: async () => {
-    try {
-      const res = await axiosInstance.get("/api/auth/check"); //gửi HTTP request GET thông tin xác thực người dùng
-      set({ authUser: res.data });
-      //set({ authUser: res.data });
-      get().connectSocket();
-    } catch (error) {
-      console.log("Error in checkAuth: ", error);
-      set({ authUser: null });
-    } finally {
-       //thực thi bất kể code ban đầu được thực thi ở try hay là catch
-      set({ isCheckingAuth: false });
-    }
-  },
+  try {
+    const res = await axiosInstance.get("/api/auth/check", {
+      withCredentials: true // Đảm bảo gửi cookie
+    });
+    
+    // Cập nhật state người dùng
+    set({ authUser: res.data });
+    return res.data;
+  } catch (error) {
+    set({ authUser: null });
+    throw error;
+  }
+},
 
   // Hàm đăng ký, sau đó kết nối socket
   SignUp: async (data) => {

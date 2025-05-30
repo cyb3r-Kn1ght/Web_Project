@@ -212,30 +212,25 @@ export const resetPassword = async (req, res) => {
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
 export const googleAuth = (req, res, next) => {
-    passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
-        try {
-            if (err || !user) {
-                return res.redirect('https://web-project-flame-five.vercel.app/login?error=auth_failed');
-            }
-            const { id, displayName, emails } = user;
-            let existingUser = await User.findOne({ GoogleId: id });
-            if (!existingUser) {
-                existingUser = new User({
-                    username: displayName,
-                    email: emails && emails.length > 0 ? emails[0].value : '',
-                    GoogleId: id
-                });
-                await existingUser.save();
-            }
-            // tạo token
-            const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
-            // Trả về HTML script redirect kèm token trên URL
-            res.redirect(`https://web-project-flame-five.vercel.app/chat`);
-        } catch (error) {
-            console.error("Error in Google authentication:", error.message);
-            return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
-        }
-    })(req, res, next);
+  passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
+    try {    
+      if (err || !user) return res.redirect('https://web-project-flame-five.vercel.app/login?error=auth_failed');
+      
+      // Tạo JWT và set vào HTTP-only cookie (như hiện tại)
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: 60 * 60 * 1000
+      });
+      
+      // Redirect về frontend với success status
+      res.redirect(`https://web-project-flame-five.vercel.app/auth/oauth-success`);
+    } catch (error) {
+      res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
+    }
+  })(req, res, next);
 };
 
 // xử lý đăng nhập bằng Facebook OAuth thông qua Passport.js.
