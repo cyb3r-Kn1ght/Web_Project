@@ -106,9 +106,9 @@ export const login = async (req, res) => {
     });
     console.log("Login successful");
       const today = new Date().toDateString();
-      if (user.lastReset.toDateString() !== today) {
- user.remainingMessages = 10;
- user.lastReset = new Date();
+      if (!user.lastReset||user.lastReset.toDateString() !== today) {
+            user.remainingMessages = 10;
+            user.lastReset = new Date();
   await user.save();
  }
     res.json({ token, user });
