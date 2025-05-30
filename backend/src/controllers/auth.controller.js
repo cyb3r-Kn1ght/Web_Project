@@ -72,6 +72,7 @@ export const signup = async (req, res) => {
     // lưu user mới vào trong csdl
     await newUser.save();
     res.send("User created successfully");
+    res.redirect(`https://web-project-flame-five.vercel.app/login`);
 }
 
 export const login = async (req, res) => {
@@ -232,14 +233,14 @@ export const googleAuth = (req, res, next) => {
                 await existingUser.save();
             }
 
-            // res.json({
-            //     user: {
-            //         _id: existingUser._id,
-            //         username: existingUser.username,
-            //         email: existingUser.email,
-            //         GoogleId: existingUser.GoogleId
-            //     }
-            // });
+            res.json({
+                user: {
+                    _id: existingUser._id,
+                    username: existingUser.username,
+                    email: existingUser.email,
+                    GoogleId: existingUser.GoogleId
+                }
+            });
 
             // tạo token
             const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
@@ -251,6 +252,7 @@ export const googleAuth = (req, res, next) => {
                 maxAge: 60 * 60 * 1000
             });
             res.redirect(`https://web-project-flame-five.vercel.app/chat`);
+            res.json({ token, user: existingUser });
         } catch (error) {
             console.error("Error in Google authentication:", error.message);
             return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
