@@ -226,7 +226,7 @@ export const googleAuth = (req, res, next) => {
       });
       
       // Redirect về frontend với success status
-      res.redirect(`https://web-project-flame-five.vercel.app/auth/oauth-success`);
+      res.redirect(`https://web-project-flame-five.vercel.app/chat`);
     } catch (error) {
       res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
     }
