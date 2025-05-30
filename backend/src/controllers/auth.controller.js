@@ -121,14 +121,17 @@ export const logout = (req, res) => {
     res.json({ message: "Logout successful" });
 }
 
-export const checkAuth = (req, res) => {
-    try {
-        res.status(200).json(req.user);
-    } catch (error) {
-        console.log("Error in checkAuth controller", error.message);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
+export const checkAuth = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password'); // không trả password
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("Error in checkAuth controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
+
 
 // xử lý quên mật khẩu
 export const forgotPassword = async (req, res) => {
