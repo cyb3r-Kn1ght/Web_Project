@@ -230,16 +230,7 @@ export const googleAuth = (req, res, next) => {
             // tạo token
             const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
             // Trả về HTML script redirect kèm token trên URL
-            res.send(`
-                <html>
-                  <head><title>Redirecting...</title></head>
-                  <body>
-                    <script>
-                      window.location.href = "https://web-project-flame-five.vercel.app/chat?token=${token}";
-                    </script>
-                  </body>
-                </html>
-            `);
+            res.redirect(`https://web-project-flame-five.vercel.app/chat`);
         } catch (error) {
             console.error("Error in Google authentication:", error.message);
             return res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
