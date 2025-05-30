@@ -232,16 +232,6 @@ export const googleAuth = (req, res, next) => {
                 });
                 await existingUser.save();
             }
-
-            res.json({
-                user: {
-                    _id: existingUser._id,
-                    username: existingUser.username,
-                    email: existingUser.email,
-                    GoogleId: existingUser.GoogleId
-                }
-            });
-
             // tạo token
             const token = jwt.sign({ _id: existingUser._id }, JWT_SECRET, { expiresIn: "1h" });
             // Set cookie
