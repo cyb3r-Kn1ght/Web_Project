@@ -43,6 +43,7 @@
   color: transparent;
   margin: 0 0 0.75rem 0;
   letter-spacing: -0.01em;
+  font-display: swap;
 }
 .button-part p {
   font-family: "Inter", sans-serif;
@@ -51,6 +52,7 @@
   color: #555555;
   font-weight: 400;
   margin: 0;
+  font-display: swap;
 }
 @media (max-width: 768px) {
   .container-button {

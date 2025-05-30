@@ -30,6 +30,7 @@
    color: #1d4ed8;
   font-family: "Poppins", sans-serif;
   transition: all 0.3s ease;
+  font-display: swap;
 }
 .navbar.scrolled .logo-text {
   color: white;
