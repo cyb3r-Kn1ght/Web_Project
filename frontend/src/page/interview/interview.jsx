@@ -84,7 +84,7 @@ const Interview = () => {
   return (
     <div className="containerI">
       <header className="headerI">
-        <div className="logoI">DeepSeek API Docs</div>
+        <div className="logoI">AI ChatBot</div>
         <Link to="/" className="home-btn">Home</Link>
       </header>
 
