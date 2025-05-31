@@ -27,6 +27,7 @@ function App() {
           element={authUser ? <Payment /> : <Navigate to="/auth/login" />}
         />
       </Routes>
+      <Route path="/interview" element={<Interview />} />
 
       <Toaster />
     </>
