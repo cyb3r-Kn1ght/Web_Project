@@ -6,9 +6,6 @@ const sidebarItems = [
   { section: 'Quick Start', items: ['Your First API Call', 'Test Case'] },
   { section: 'Models & Pricing', items: [] },
   { section: 'The Temperature Parameter', items: [] },
-  { section: 'Token & Token Usage', items: [] },
-  { section: 'Rate Limit', items: [] },
-  { section: 'Error Codes', items: [] },
   {
     section: 'News', 
     items: [
@@ -87,8 +84,6 @@ const Interview = () => {
   return (
     <div className="containerI">
       <header className="headerI">
-        
-        <button className="toggle-btn" onClick={() => {}}>☰</button>
         <div className="logoI">DeepSeek API Docs</div>
         <Link to="/" className="home-btn">Home</Link>
       </header>
