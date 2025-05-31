@@ -21,7 +21,7 @@ const sidebarItems = [
   }
 ];
 
-const DeepSeekLayout = () => {
+const Interview = () => {
   return (
     <div className="container">
       <aside className="sidebar">
@@ -93,4 +93,4 @@ const DeepSeekLayout = () => {
   );
 };
 
-export default DeepSeekLayout;
+export default Interview;
