@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import './interview.css';
+import { Link } from 'react-router-dom';
+import '../../style/interview/interview.css';
 
 const sidebarItems = [
   { section: 'Quick Start', items: ['Your First API Call', 'Test Case'] },
@@ -24,25 +25,13 @@ const sidebarItems = [
 ];
 
 const Interview = () => {
-  // State lưu các section đang mở (mở rộng)
   const [openSections, setOpenSections] = useState([]);
-  // State lưu mục nhỏ đang chọn để render nội dung
   const [selectedItem, setSelectedItem] = useState('Your First API Call');
 
-  // Toggle khi click vào section lớn
   const handleSectionClick = (section) => {
-    setOpenSections(prev => {
-      if (prev.includes(section)) {
-        // Nếu đã mở thì đóng
-        return prev.filter(s => s !== section);
-      } else {
-        // Mở thêm, không đóng các section khác
-        return [...prev, section];
-      }
-    });
+    setOpenSections(prev => prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]);
   };
 
-  // Render nội dung khi click vào mục nhỏ
   const renderContent = (key) => {
     switch (key) {
       case 'Your First API Call':
@@ -97,31 +86,22 @@ const Interview = () => {
 
   return (
     <div className="containerI">
-      {/* Header */}
       <header className="headerI">
-        <button 
-          className="toggle-btn" 
-          onClick={() => {/* có thể thêm logic show/hide sidebar nếu muốn */}}
-        >
-          ☰
-        </button>
-        <div className="logoI">AI ChatBot</div>
+        <Link to="/" className="home-btn">Home</Link>
+        <button className="toggle-btn" onClick={() => {}}>☰</button>
+        <div className="logoI">DeepSeek API Docs</div>
       </header>
 
       <div className="bodyI">
-        {/* Sidebar bên trái */}
         <aside className="navI">
           {sidebarItems.map((group, idx) => (
             <div key={idx} className="menu-groupI">
-              {/* Mỗi section lớn chỉ toggle mở rộng item, không render nội dung */}
               <div
                 className={`menu-headerI ${openSections.includes(group.section) ? 'activeI' : ''}`}
                 onClick={() => handleSectionClick(group.section)}
               >
                 {group.section}
               </div>
-
-              {/* Hiển thị danh sách item nếu section đang mở */}
               {group.items.length > 0 && openSections.includes(group.section) && (
                 <ul className="menu-listI">
                   {group.items.map((item, index) => (
@@ -139,7 +119,6 @@ const Interview = () => {
           ))}
         </aside>
 
-        {/* Phần content bên phải hiển thị theo selectedItem */}
         <main className="contentI">
           {renderContent(selectedItem)}
         </main>
