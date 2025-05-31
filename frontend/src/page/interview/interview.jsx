@@ -105,7 +105,7 @@ const Interview = () => {
         >
           ☰
         </button>
-        <div className="logoI">DeepSeek API Docs</div>
+        <div className="logoI">AI ChatBot</div>
       </header>
 
       <div className="bodyI">
