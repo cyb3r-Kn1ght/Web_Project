@@ -87,9 +87,10 @@ const Interview = () => {
   return (
     <div className="containerI">
       <header className="headerI">
-        <Link to="/" className="home-btn">Home</Link>
+        
         <button className="toggle-btn" onClick={() => {}}>☰</button>
         <div className="logoI">DeepSeek API Docs</div>
+        <Link to="/" className="home-btn">Home</Link>
       </header>
 
       <div className="bodyI">

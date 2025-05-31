@@ -33,7 +33,19 @@
   font-weight: bold;
   color: #343a40;
 }
+/* Nút Home: đặt margin-left auto để nó luôn nằm ngoài cùng bên phải */
+.home-btn {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #343a40;    /* Tùy chỉnh màu chữ cho phù hợp */
+  margin-left: auto;
+  padding: 5px 10px;
+}
 
+.home-btn:hover {
+  text-decoration: underline;
+}
 /* -------- Body (content chính) -------- */
 .bodyI {
   display: flex;
