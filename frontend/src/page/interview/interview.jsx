@@ -23,9 +23,9 @@ const sidebarItems = [
 
 const Interview = () => {
   return (
-    <div className="container">
-      <aside className="sidebar">
-        <div className="logo">DeepSeek API Docs</div>
+    <div className="containerI">
+      <aside className="sidebarI">
+        <div className="logoI">DeepSeek API Docs</div>
         {sidebarItems.map((group, idx) => (
           <div key={idx} className="menu-group">
             <div className="menu-header">{group.section}</div>
@@ -42,9 +42,9 @@ const Interview = () => {
         ))}
       </aside>
 
-      <main className="content">
+      <main className="contentI">
         <nav className="breadcrumb">
-          <span>Quick Start</span> &gt; <span className="active">Your First API Call</span>
+          <span>Quick Start</span> &gt; <span className="activeI">Your First API Call</span>
         </nav>
 
         <h1>Your First API Call</h1>
