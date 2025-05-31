@@ -1,5 +1,5 @@
-import React from 'react';
-import '../../style/interview/interview.css';
+import React, { useState } from 'react';
+import './interview.css';
 
 const sidebarItems = [
   { section: 'Quick Start', items: ['Your First API Call'] },
@@ -8,7 +8,9 @@ const sidebarItems = [
   { section: 'Token & Token Usage', items: [] },
   { section: 'Rate Limit', items: [] },
   { section: 'Error Codes', items: [] },
-  { section: 'News', items: [
+  {
+    section: 'News', 
+    items: [
       'DeepSeek-R1-0528 Release 2025/05/28',
       'DeepSeek-V3-0324 Release 2025/03/25',
       'DeepSeek-R1 Release 2025/01/20',
@@ -22,73 +24,108 @@ const sidebarItems = [
 ];
 
 const Interview = () => {
+  // Khởi tạo state lưu mục đang chọn (mặc định là 'Quick Start')
+  const [selected, setSelected] = useState('Quick Start');
+
+  // Hàm để render nội dung bên phải dựa trên giá trị `selected`
+  const renderContent = (key) => {
+    switch (key) {
+      case 'Quick Start':
+        return (
+          <>
+            <h2>Your First API Call</h2>
+            <p>
+              The DeepSeek API uses an API format compatible with OpenAI. 
+              By modifying the configuration, you can use the OpenAI SDK or software 
+              compatible with the OpenAI API to access the DeepSeek API.
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>PARAM</th>
+                  <th>VALUE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>base_url *</td>
+                  <td><code>https://api.deepseek.com</code></td>
+                </tr>
+                <tr>
+                  <td>api_key</td>
+                  <td>apply for an <a href="#">API key</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="footnote">
+              * To be compatible with OpenAI, you can also use <code>https://api.deepseek.com/v1</code> 
+              as the <code>base_url</code>.
+            </p>
+          </>
+        );
+
+      default:
+        // Nếu người dùng click vào những mục chưa có nội dung, hiển thị placeholder
+        return (
+          <p>
+            Content for <strong>{key}</strong> will be available soon.
+          </p>
+        );
+    }
+  };
+
   return (
     <div className="containerI">
-      <aside className="sidebarI">
+      {/* Header trên cùng */}
+      <header className="headerI">
+        <button 
+          className="toggle-btn" 
+          onClick={() => {
+            /* Có thể gắn logic show/hide sidebar nếu cần */
+          }}
+        >
+          ☰
+        </button>
         <div className="logoI">DeepSeek API Docs</div>
-        {sidebarItems.map((group, idx) => (
-          <div key={idx} className="menu-group">
-            <div className="menu-header">{group.section}</div>
-            {group.items.length > 0 && (
-              <ul className="menu-list">
-                {group.items.map((item, index) => (
-                  <li key={index} className="menu-item">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </aside>
+      </header>
 
-      <main className="contentI">
-        <nav className="breadcrumb">
-          <span>Quick Start</span> &gt; <span className="activeI">Your First API Call</span>
-        </nav>
+      {/* Phần thân chia làm 2 cột */}
+      <div className="bodyI">
+        {/* Cột trái: thanh điều hướng */}
+        <aside className="navI">
+          {sidebarItems.map((group, idx) => (
+            <div key={idx} className="menu-groupI">
+              {/* Tiêu đề section, click để chọn */}
+              <div
+                className={`menu-headerI ${selected === group.section ? 'activeI' : ''}`}
+                onClick={() => setSelected(group.section)}
+              >
+                {group.section}
+              </div>
 
-        <h1>Your First API Call</h1>
-        <p>
-          The DeepSeek API uses an API format compatible with OpenAI. By modifying the configuration, you can use the OpenAI SDK
-          or softwares compatible with the OpenAI API to access the DeepSeek API.
-        </p>
+              {/* Nếu section có items và đang được chọn, hiển thị danh sách items */}
+              {group.items.length > 0 && selected === group.section && (
+                <ul className="menu-listI">
+                  {group.items.map((item, index) => (
+                    <li
+                      key={index}
+                      className={`menu-itemI ${selected === item ? 'activeI' : ''}`}
+                      onClick={() => setSelected(item)}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </aside>
 
-        <table className="param-table">
-          <thead>
-            <tr>
-              <th>PARAM</th>
-              <th>VALUE</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>base_url *</td>
-              <td><code>https://api.deepseek.com</code></td>
-            </tr>
-            <tr>
-              <td>api_key</td>
-              <td>apply for an <a href="#">API key</a></td>
-            </tr>
-          </tbody>
-        </table>
-        <p className="footnote">
-          * To be compatible with OpenAI, you can also use <code>https://api.deepseek.com/v1</code> as the <code>base_url</code>.
-          But note that the <code>v1</code> here has NO relationship with the model's version.
-        </p>
-        <p className="footnote">
-          * The <code>deepseek-chat</code> model points to DeepSeek-V3-0324. You can invoke it by specifying <code>model='deepseek-chat'</code>.
-        </p>
-        <p className="footnote">
-          * The <code>deepseek-reasoner</code> model points to DeepSeek-R1-0528. You can invoke it by specifying <code>model='deepseek-reasoner'</code>.
-        </p>
-
-        <h2>Invoke The Chat API</h2>
-        <p>
-          Once you have obtained an API key, you can access the DeepSeek API using the following example scripts.
-          This is a non-stream example, you can set the <code>stream</code> parameter to <code>true</code> to get stream response.
-        </p>
-        {/* Example code snippet can go here */}
-      </main>
+        {/* Cột phải: nội dung tương ứng */}
+        <main className="contentI">
+          {renderContent(selected)}
+        </main>
+      </div>
     </div>
   );
 };
