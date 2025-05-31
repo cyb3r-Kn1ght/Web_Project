@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './interview.css';
+import '../style/interview/Interview.css';
 
 const sidebarItems = [
   { section: 'Quick Start', items: ['Your First API Call'] },
