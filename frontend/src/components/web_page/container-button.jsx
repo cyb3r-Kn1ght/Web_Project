@@ -8,7 +8,7 @@ function ContainerButton() {
         <h3> Bắt đầu ngay </h3>
         <p> demo </p>
       </Link>
-      <div className="button-part">
+      <div className="button-part" to="/interview">
         <h3> Hướng dẫn sử dụng </h3>
         <p> demo </p>
       </div>

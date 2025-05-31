@@ -3,11 +3,13 @@ import Login from "./page/login/login.jsx";
 import Chat from "./page/chat/chat.jsx";
 import Payment from "./page/payment/payment.jsx";
 import OAuthSuccess from "./page/login/OAuthSuccess.jsx";
+import Interview from "./page/interview/interview.jsx";
 
 import { lazy, Suspense } from "react";
 import { useAuthStore } from "./store/useAuthStore";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+
 function App() {
   const { authUser } = useAuthStore();
   return (
@@ -24,6 +26,7 @@ function App() {
           path="/payment" 
           element={authUser ? <Payment /> : <Navigate to="/auth/login" />}
         />
+         <Route path="/interview" element={<Interview />} />
       </Routes>
 
       <Toaster />
