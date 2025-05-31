@@ -36,7 +36,7 @@ const Interview = () => {
             <h2>Your First API Call</h2>
             <p>
               The DeepSeek API uses an API format compatible with OpenAI. 
-              By modifying the configuration, you can use the OpenAI SDK or software 
+              By modifying the configuration, you can use the OpenAI SDK
               compatible with the OpenAI API to access the DeepSeek API.
             </p>
             <table>
