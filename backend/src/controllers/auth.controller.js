@@ -161,7 +161,7 @@ export const forgotPassword = async (req, res) => {
     });
     await newToken.save();
 
-    const reset_link = `${process.env.FRONTEND_URL}/reset-password/${reset_token}`;
+    const reset_link = `https://web-project-flame-five.vercel.app/reset-password/${reset_token}`;
     await sendEmail(email, reset_link);
     res.json({ message: "Reset link has been sent to your email" });
 }
