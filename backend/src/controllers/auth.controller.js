@@ -32,7 +32,7 @@ const sendEmail = async (email, reset_link) => {
 export const signup = async (req, res) => {
     console.log("Received request at signup:", req.body);
 
-    const { username, password, email } = req.body;
+    const { username,email, password } = req.body;
 
     // kiểm tra xem người dùng đã nhập đủ thông tin chưa
     if (!username || !password || !email) {

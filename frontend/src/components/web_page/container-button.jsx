@@ -4,10 +4,15 @@ import { Link } from "react-router-dom";
 function ContainerButton() {
   return (
     <div className="container-button">
-      <Link className="button-part" to="/auth/login">
-        <h3> Đóng góp ý kiến! </h3>
-        <p> Hãy cho chúng mình ý kiến phản hồi của bạn! </p>
-      </Link>
+       <a
+        className="button-part"
+        href="https://forms.gle/u54WnLQZ9d6Pa7TR8"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h3>Đóng góp ý kiến!</h3>
+        <p>Hãy cho chúng mình ý kiến phản hồi của bạn!</p>
+      </a>
       
             <Link className="button-part" to ="/interview">
         <h3> Giới thiệu chung </h3>
