@@ -13,7 +13,7 @@
 }
 
 .MainTittle {
-  font-weight: 750;
+  font-weight: 800;
   font-size: clamp(2rem, 5vw, 3rem);
   background:  #1d4ed8;
   -webkit-background-clip: text;
