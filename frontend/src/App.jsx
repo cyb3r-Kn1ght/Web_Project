@@ -2,6 +2,8 @@ import Home from "./page/web_page/Home.jsx";
 import Login from "./page/login/login.jsx";
 import Chat from "./page/chat/chat.jsx";
 import Payment from "./page/payment/payment.jsx";
+import ForgotPasswordPage from "./page/login/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./page/login/ResetPasswordPage.jsx";
 import OAuthSuccess from "./page/login/OAuthSuccess.jsx";
 import Interview from "./page/interview/interview.jsx";
 
