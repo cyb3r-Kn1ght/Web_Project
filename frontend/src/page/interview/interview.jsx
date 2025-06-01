@@ -119,7 +119,7 @@ const Interview = () => {
         );
         
       default:
-        return <p> <strong>404 Page Not Found</strong></p>;
+        return <h2><b>Welcome to AI ChatBot</b></h2>;
     }
   };
 
