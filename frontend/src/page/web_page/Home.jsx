@@ -13,7 +13,6 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Tittle />
       <Suspense>
         <ContainerButton />
       </Suspense>
