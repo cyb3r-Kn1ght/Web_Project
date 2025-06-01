@@ -1,30 +1,34 @@
-import React, { useEffect } from "react";
-import "../style/login/login.css";
-import React, { useEffect } from 'react';
-import Input_Field from "../components/login/Input_Fields.jsx";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function Forgot_Password() {
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('https://celebritychatbot.up.railway.app/api/auth/forgot-password', { email });
+      setMessage('Vui lòng kiểm tra email để nhận link đặt lại mật khẩu.');
+    } catch (err) {
+      setMessage('Email không tồn tại hoặc có lỗi xảy ra.');
+    }
+  };
+
   return (
-    <>
-      <div className="forms-container">
-        <div className="signin-signup"></div>
-        <form action="#" className="sign-in-form">
-          <h2 className="title">Forgot Password</h2>
-
-          {/* su dung component vao thuc te */}
-          <Input_Field
-            icon="mail"
-            type="email"
-            placeholder="Email"
-            // value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-            // onChange={(e) =>
-            //   setFormData({ ...formData, email: e.target.value })
-            // }
-          />
-        </form>
-      </div>
-    </>
+    <div>
+      <h2>Quên mật khẩu</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Nhập email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <button type="submit">Gửi link đặt lại mật khẩu</button>
+      </form>
+      {message && <p>{message}</p>}
+    </div>
   );
 }
-
-export default Forgot_Password;

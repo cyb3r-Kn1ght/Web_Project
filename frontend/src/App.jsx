@@ -18,6 +18,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/auth/login" element={authUser ? <Navigate to="/chat" /> : <Login />} />
         <Route path="/auth/oauth-success" element={<OAuthSuccess />} /> 
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route 
           path="/chat" 
           element={authUser ? <Chat /> : <Navigate to="/auth/login" />} 
