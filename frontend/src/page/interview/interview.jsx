@@ -52,7 +52,7 @@ const Interview = () => {
      
       <tr>
         <td>Giới hạn lượt hỏi</td>
-        <td>5 câu/ngày</td>
+        <td>10 câu/ngày</td>
         <td>Không giới hạn</td>
       </tr>
 
