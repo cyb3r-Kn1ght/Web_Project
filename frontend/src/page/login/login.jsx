@@ -105,21 +105,11 @@ const Login = () => {
               />
 
               <p className="forget-password">
-                {/* Forget password <Link to="/forgot-password">click here!</Link> */}
+                Forgot password? <Link to="https://celebritychatbot.up.railway.app/api/auth/forgot-password">click here!</Link> 
               </p>
               <input type="submit" value="Login" className="btn solid" />
               <p className="social-text">Or sign in with social platforms</p>
               <div className="social-media">
-                <a
-                  href="https://celebritychatbot.up.railway.app/api/auth/facebook"
-                  className="social-icon"
-                >
-                  <img
-                    src={FacebookIcon}
-                    alt="FacebookIcon"
-                    className="icon-facebook"
-                  />
-                </a>
 
                 <a href="https://celebritychatbot.up.railway.app/api/auth/google" className="social-icon">
                   <img
@@ -129,6 +119,7 @@ const Login = () => {
                   />
                 </a>
               </div>
+             
             </form>
 
             <form action="#" className="sign-up-form" onSubmit={handleSignUp}>
