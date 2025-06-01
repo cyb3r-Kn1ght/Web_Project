@@ -82,6 +82,7 @@ try {
     {
       prompt: messageText,
       api_key: "memaybeo",
+      persona: "my_tam"
     },
     {
       headers: {
