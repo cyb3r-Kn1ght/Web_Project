@@ -8,8 +8,7 @@ const sidebarItems = [
     items: [
       'Tổng quan trang web',
       'Gói đăng ký',
-      'Model sử dụng',
-      'Sơ lược về trang web'
+      'Model sử dụng'
     ]
   }
 ];
@@ -100,21 +99,6 @@ const Interview = () => {
             </p>
 
           
-          </>
-        );
-
-        case 'Sơ lược về trang web':
-        return (
-          <>
-            <h2>Test Case Content Model</h2>
-            <p>
-              Đây là nội dung dùng để kiểm thử khi chọn mục "Test Case". Bạn có thể thay đổi bất kỳ thông tin gì ở đây.
-            </p>
-            <ul>
-              <li>Item 1: Ví dụ nội dung 1</li>
-              <li>Item 2: Ví dụ nội dung 2</li>
-              <li>Item 3: Ví dụ nội dung 3</li>
-            </ul>
           </>
         );
         
