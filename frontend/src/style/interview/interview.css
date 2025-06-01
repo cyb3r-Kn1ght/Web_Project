@@ -1,15 +1,13 @@
 
-/* Container tổng (bao gồm header + body) */
 .containerI {
   display: flex;
   flex-direction: column;
   height: 100vh;
   font-family: Arial, sans-serif;
-  height: 100vh;
   box-sizing: border-box;
 }
 
-/* -------- Header -------- */
+/* Header */
 .headerI {
   display: flex;
   align-items: center;
@@ -27,47 +25,53 @@
   margin-right: 20px;
 }
 
-/* Logo ở header */
+/* Logo và nút Home */
 .logoI {
   font-size: 1.25rem;
   font-weight: bold;
   color: #343a40;
 }
-/* Nút Home: đặt margin-left auto để nó luôn nằm ngoài cùng bên phải */
 .home-btn {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 600;
-  color: #343a40;    /* Tùy chỉnh màu chữ cho phù hợp */
+  color: #343a40;
   margin-left: auto;
   padding: 5px 10px;
 }
-
 .home-btn:hover {
   text-decoration: underline;
 }
-/* -------- Body (content chính) -------- */
+
+/* Body */
 .bodyI {
   display: flex;
-  flex: 1; /* Chiếm toàn bộ chiều cao còn lại của container */
+  flex: 1;
   overflow: hidden;
 }
 
-/* Sidebar bên trái trong body */
+/* Sidebar */
 .navI {
   width: 250px;
   background-color: #f1f3f5;
   border-right: 1px solid #e0e0e0;
   padding: 20px;
   overflow-y: auto;
+  transition: width 0.3s ease, padding 0.3s ease;
 }
 
-/* Mỗi nhóm mục (section) */
+/* Khi có class .collapsed, sẽ co hết */
+.navI.collapsed {
+  width: 0;
+  padding: 0;
+  border-right: none;
+  overflow: hidden;
+}
+
+/* Các section và item */
 .menu-groupI {
   margin-bottom: 1rem;
 }
-
-/* Tiêu đề section */
 .menu-headerI {
   font-size: 0.95rem;
   font-weight: 600;
@@ -75,53 +79,47 @@
   cursor: pointer;
   padding: 5px 0;
 }
-
 .menu-headerI.activeI {
   color: #212529;
   text-decoration: underline;
 }
-
-/* Danh sách item (nếu có) */
 .menu-listI {
   list-style: none;
   padding-left: 10px;
   margin-top: 5px;
 }
-
 .menu-itemI {
   font-size: 0.9rem;
   color: #6c757d;
   cursor: pointer;
   margin: 3px 0;
 }
-
 .menu-itemI:hover,
 .menu-itemI.activeI {
   color: #343a40;
   text-decoration: underline;
 }
 
-/* -------- Content bên phải -------- */
+/* Content bên phải */
 .contentI {
   flex: 1;
   padding: 30px;
   overflow-y: auto;
   background-color: #ffffff;
+  transition: margin-left 0.3s ease;
 }
 
-/* Tiêu đề con (h2) */
+/* Tiêu đề và đoạn văn trong content */
 .contentI h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
   color: #212529;
 }
-
 .contentI h3 {
   font-size: 1.17rem;
   margin-bottom: 1rem;
   color: #212529;
 }
-/* Đoạn văn bản */
 .contentI p {
   font-size: 1rem;
   line-height: 1.6;
@@ -135,7 +133,6 @@
   border-collapse: collapse;
   margin: 1rem 0;
 }
-
 .contentI th,
 .contentI td {
   border: 1px solid #dee2e6;
@@ -143,7 +140,6 @@
   text-align: left;
   font-size: 0.95rem;
 }
-
 .contentI th {
   background-color: #e9ecef;
   font-weight: 600;
@@ -156,30 +152,160 @@
   margin-top: 0.25rem;
 }
 
-
+/* Các lớp bổ sung */
 .table_register_AI {
-  color: black;  
+  color: black;
 }
-
-.discount-value{
+.discount-value {
   color: red;
 }
-
-.img_off_page{
+.img_off_page {
   width: 80%;
-  height: 80;
+  height: auto;
   margin-top: 5%;
 }
-.About_img{
+.About_img {
   text-align: center;
 }
-
 .About_img .text_script_img {
   color: #525659;
-
 }
-
-.Title_of_page{
+.Title_of_page {
   color: black;
   margin-top: 10px;
+}
+
+/* ========== Responsive (nếu có) ========== */
+/* Ví dụ như trong câu trả lời trước, bạn có thể giữ nguyên các media queries đã thêm */
+
+@media (max-width: 768px) {
+  /* Container chính: giữ flex-direction column, không đổi */
+
+
+  /* Header: padding thu gọn */
+  .headerI {
+    padding: 8px 16px;
+  }
+
+  /* Nút toggle (☰) luôn hiện, để mở/đóng sidebar */
+  .toggle-btn {
+    display: block;
+  }
+
+  /* Sidebar (.navI): co lại hoặc ẩn đi mặc định, hiển thị khi toggle */
+  .navI {
+    position: fixed;
+    top: 0;
+    left: -250px;       /* Ẩn khỏi khung nhìn */
+    height: 100vh;
+    width: 250px;
+    background-color: #f1f3f5;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+
+  /* Khi sidebar có class "open", chuyển vào khung nhìn */
+  .navI.open {
+    left: 0;
+  }
+
+  /* Body content: khi sidebar đang mở, có thể đặt overlay */
+  .bodyI {
+    position: relative;
+  }
+  .bodyI::after {
+    content: "";
+    display: none; /* mặc định không hiện */
+  }
+  /* Khi sidebar mở, hiển thị overlay nền đen mờ */
+  .bodyI.overlay-active::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 500;
+  }
+
+  /* Content chính: padding thu gọn */
+  .contentI {
+    padding: 20px;
+  }
+
+  /* Sidebar width: giữ 250px khi mở, nhưng phần content phủ toàn độ rộng */
+  /* Khi sidebar đóng, content sẽ chiếm hết */
+  .contentI {
+    width: 100%;
+  }
+
+  /* Menu header & item: thu nhỏ font nếu cần */
+  .menu-headerI {
+    font-size: 0.9rem;
+  }
+  .menu-itemI {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===========================
+   Responsive cho điện thoại (<=480px)
+   =========================== */
+@media (max-width: 480px) {
+  /* Header: font-logo và nút thu gọn hơn */
+  .logoI {
+    font-size: 1rem;
+  }
+  .toggle-btn {
+    font-size: 1.25rem;
+    margin-right: 12px;
+  }
+  .home-btn {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
+  /* Sidebar: thu nhỏ padding hoặc ẩn hẳn khi đóng */
+  .navI {
+    width: 200px;
+    padding: 16px;
+  }
+  .navI.open {
+    left: 0;
+  }
+
+  /* Menu header & item: tiếp tục thu nhỏ */
+  .menu-headerI {
+    font-size: 0.85rem;
+  }
+  .menu-itemI {
+    font-size: 0.8rem;
+  }
+
+  /* Content: gỡ bỏ margin/padding thừa */
+  .contentI {
+    padding: 16px;
+  }
+
+  /* Tiêu đề trong nội dung: thu nhỏ */
+  .contentI h2 {
+    font-size: 1.5rem;
+  }
+  .contentI h3 {
+    font-size: 1rem;
+  }
+  .contentI p {
+    font-size: 0.95rem;
+  }
+
+  /* Ảnh (.img_off_page) */
+  .img_off_page {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+  }
 }

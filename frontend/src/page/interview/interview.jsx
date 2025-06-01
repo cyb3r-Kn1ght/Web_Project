@@ -20,7 +20,7 @@ const sidebarItems = [
 const Interview = () => {
   const [openSections, setOpenSections] = useState([]);
   const [selectedItem, setSelectedItem] = useState('Your First API Call');
-
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const handleSectionClick = (section) => {
     setOpenSections(prev => prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]);
   };
@@ -148,12 +148,19 @@ const Interview = () => {
   return (
     <div className="containerI">
       <header className="headerI">
+        <button
+          className="toggle-btn"
+          onClick={() => setIsSidebarCollapsed(prev => !prev)}
+        >
+          ☰
+        </button>
         <div className="logoI">AI ChatBot</div>
         <Link to="/" className="home-btn">Home</Link>
       </header>
 
       <div className="bodyI">
-        <aside className="navI">
+       
+           <aside className={`navI ${isSidebarCollapsed ? 'collapsed' : ''}`}>  
           {sidebarItems.map((group, idx) => (
             <div key={idx} className="menu-groupI">
               <div
