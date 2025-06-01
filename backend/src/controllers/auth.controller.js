@@ -157,7 +157,7 @@ export const forgotPassword = async (req, res) => {
     const newToken = new Token({
         userId: user._id,
         token: reset_token,
-        expiresAt: Date.now() + 15 * 60 * 1000
+        expireAt: Date.now() + 15 * 60 * 1000 // 15 phút
     });
     await newToken.save();
 
@@ -175,16 +175,15 @@ export const resetPassword = async (req, res) => {
         return res.status(400).send("Missing new password");
     }
 
-    // kiểm tra độ mạnh của mật khẩu mới
-    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
-    // if (!passwordRegex.test(newPassword)) {
-    //     return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
-    // }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
+    }
 
     try {
         // tìm token đã lưu trong csdl
         const tokenRecord = await Token.findOne({ token });
-        if (!tokenRecord || tokenRecord.expiresAt < Date.now()) {
+        if (!tokenRecord || tokenRecord.expireAt < Date.now()) {
             if (tokenRecord) await tokenRecord.remove();
             return res.status(400).send("Invalid or expired token");
         }
