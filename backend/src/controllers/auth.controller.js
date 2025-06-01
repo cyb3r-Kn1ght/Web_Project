@@ -4,7 +4,7 @@ import Token from '../models/token.model.js'
 import bcrypt from 'bcryptjs' // mã hóa mật khẩu của người dùng vào trong csdl
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import cryto, { randomBytes } from 'crypto'; // random token reset mật khẩu
+import crypto, { randomBytes } from 'crypto'; // random token reset mật khẩu
 import nodemailer from 'nodemailer'; // thư viện gửi gmail
 import passport from 'passport';
 dotenv.config();
