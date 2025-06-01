@@ -1,5 +1,5 @@
 import Navbar from "../../components/web_page/navbar.jsx";
-import React, { lazy, Suspense, useEffect } from 'react';
+import  { lazy, Suspense, useEffect } from 'react';
 import "../../style/web_page/Home_module.css";
 import "../../style/web_page/navbar.css";
 
