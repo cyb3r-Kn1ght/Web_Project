@@ -1,7 +1,7 @@
 :root {
   --primary-color: #1d4ed8;
   --text-shadow-color: rgba(0, 0, 0, 0.3);
-  --font-family-poppins: "Poppins", sans-serif;
+  --font-family-poppins: sans-serif;
 }
 
 .Tittle-section, .MainTittle, .debcribe {
