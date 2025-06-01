@@ -18,17 +18,17 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="forgot-container">
-      <h2 className="forgot-title">Quên mật khẩu</h2>
+      <h2 className="forgot-title">Quên mật khẩu?</h2>
       <form className="forgot-form" onSubmit={handleSubmit}>
         <input
           className="forgot-input"
           type="email"
-          placeholder="Nhập email"
+          placeholder="Nhập email của bạn"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
         />
-        <button className="forgot-btn" type="submit">Gửi link đặt lại mật khẩu</button>
+        <button className="forgot-btn" type="submit">Tiếp tục</button>
       </form>
       {message && <p className="forgot-message">{message}</p>}
     </div>
