@@ -3,20 +3,13 @@ import { Link } from 'react-router-dom';
 import '../../style/interview/interview.css';
 
 const sidebarItems = [
-  { section: 'Quick Start', items: ['Your First API Call', 'Test Case'] },
-  { section: 'Models & Pricing', items: [] },
-  { section: 'The Temperature Parameter', items: [] },
   {
-    section: 'News', 
+    section: 'Giới thiệu chung', 
     items: [
-      'DeepSeek-R1-0528 Release 2025/05/28',
-      'DeepSeek-V3-0324 Release 2025/03/25',
-      'DeepSeek-R1 Release 2025/01/20',
-      'DeepSeek APP 2025/01/15',
-      'Introducing DeepSeek-V3 2024/12/26',
-      'DeepSeek-V2.5-1210 Release 2024/12/10',
-      'DeepSeek-R1-Lite Release 2024/11/20',
-      'DeepSeek-V2.5 Release 2024/11/05'
+      'Công nghệ trang web', 
+      'Gói đăng ký', 
+      'Model sử dụng',
+      'Sơ lược về trang web'
     ]
   }
 ];

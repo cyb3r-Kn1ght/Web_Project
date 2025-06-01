@@ -104,9 +104,7 @@ const Login = () => {
                 }
               />
 
-              <p className="forget-password">
-                Forgot password? <Link to="https://celebritychatbot.up.railway.app/api/auth/forgot-password">click here!</Link> 
-              </p>
+              <a href = "https://celebritychatbot.up.railway.app/api/auth/forgot-password" className="forget-password">Forgot password?</a>
               <input type="submit" value="Login" className="btn solid" />
               <p className="social-text">Or sign in with social platforms</p>
               <div className="social-media">
