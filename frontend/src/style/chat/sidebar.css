@@ -34,6 +34,7 @@
 .sidebar-wrapper.collapsed .sidebar-content {
   display: none;
 }
+
 .sidebar-wrapper.collapsed .sidebar-title {
   display: none;
 }
@@ -48,7 +49,8 @@
   margin-top: 0.25rem;
   background-color: #4a90e2;
   color: white;
-  max-height: 1rem;;
+  max-height: 1rem;
+  ;
 }
 
 .sidebar-title {
@@ -63,7 +65,7 @@
   flex: 1;
   padding: 0.5rem;
   overflow-y: auto;
-  background-color:whitesmoke;
+  background-color: whitesmoke;
   border-radius: 10px;
 }
 
@@ -165,7 +167,7 @@
   right: 0;
   background-color: white;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -185,6 +187,7 @@
 .settings-option:hover {
   background-color: #f0f0f0;
 }
+
 /* Account info */
 .account-info {
   display: flex;
@@ -192,6 +195,7 @@
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
 }
+
 .account-info .avatar {
   width: 40px;
   height: 40px;
@@ -199,16 +203,19 @@
   margin-right: 0.75rem;
   object-fit: cover;
 }
+
 .account-info .info-text .name {
-  color:darkcyan;
+  color: darkcyan;
   font-weight: 500;
   margin: 0;
 }
+
 .account-info .info-text .tier {
   font-size: 0.875rem;
   color: #4b5563;
   margin: 0.25rem 0 0;
 }
+
 /* ------------ Responsive ------------ */
 @media (max-width: 768px) {
   .sidebar-wrapper {

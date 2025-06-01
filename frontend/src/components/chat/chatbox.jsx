@@ -8,16 +8,16 @@ import { useAuthStore } from '../../store/useAuthStore.js';
 import '../../style/chat/chatbox.css';
 
 const Chatbox = () => {
-  const {useSelectedCeleb} = useChatStore();
+  const { useSelectedCeleb } = useChatStore();
   return (
     <div className="chatbox">
       {useSelectedCeleb ? (
-      <>
-        <HeaderChatbox selectedCeleb={useSelectedCeleb} />
-        <HistoryChatbox />
-        <TypeChatbox />
-        <AlertDemo />
-      </>
+        <>
+          <HeaderChatbox selectedCeleb={useSelectedCeleb} />
+          <HistoryChatbox />
+          <TypeChatbox />
+          <AlertDemo />
+        </>
       ) : (
         <div className="chatbox-placeholder">
           <span className="placeholder">Chào mừng bạn đến với AI Chatbot!</span>

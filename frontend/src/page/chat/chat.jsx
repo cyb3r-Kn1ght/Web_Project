@@ -16,39 +16,39 @@ const Chat = () => {
   const { celebs, selectedCeleb, setSelectedCeleb, getCelebs } = useChatStore();
   const [isSocketReady, setIsSocketReady] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-const location = useLocation();
-const navigate = useNavigate();
-const checkAuth = useAuthStore(state => state.checkAuth);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const checkAuth = useAuthStore(state => state.checkAuth);
 
-// Xử lý kết quả thanh toán
-useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  const payment = params.get('payment');
-  if (payment === 'success') {
-    toast.success('Nâng cấp lên Premium thành công!');
-    // Gọi lại checkAuth để cập nhật authUser.tier = 'premium'
-    checkAuth();
-  } else if (payment === 'failed') {
-    toast.error('Thanh toán thất bại. Vui lòng thử lại.');
-  } else if (payment === 'invalid' || payment === 'error') {
-    toast.error('Thanh toán gặp lỗi. Vui lòng liên hệ hỗ trợ.');
-  } else {
-    return;
-  }
-  // Xóa param thanh toán khỏi URL để tránh xử lý lại khi user refresh
-  params.delete('payment');
-  navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
-}, [location.search, navigate, checkAuth]);
+  // Xử lý kết quả thanh toán
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const payment = params.get('payment');
+    if (payment === 'success') {
+      toast.success('Nâng cấp lên Premium thành công!');
+      // Gọi lại checkAuth để cập nhật authUser.tier = 'premium'
+      checkAuth();
+    } else if (payment === 'failed') {
+      toast.error('Thanh toán thất bại. Vui lòng thử lại.');
+    } else if (payment === 'invalid' || payment === 'error') {
+      toast.error('Thanh toán gặp lỗi. Vui lòng liên hệ hỗ trợ.');
+    } else {
+      return;
+    }
+    // Xóa param thanh toán khỏi URL để tránh xử lý lại khi user refresh
+    params.delete('payment');
+    navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
+  }, [location.search, navigate, checkAuth]);
 
   useEffect(() => {
     getCelebs();                                                   // lấy danh sách celeb
   }, [getCelebs]);
-useEffect(() => {
-  // Sau khi component mount
-  if (!authUser) {
-    useAuthStore.getState().checkAuth();
-  }
-}, []);
+  useEffect(() => {
+    // Sau khi component mount
+    if (!authUser) {
+      useAuthStore.getState().checkAuth();
+    }
+  }, []);
   useEffect(() => {
     if (authUser && (!socket || !socket.connected)) {
       connectSocket();                                             // khởi tạo socket khi có authUser
@@ -96,7 +96,7 @@ useEffect(() => {
         isCollapsed={isSidebarCollapsed} // Truyền trạng thái
         toggleSidebar={toggleSidebar}   // Truyền hàm toggle
       />
-        <Chatbox isSocketReady={isSocketReady} />
+      <Chatbox isSocketReady={isSocketReady} />
     </div>
   );
 };

@@ -8,7 +8,7 @@ import { faBars, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 
 // component này đại diện cho sidebar, bao gồm header, nội dung và footer
-const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar: toggleSidebarProp}) => {
+const Sidebar = ({ celebs, selectedCeleb, handleSelect, isCollapsed, toggleSidebar: toggleSidebarProp }) => {
   // State để lưu trạng thái thu gọn hoặc mở rộng sidebar
   const [collapsed, setCollapsed] = useState(false);
   const isMobile = window.innerWidth <= 768; // Kiểm tra nếu là thiết bị di động

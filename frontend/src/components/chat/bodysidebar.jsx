@@ -10,15 +10,15 @@ import '../../style/chat/sidebar.css';
 // Component này dùng để hiển thị phần giữa của sidebar, bao gồm thanh tìm kiếm và danh sách các nhân vật nổi tiếng (celebs).
 const BodySidebar = ({ celebs, useSelectedCeleb, handleSelect }) => {
   // State để lưu giá trị tìm kiếm
-const [search, setSearch] = useState('');
-const [showMenu, setShowMenu] = useState(false);
-const { authUser , LogOut } = useAuthStore();
-const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  const { authUser, LogOut } = useAuthStore();
+  const navigate = useNavigate();
 
-const handleLogout = async () => {
-  await LogOut();
-  navigate('/auth/login');
-}
+  const handleLogout = async () => {
+    await LogOut();
+    navigate('/auth/login');
+  }
 
   // State để lưu danh sách các nhân vật nổi tiếng (celebs) đã được lọc theo từ khóa tìm kiếm
   const filtered = celebs.filter((c) =>
@@ -56,7 +56,7 @@ const handleLogout = async () => {
           <div className="settings-dropdown">
             <div className="account-info">
               <img
-                src={authUser?.profilePic||defaultAvatar}
+                src={authUser?.profilePic || defaultAvatar}
                 alt="avatar"
                 className="avatar"
               />
@@ -65,7 +65,7 @@ const handleLogout = async () => {
                 <p className="tier">Trạng thái: <span>{authUser?.tier}</span></p>
               </div>
             </div>
-             {authUser?.tier !== 'premium' && (
+            {authUser?.tier !== 'premium' && (
               <button className="settings-option" onClick={() => navigate('/payment')}>
                 Nâng cấp gói
               </button>

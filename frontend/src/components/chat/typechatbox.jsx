@@ -11,10 +11,10 @@ const TypeChatbox = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-       if (authUser.tier === 'free' && authUser.remainingMessages <= 0) {
-     toast.error('Bạn đã hết số lần nhắn tin miễn phí trong ngày. Vui lòng nâng cấp gói premium để tiếp tục.');
-     return;
-   }
+    if (authUser.tier === 'free' && authUser.remainingMessages <= 0) {
+      toast.error('Bạn đã hết số lần nhắn tin miễn phí trong ngày. Vui lòng nâng cấp gói premium để tiếp tục.');
+      return;
+    }
     setMessage("");
     try {
       await sendMessage({
@@ -42,7 +42,7 @@ const TypeChatbox = () => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyDown} 
+        onKeyDown={handleKeyDown}
       />
       <button
         className="typechatbox-send"
