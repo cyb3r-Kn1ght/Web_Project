@@ -42,11 +42,11 @@ const Interview = () => {
             </p>
           <div className='About_img'>
                <img src={page_speed_rating_mobile} alt="Detail Rating for mobile"  className= "img_off_page"/>
-                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights trên mobile </p>
+                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights (mobile) </p>
           </div>
                     <div className='About_img'>
                <img src={page_speed_rating_pc} alt="Detail Rating for pc"  className= "img_off_page"/>
-                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights trên máy tính </p>
+                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights (máy tính) </p>
           </div>
           
           </>
