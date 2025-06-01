@@ -31,13 +31,14 @@ const Interview = () => {
         return (
           <>
             <h2>Tổng quan trang web</h2>
-            <h3>Công nghệ.</h3>
+            <h3>Công nghệ:</h3>
             <p>
                Phía front-end: Sử dụng <b>Reactjs + Vite</b> tăng khả năng tối ưu trang web, thiết kế phù hợp với xu hướng hiện tại, thân thiện và dễ tiếp cận, Back-end sử dụng  <b>Nodejs, MongoDB </b>để theo dõi account, data, gói đăng kí... của quý khách hàng.Đây là trang web làm về  <strong>AI chat bot làm về nghệ sĩ Việt Nam đầu tiên tại Việt Nam</strong> do nhóm 4 phát triển và sẽ mở <strong>Open Source</strong>.
             </p>
-            <h3>Thông số.</h3>
+            <h3>Thông số:</h3>
             <p>
-              
+              Để tối ưu hóa trải nghiệm người dùng, chúng tôi đã thiết kế trang chủ của trang web sao cho đơn giản, dễ dàng sử dụng với hiệu suất ổn định trên cả máy tính lẫn di động. Do đó, chỉ số hiệu suất và hỗ trợ tiếp cận được ưu tiên trong quá trình thiết kế trang chủ.
+
             </p>
           
           </>
