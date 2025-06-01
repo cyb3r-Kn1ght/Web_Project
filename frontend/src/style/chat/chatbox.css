@@ -1,38 +1,38 @@
 .chatbox {
-    flex-grow: 1;
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    /* height: 100%; */
-    overflow: hidden;
-  }
-  
-  /* ========== HEADER CHATBOX ========== */
-  .chatbox-header {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .chatbox-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-  }
-  
-  .chatbox-name,
-  .placeholder-text {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
-  }
-  
-  
- /* ========== HISTORY CHATBOX ========== */
+  flex-grow: 1;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  /* height: 100%; */
+  overflow: hidden;
+}
+
+/* ========== HEADER CHATBOX ========== */
+.chatbox-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.chatbox-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.chatbox-name,
+.placeholder-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+
+/* ========== HISTORY CHATBOX ========== */
 .historychatbox {
   padding: 16px;
   height: 100%;
@@ -40,8 +40,10 @@
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Thêm khoảng cách giữa các tin nhắn */
+  gap: 8px;
+  /* Thêm khoảng cách giữa các tin nhắn */
 }
+
 /* Trong file chatbox.css */
 .pending-message {
   opacity: 0.7;
@@ -55,9 +57,17 @@
 }
 
 @keyframes typing {
-  0% { opacity: 0.3; }
-  50% { opacity: 1; }
-  100% { opacity: 0.3; }
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
 }
 
 /* Style chung cho cả 2 loại tin nhắn */
@@ -74,17 +84,21 @@
   font-size: 14px;
   line-height: 1.4;
 }
+
 .chat-message.user-message {
   margin-left: auto;
 }
+
 .chat-message.bot-message {
   margin-right: auto;
 }
+
 /* Tin nhắn user */
 .user-message {
   background-color: #4a90e2;
   color: whitesmoke;
-  border-bottom-right-radius: 4px; /* Làm hơi nhọn góc dưới bên phải */
+  border-bottom-right-radius: 4px;
+  /* Làm hơi nhọn góc dưới bên phải */
 }
 
 /* Tin nhắn bot */
@@ -92,8 +106,9 @@
   background-color: white;
   color: #333;
   border: 1px solid #e0e0e0;
-  border-bottom-left-radius: 4px; /* Làm hơi nhọn góc dưới bên trái */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-bottom-left-radius: 4px;
+  /* Làm hơi nhọn góc dưới bên trái */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Avatar bot (nếu cần) */
@@ -102,13 +117,15 @@
   height: 32px;
   border-radius: 50%;
   margin-right: 8px;
-  align-self: flex-end; /* Căn avatar xuống dưới với tin nhắn dài */
+  align-self: flex-end;
+  /* Căn avatar xuống dưới với tin nhắn dài */
 }
 
 .chat-message p {
   margin: 0;
   padding: 0;
 }
+
 /* Hiệu ứng chấm nhấp nháy */
 .ai-typing-indicator {
   display: flex;
@@ -140,9 +157,17 @@
 }
 
 @keyframes dot-pulse {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
 }
+
 .button-text-to-speech {
   color: #4a90e2;
   background-color: #fff;
@@ -157,58 +182,60 @@
 
 /* ========== TYPE CHATBOX ========== */
 .typechatbox {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* căn giữa ngang */
-    padding: 0.75rem 1rem;
-    background-color: #fff;
-    gap: 0.75rem;
-    flex-shrink: 0;
-    width: 100%;
-    border-top: 1px solid #ddd;
-  }
-  
-  .typechatbox-input {
-    flex:1;
-    max-width: 60%; /* để không quá to ở màn hình lớn */
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-  }
-  
-  .typechatbox-send {
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 0.5rem;
-  }
-  
-  .typechatbox-send:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* căn giữa ngang */
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  width: 100%;
+  border-top: 1px solid #ddd;
+}
 
-  /* ========== ALERT DEMO ========== */
-  .alert-demo {
-    font-size: 0.85rem;
-    text-align: center;
-    padding: 0.5rem;
-    color: #555;
-    background-color: #fff;
-    flex-shrink: 0;
-  }
+.typechatbox-input {
+  flex: 1;
+  max-width: 60%;
+  /* để không quá to ở màn hình lớn */
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
+}
 
-  /* ========== PLACEHOLDER ========== */
+.typechatbox-send {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+}
+
+.typechatbox-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ========== ALERT DEMO ========== */
+.alert-demo {
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.5rem;
+  color: #555;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+/* ========== PLACEHOLDER ========== */
 .chatbox-placeholder {
   height: 100%;
   width: 100%;
@@ -222,27 +249,40 @@
   color: #888;
 }
 
-  /* ========== RESPONSIVE ========== */
-  @media (max-width: 768px) {
-    .chatbox-header-name {
-      font-size: 1rem;
-    }
-  
-    .typechatbox-input {
-      font-size: 0.95rem;
-      max-width: 50%; 
-    }
-  
-    .typechatbox-send {
-      font-size: 1rem;
-      padding: 0.4rem 0.6rem;
-    }
-
-    .chatbox {
-      min-height: 100dvh; 
-    }
-    .historychatbox {
-      overflow-y: hidden;
-    }
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .chatbox-header-name {
+    font-size: 1rem;
   }
-  
+
+  .typechatbox-input {
+    font-size: 0.95rem;
+    max-width: 50%;
+  }
+
+  .typechatbox-send {
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .chatbox {
+    min-height: 100dvh;
+  }
+
+  .historychatbox {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+
+    /* Cuộn được */
+    overflow-y: auto;
+    /* mượt trên iOS */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .historychatbox::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+}
