@@ -5,12 +5,12 @@ function ContainerButton() {
   return (
     <div className="container-button">
       <Link className="button-part" to="/auth/login">
-        <h3> Bắt đầu ngay </h3>
-        <p> demo </p>
+        <h3> Quét QR </h3>
+        <p> Hãy cho chúng mình ý kiến phản hồi của bạn! </p>
       </Link>
             <Link className="button-part" to ="/interview">
-        <h3> Hướng dẫn sử dụng </h3>
-        <p> demo </p>
+        <h3> Giới thiệu chung </h3>
+        <p> Web này là gì có ăn được không? </p>
       </Link>
     </div>
   );

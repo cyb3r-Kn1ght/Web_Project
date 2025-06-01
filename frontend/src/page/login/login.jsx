@@ -1,78 +1,154 @@
+// src/pages/Login.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { Link } from "react-router-dom";
 import { initLoginHandlers } from "../../feature/login/login.js";
 import GoogleIcon from "../../assets/login/google.svg";
-import FacebookIcon from "../../assets/login/facebook.svg";
 import "../../style/login/login.css";
 import Input_Field from "../../components/login/Input_Fields.jsx";
 import { useAuthStore } from "../../store/useAuthStore.js";
-import { axiosInstance } from "../../lib/axios.js";
 
 const Login = () => {
-  const {LogIn, SignUp} = useAuthStore();
-  const [formData, setFormData] = useState({
+  const { LogIn, SignUp } = useAuthStore();
+  const navigate = useNavigate();
+
+  // === State cho Sign-in ===
+  const [signInData, setSignInData] = useState({ email: "", password: "" });
+  const [signInError, setSignInError] = useState("");
+  const [signInLoading, setSignInLoading] = useState(false);
+
+  // === State cho Sign-up ===
+  const [signUpData, setSignUpData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: ""
   });
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [signUpError, setSignUpError] = useState("");
+  const [signUpLoading, setSignUpLoading] = useState(false);
+
   useEffect(() => {
-    document.title = 'Login';
+    document.title = "Login";
   }, []);
 
   useEffect(() => {
-    // Gọi hàm chuyển cảnh sau khi component render xong
     initLoginHandlers();
+
+    // Sau khi DOM được render, đánh dấu event listeners để reset form
+    // Khi click “Sign up” (đổi pane), xóa dữ liệu sign-in
+    const signUpBtn = document.getElementById("sign-up-btn");
+    const signInBtn = document.getElementById("sign-in-btn");
+
+    const clearSignInForm = () => {
+      setSignInData({ email: "", password: "" });
+      setSignInError("");
+    };
+    const clearSignUpForm = () => {
+      setSignUpData({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: ""
+      });
+      setSignUpError("");
+    };
+
+    if (signUpBtn) signUpBtn.addEventListener("click", clearSignInForm);
+    if (signInBtn) signInBtn.addEventListener("click", clearSignUpForm);
+
+    // Cleanup khi component unmount hoặc re-render
+    return () => {
+      if (signUpBtn) signUpBtn.removeEventListener("click", clearSignInForm);
+      if (signInBtn) signInBtn.removeEventListener("click", clearSignUpForm);
+    };
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    const user = await LogIn(formData);
-    console.log(user);
-    if (user) {
-      navigate("/chat"); // chuyển hướng sang trang chat
-    }
-
-    //   // Gửi request POST đến endpoint /login của server
-    //   const response = await axiosInstance.post("/login", {
-    //     username,
-    //     password,
-    //   });
-
-    //   // Giả sử server trả về { success: true, user: {...} } khi đăng nhập thành công
-    //   if (response.data.success) {
-    //     // Lưu thông tin phiên làm việc, ví dụ: lưu vào localStorage hoặc Context
-    //     localStorage.setItem("user", JSON.stringify(response.data.user));
-    //     // Chuyển hướng đến trang chatbox hoặc trang chính của ứng dụng
-    //     navigate("/chatbox");
-    //   } else {
-    //     setError(response.data.message || "Đăng nhập thất bại!");
-    //   }
-    // } catch (err) {
-    //   setError("Có lỗi xảy ra, vui lòng thử lại!");
-    //   console.error(err);
-    // }
+  // --- Hàm thay đổi input cho Sign-in ---
+  const handleSignInChange = (e) => {
+    const { name, value } = e.target;
+    setSignInData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // --- Submit Sign-in ---
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSignInError("");
+
+    const { email, password } = signInData;
+    if (!email || !password) {
+      setSignInError("Vui lòng nhập đầy đủ email và mật khẩu");
+      return;
+    }
+
+    setSignInLoading(true);
+    try {
+      const user = await LogIn({ email, password });
+      setSignInLoading(false);
+      if (user) {
+        navigate("/chat");
+      } else {
+        setSignInError("Email hoặc mật khẩu không đúng");
+      }
+    } catch (err) {
+      setSignInLoading(false);
+      setSignInError("Có lỗi xảy ra, vui lòng thử lại");
+      console.error(err);
+    }
+  };
+
+  // --- Hàm thay đổi input cho Sign-up ---
+  const handleSignUpChange = (e) => {
+    const { name, value } = e.target;
+    setSignUpData((prev) => ({ ...prev, [name]: value }));
+
+    // Kiểm tra ngay khi nhập confirmPassword hoặc password
+    if (name === "confirmPassword") {
+      if (value && value !== signUpData.password) {
+        setSignUpError("Mật khẩu xác nhận không khớp");
+        return;
+      } else {
+        setSignUpError("");
+      }
+    }
+    if (name === "password") {
+      if (signUpData.confirmPassword && value !== signUpData.confirmPassword) {
+        setSignUpError("Mật khẩu xác nhận không khớp");
+        return;
+      } else {
+        setSignUpError("");
+      }
+    }
+    setSignUpError("");
+  };
+
+  // --- Submit Sign-up ---
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError("");
+    setSignUpError("");
 
-    const user = await SignUp(formData);
-
-    console.log(user);
-    if (user) {
-      navigate("/auth/login");
+    const { username, email, password, confirmPassword } = signUpData;
+    if (!username || !email || !password || !confirmPassword) {
+      setSignUpError("Vui lòng nhập đầy đủ thông tin");
+      return;
     }
-    // if (user) {
-    //   navigate("/chat"); // chuyển hướng sang trang chat
-    // }
+    if (password !== confirmPassword) {
+      setSignUpError("Mật khẩu xác nhận không khớp");
+      return;
+    }
+
+    setSignUpLoading(true);
+    try {
+      const user = await SignUp({ username, email, password });
+      setSignUpLoading(false);
+      if (user) {
+        navigate("/auth/login");
+      } else {
+        setSignUpError("Đăng ký thất bại, vui lòng thử lại");
+      }
+    } catch (err) {
+      setSignUpLoading(false);
+      setSignUpError("Có lỗi xảy ra, vui lòng thử lại");
+      console.error(err);
+    }
   };
 
   return (
@@ -80,90 +156,115 @@ const Login = () => {
       <div className="container">
         <div className="forms-container">
           <div className="signin-signup">
-            <form action="#" className="sign-in-form" onSubmit={handleSubmit}>
+            {/* ===== Form Sign-in ===== */}
+            <form
+              action="#"
+              className="sign-in-form"
+              onSubmit={handleSubmit}
+            >
               <h2 className="title">Sign in</h2>
 
-              {/* su dung component vao thuc te */}
               <Input_Field
+                name="email"
                 icon="mail"
                 type="email"
                 placeholder="Email"
-                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                value={signInData.email}
+                onChange={handleSignInChange}
               />
 
               <Input_Field
+                name="password"
                 icon="key"
                 type="password"
                 placeholder="Password"
-                value={formData.password} // doan nay can BE check lai
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                value={signInData.password}
+                onChange={handleSignInChange}
               />
 
-              <a href = "/forgot-password" className="forget-password">Forgot password?</a>
-              <input type="submit" value="Login" className="btn solid" />
-              <p className="social-text">Or sign in with social platforms</p>
-              <div className="social-media">
+              {signInError && (
+                <div className="form-error" style={{ color: "red", marginTop: "4px" }}>
+                  {signInError}
+                </div>
+              )}
 
-                <a href="https://celebritychatbot.up.railway.app/api/auth/google" className="social-icon">
+              <input
+                type="submit"
+                value={signInLoading ? "Đang xử lý..." : "Login"}
+                className="btn solid"
+                disabled={signInLoading}
+              />
+
+              <p className="social-text">
+                Or sign in with social platforms
+              </p>
+              <div className="social-media">
+                <a
+                  href="https://celebritychatbot.up.railway.app/api/auth/google"
+                  className="social-icon"
+                >
                   <img
                     src={GoogleIcon}
                     alt="GoogleIcon"
                     className="icon-google"
                   />
                 </a>
+              
               </div>
-             
             </form>
 
-            <form action="#" className="sign-up-form" onSubmit={handleSignUp}>
+            {/* ===== Form Sign-up ===== */}
+            <form className="sign-up-form" onSubmit={handleSignUp}>
               <h2 className="title">Sign up</h2>
 
               <Input_Field
+                name="username"
                 icon="account_circle"
                 type="text"
                 placeholder="Username"
-                value={formData.username} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
+                value={signUpData.username}
+                onChange={handleSignUpChange}
               />
 
               <Input_Field
+                name="email"
                 icon="mail"
                 type="email"
                 placeholder="Email"
-                value={formData.email} // doan nay can BE check lai, thieu gi do ma web k chay dc tam thoi bo comment
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                value={signUpData.email}
+                onChange={handleSignUpChange}
               />
 
               <Input_Field
+                name="password"
                 icon="key"
                 type="password"
                 placeholder="Password"
-                value={formData.password} // doan nay can BE check lai
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                value={signUpData.password}
+                onChange={handleSignUpChange}
               />
 
               <Input_Field
+                name="confirmPassword"
                 icon="verified_user"
                 type="password"
                 placeholder="Confirm Password"
-                value={formData.password} // doan nay can BE check lai
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                value={signUpData.confirmPassword}
+                onChange={handleSignUpChange}
               />
 
-              <input type="submit" className="btn" value="Sign up" />
+              {signUpError && (
+                <div className="form-error" style={{ color: "red", marginTop: "4px" }}>
+                  {signUpError}
+                </div>
+              )}
+
+              <input
+                type="submit"
+                className="btn"
+                value={signUpLoading ? "Đang xử lý..." : "Sign up"}
+                disabled={signUpLoading}
+              />
             </form>
           </div>
         </div>

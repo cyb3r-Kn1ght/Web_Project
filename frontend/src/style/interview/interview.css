@@ -155,3 +155,26 @@
 .table_register_AI {
   color: black;  
 }
+
+.discount-value{
+  color: red;
+}
+
+.img_off_page{
+  width: 80%;
+  height: 80;
+  margin-top: 5%;
+}
+.About_img{
+  text-align: center;
+}
+
+.About_img .text_script_img {
+  color: #525659;
+
+}
+
+.Title_of_page{
+  color: black;
+  margin-top: 10px;
+}

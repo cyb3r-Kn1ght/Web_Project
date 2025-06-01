@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../style/interview/interview.css';
+import AI_img from "../../assets/interview/AI_fine_tune.png";
+import SS_AI_img from "../../assets/interview/SS_model_Ollama.png";
+
+
 
 const sidebarItems = [
   {
@@ -45,7 +49,7 @@ const Interview = () => {
             <p>
               Dưới đây là những quyền lợi mà chúng tôi đưa ra khi bạn đăng kí dịch vụ bên tôi: 
             </p>
-             <table class="table_register_AI">
+             <table className="table_register_AI">
     <thead>
       <tr>
         <th>Gói</th>
@@ -87,7 +91,7 @@ const Interview = () => {
        <tr>
         <td>Giá</td>
         <td>0 VND</td>
-        <td> <del>500.000 VND</del>  <b>250.000 VND(-50%)</b></td>
+        <td> <del>500.000 VND</del>  <b>250.000 VND</b> <b className= "discount-value">(-50%)</b></td>
       </tr>
 
     </tbody>
@@ -103,7 +107,22 @@ const Interview = () => {
               Để có thể tạo ra 1 chat bot AI người Việt, chúng tôi đã sử dụng model <strong>Ollama 3.2 3B-Instruction</strong> sau đó fine-tune dựa trên lượng data đã được tìm kiếm thủ công, lọc data để mang lại một <strong>model biết nói Tiếng Việt</strong>, biết sáng tạo nói theo phong cách của người nổi tiếng 100%.
             </p>
 
+          <h3 className='Title_of_page'>Tại sao chúng tôi lại sử dụng Ollama 3.2 3B - Instruction?</h3>
+          <div className='About_img'>
+               <img src={SS_AI_img} alt="Detail fine-tune AI"  className= "img_off_page"/>
+                <p className='text_script_img'>Hình ảnh benchmark giữa các model </p>
+          </div>
+          <p>Bởi vì <strong>OLlama 3.2 3B-Instruction </strong> có hỗ trợ đa ngôn ngữ đặc biệt là Tiếng Việt, đó là 1 điều kiện tuyệt vời để tránh việc phải train lại model thêm nhiều ngữ cảnh ứng xử của người Việt. Cùng với yếu tố cấu hình 3B tức 3 tỷ tham số sẽ phù hợp để chạy với cấu hình yếu và sẽ là vừa đủ để model không quá "ngơ".</p>
           
+          <h3 className='Title_of_page'>Vậy chúng tôi đã fine-tune model như thế nào?</h3>
+          <p>Để fine-tune được một model sẽ cần rất nhiều yếu tố và cần biết <b>tối ưu phần cứng </b> để chạy fine-tune model. Ngoài ra chúng ta cần phải có được nguồn data dồi dào của các nhân vật được nhắc đến, nguồn chủ yếu để có thể khai thác thông tin đến từ các talkshow, bài báo, tạp chí... của nhân vật đó, chúng ta sẽ lấy những data đặc trưng nhất của nhân vật và chọn lọc. Ngoài ra chúng ta sẽ sử dụng những data ảo được tạo từ những data thật để có thể làm sinh động hơn data để fine-tune. Ngoài ra để model có thể đúng như mong đợi là một "Chat Bot" thì ta cần phải format sang dạng có persona riêng của từng nhân vật. Xây dựng hình tượng nhân vật không chỉ qua data mà thêm vào đó sẽ kà các tính cách, những câu chuyện của nhân vật để model có thể nhận diện và hiểu rõ hơn về hình tượng nhân vật mà nó cần mô phỏng.</p>
+          <div className='About_img'>
+               <img src={AI_img} alt="Detail fine-tune AI"  className= "img_off_page"/>
+                <p className='text_script_img'>Hình ảnh về thông số mô tả quá trình fine-tune AI</p>
+          </div>
+
+          <p></p>
+              
           </>
         );
         
