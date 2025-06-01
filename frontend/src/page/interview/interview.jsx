@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import '../../style/interview/interview.css';
 import AI_img from "../../assets/interview/AI_fine_tune.png";
 import SS_AI_img from "../../assets/interview/SS_model_Ollama.png";
-
-
+import page_speed_rating_mobile from "../../assets/interview/page_speed_rating_mobile.jpg";
+import page_speed_rating_pc from "../../assets/interview/page_speed_rating_pc.jpg";
 
 const sidebarItems = [
   {
@@ -37,9 +37,17 @@ const Interview = () => {
             </p>
             <h3>Thông số:</h3>
             <p>
-              Để tối ưu hóa trải nghiệm người dùng, chúng tôi đã thiết kế trang chủ của trang web sao cho đơn giản, dễ dàng sử dụng với hiệu suất ổn định trên cả máy tính lẫn di động. Do đó, chỉ số hiệu suất và hỗ trợ tiếp cận được ưu tiên trong quá trình thiết kế trang chủ.
+              Để tối ưu hóa trải nghiệm người dùng, chúng tôi đã thiết kế trang chủ của trang web sao cho đơn giản, dễ dàng sử dụng với hiệu suất ổn định trên cả máy tính lẫn di động. Do đó, chỉ số <strong>hiệu suất</strong> và <strong>hỗ trợ tiếp cận</strong> được ưu tiên trong quá trình thiết kế trang chủ.
 
             </p>
+          <div className='About_img'>
+               <img src={page_speed_rating_mobile} alt="Detail Rating for mobile"  className= "img_off_page"/>
+                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights trên mobile </p>
+          </div>
+                    <div className='About_img'>
+               <img src={page_speed_rating_pc} alt="Detail Rating for pc"  className= "img_off_page"/>
+                <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights trên máy tính </p>
+          </div>
           
           </>
         );
