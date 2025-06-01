@@ -5,7 +5,7 @@ function ContainerButton() {
   return (
     <div className="container-button">
       <Link className="button-part" to="/auth/login">
-        <h3> Quét QR </h3>
+        <h3> Đóng góp ý kiến! </h3>
         <p> Hãy cho chúng mình ý kiến phản hồi của bạn! </p>
       </Link>
             <Link className="button-part" to ="/interview">
