@@ -6,8 +6,8 @@ const sidebarItems = [
   {
     section: 'Giới thiệu chung', 
     items: [
-      'Công nghệ trang web', 
-      'Gói đăng ký', 
+      'Tổng quan trang web',
+      'Gói đăng ký',
       'Model sử dụng',
       'Sơ lược về trang web'
     ]
@@ -24,41 +24,89 @@ const Interview = () => {
 
   const renderContent = (key) => {
     switch (key) {
-      case 'Your First API Call':
+      case 'Tổng quan trang web':
         return (
           <>
-            <h2>Your First API Call</h2>
+            <h2>Tổng quan trang web</h2>
             <p>
-              The DeepSeek API uses an API format compatible with OpenAI. By modifying the configuration, you can use the OpenAI SDK
-              or software compatible with the OpenAI API to access the DeepSeek API.
+               Phía front-end: Sử dụng <b>Reactjs + Vite</b> tăng khả năng tối ưu trang web, thiết kế phù hợp với xu hướng hiện tại, thân thiện và dễ tiếp cận, Back-end sử dụng  <b>Nodejs, MongoDB </b>để theo dõi account, data, gói đăng kí... của quý khách hàng.Đây là trang web làm về  <strong>AI chat bot làm về nghệ sĩ Việt Nam đầu tiên tại Việt Nam</strong> do nhóm 4 phát triển và sẽ mở <strong>Open Source</strong>.
             </p>
-            <table>
-              <thead>
-                <tr>
-                  <th>PARAM</th>
-                  <th>VALUE</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>base_url *</td>
-                  <td><code>https://api.deepseek.com</code></td>
-                </tr>
-                <tr>
-                  <td>api_key</td>
-                  <td>apply for an <a href="#">API key</a></td>
-                </tr>
-              </tbody>
-            </table>
-            <p className="footnote">
-              * To be compatible with OpenAI, you can also use <code>https://api.deepseek.com/v1</code> as the <code>base_url</code>.
-            </p>
+          
           </>
         );
-      case 'Test Case':
+      case 'Gói đăng ký':
         return (
           <>
-            <h2>Test Case Content</h2>
+            <h2>Đến với AI ChatBot bạn nhận được gì?</h2>
+            <p>
+              Dưới đây là những quyền lợi mà chúng tôi đưa ra khi bạn đăng kí dịch vụ bên tôi: 
+            </p>
+             <table class="table_register_AI">
+    <thead>
+      <tr>
+        <th>Gói</th>
+        <th>Free</th>
+        <th>Premium</th>
+      </tr>
+    </thead>
+    <tbody>
+     
+      <tr>
+        <td>Giới hạn lượt hỏi</td>
+        <td>5 câu/ngày</td>
+        <td>Không giới hạn</td>
+      </tr>
+
+ 
+      <tr>
+        <td>Text-to-Speech</td>
+        <td>
+         ✗
+        </td>
+        <td>
+          ✓
+        </td>
+      </tr>
+      
+      <tr>
+        <td>Trải nghiệm phiên bản mới</td>
+        <td>✗</td>
+        <td>✓</td>
+      </tr>
+
+      <tr>
+        <td>Có thể chọn việc cho model học phong cách nói chuyện của chính mình (Đang phát triển) </td>
+        <td>✗</td>
+        <td>✓</td>
+      </tr>
+
+       <tr>
+        <td>Giá</td>
+        <td>0 VND</td>
+        <td> <del>500.000 VND</del>  <b>250.000 VND(-50%)</b></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <p>Hãy đăng kí ngay hôm nay để nhận được ưu đãi giá tốt! </p>
+          </>
+        );
+        case 'Model sử dụng':
+        return (
+          <>
+            <h2>Model AI của trang Web</h2>
+            <p>
+              Để có thể tạo ra 1 chat bot AI người Việt, chúng tôi đã sử dụng model <strong>Ollama 3.2 3B-Instruction</strong> sau đó fine-tune dựa trên lượng data đã được tìm kiếm thủ công, lọc data để mang lại một <strong>model biết nói Tiếng Việt</strong>, biết sáng tạo nói theo phong cách của người nổi tiếng 100%.
+            </p>
+
+          
+          </>
+        );
+
+        case 'Sơ lược về trang web':
+        return (
+          <>
+            <h2>Test Case Content Model</h2>
             <p>
               Đây là nội dung dùng để kiểm thử khi chọn mục "Test Case". Bạn có thể thay đổi bất kỳ thông tin gì ở đây.
             </p>
@@ -69,8 +117,9 @@ const Interview = () => {
             </ul>
           </>
         );
+        
       default:
-        return <p>Content for <strong>{key}</strong> will be available soon.</p>;
+        return <p> <strong>404 Page Not Found</strong></p>;
     }
   };
 
