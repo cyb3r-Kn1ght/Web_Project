@@ -189,7 +189,7 @@
     margin-left: 0; /* mặc định */
   }
   .navI.open ~ .contentI {
-    margin-left: 0px;
+    margin-left: 250px;
   }
 }
 
@@ -322,13 +322,3 @@
   text-decoration: underline;
 }
 
-/* Overlay mờ riêng cho mobile (để click vào đóng sidebar) */
-.mobile-overlay {
-  position: fixed;
-  top: 60px; /* ngay dưới header */
-  left: 0;
-  width: 100vw;
-  height: calc(100vh - 60px);
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 500;
-}
