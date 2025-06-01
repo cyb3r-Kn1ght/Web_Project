@@ -160,7 +160,8 @@ const Interview = () => {
 
       <div className="bodyI">
        
-           <aside className={`navI ${isSidebarCollapsed ? 'collapsed' : ''}`}>  
+           <aside className={`navI ${isSidebarCollapsed ? '' : 'open'}`}>
+ 
           {sidebarItems.map((group, idx) => (
             <div key={idx} className="menu-groupI">
               <div
