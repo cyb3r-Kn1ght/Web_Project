@@ -126,6 +126,7 @@ const Login = () => {
     setSignUpError("");
 
     const { username, email, password, confirmPassword } = signUpData;
+    
     if (!username || !email || !password || !confirmPassword) {
       setSignUpError("Vui lòng nhập đầy đủ thông tin");
       return;
