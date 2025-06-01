@@ -5,7 +5,7 @@ import AI_img from "../../assets/interview/AI_fine_tune.png";
 import SS_AI_img from "../../assets/interview/SS_model_Ollama.png";
 import page_speed_rating_mobile from "../../assets/interview/page_speed_rating_mobile.jpg";
 import page_speed_rating_pc from "../../assets/interview/page_speed_rating_pc.jpg";
-
+import guide from "../../assets/interview/guide.png";
 const sidebarItems = [
   {
     section: 'Giới thiệu chung', 
@@ -44,9 +44,14 @@ const Interview = () => {
                <img src={page_speed_rating_mobile} alt="Detail Rating for mobile"  className= "img_off_page"/>
                 <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights (mobile) </p>
           </div>
-                    <div className='About_img'>
+          <div className='About_img'>
                <img src={page_speed_rating_pc} alt="Detail Rating for pc"  className= "img_off_page"/>
                 <p className='text_script_img'>Hình ảnh đánh giá trang chủ bằng PageSpeed Insights (máy tính) </p>
+          </div>
+          <h3>Một vài thao tác cơ bản trên web:</h3>
+          <div className='About_img'>
+               <img src={guide} alt="Detail Rating for pc"  className= "img_off_page"/>
+                <p className='text_script_img'>Hướng dẫn một vài thao tác trên web</p>
           </div>
           
           </>
