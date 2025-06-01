@@ -1,3 +1,6 @@
+/* =========================
+   CƠ BẢN (Desktop + Mobile)
+   ========================= */
 
 .containerI {
   display: flex;
@@ -7,13 +10,19 @@
   box-sizing: border-box;
 }
 
-/* Header */
+/* Header: cố định (fixed) luôn nằm trên */
 .headerI {
-  display: flex;
-  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;       /* Bạn có thể điều chỉnh chiều cao nếu cần */
   background-color: #f8f9fa;
   border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
   padding: 10px 20px;
+  z-index: 1000;
 }
 
 /* Nút toggle (icon ☰) */
@@ -23,6 +32,8 @@
   font-size: 1.5rem;
   cursor: pointer;
   margin-right: 20px;
+  position: relative;
+  z-index: 1001; /* Luôn nổi trên sidebar */
 }
 
 /* Logo và nút Home */
@@ -38,69 +49,47 @@
   color: #343a40;
   margin-left: auto;
   padding: 5px 10px;
+  position: relative;
+  z-index: 1001; /* Luôn nổi trên sidebar */
 }
 .home-btn:hover {
   text-decoration: underline;
 }
 
-/* Body */
+/* Body: phải có margin-top bằng đúng height của header để không bị che */
 .bodyI {
   display: flex;
   flex: 1;
+  margin-top: 60px; /* Bằng height của headerI */
   overflow: hidden;
+  position: relative;
 }
 
-/* Sidebar */
+/* Overlay mờ (hiển thị khi sidebar mở trên mobile/tablet) */
+.bodyI.overlay-active::after {
+  content: "";
+  position: fixed;
+  top: 60px; /* Bắt đầu phía dưới header */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 60px);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 500;
+}
+
+/* Sidebar mặc định ẩn (width: 0) */
 .navI {
-  width: 250px;
-  background-color: #f1f3f5;
-  border-right: 1px solid #e0e0e0;
-  padding: 20px;
-  overflow-y: auto;
-  transition: width 0.3s ease, padding 0.3s ease;
-}
-
-/* Khi có class .collapsed, sẽ co hết */
-.navI.collapsed {
   width: 0;
   padding: 0;
+  background-color: #f1f3f5;
   border-right: none;
   overflow: hidden;
+  transition: width 0.3s ease, padding 0.3s ease;
+  position: relative;
+  z-index: 999;
 }
 
-/* Các section và item */
-.menu-groupI {
-  margin-bottom: 1rem;
-}
-.menu-headerI {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #495057;
-  cursor: pointer;
-  padding: 5px 0;
-}
-.menu-headerI.activeI {
-  color: #212529;
-  text-decoration: underline;
-}
-.menu-listI {
-  list-style: none;
-  padding-left: 10px;
-  margin-top: 5px;
-}
-.menu-itemI {
-  font-size: 0.9rem;
-  color: #6c757d;
-  cursor: pointer;
-  margin: 3px 0;
-}
-.menu-itemI:hover,
-.menu-itemI.activeI {
-  color: #343a40;
-  text-decoration: underline;
-}
-
-/* Content bên phải */
+/* Nội dung chính: chiếm hết phần còn lại */
 .contentI {
   flex: 1;
   padding: 30px;
@@ -175,75 +164,72 @@
   margin-top: 10px;
 }
 
-/* ========== Responsive (nếu có) ========== */
-/* Ví dụ như trong câu trả lời trước, bạn có thể giữ nguyên các media queries đã thêm */
+/* =========================
+   Desktop (>= 769px)
+   ========================= */
+@media (min-width: 769px) {
+  /* Sidebar khi mở (có class open) */
+  .navI.open {
+    width: 250px;
+    padding: 20px;
+    border-right: 1px solid #e0e0e0;
+  }
 
+  /* Các vị trí, kích thước cố định cho desktop: */
+  .navI {
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+    background-color: #f1f3f5;
+  }
+
+  /* Khi sidebar mở, đẩy content sang phải */
+  .contentI {
+    margin-left: 0; /* mặc định */
+  }
+  .navI.open ~ .contentI {
+    margin-left: 250px;
+  }
+}
+
+/* =========================
+   Tablet + Mobile (<= 768px)
+   ========================= */
 @media (max-width: 768px) {
-  /* Container chính: giữ flex-direction column, không đổi */
-
-
   /* Header: padding thu gọn */
   .headerI {
     padding: 8px 16px;
+    height: 60px;
   }
 
-  /* Nút toggle (☰) luôn hiện, để mở/đóng sidebar */
-  .toggle-btn {
-    display: block;
-  }
-
-  /* Sidebar (.navI): co lại hoặc ẩn đi mặc định, hiển thị khi toggle */
+  /* Sidebar (ẩn trái) */
   .navI {
     position: fixed;
-    top: 0;
-    left: -250px;       /* Ẩn khỏi khung nhìn */
-    height: 100vh;
+    top: 60px;          /* ngay dưới header */
+    left: -250px;       /* ẩn trái */
     width: 250px;
+    height: calc(100vh - 60px);
     background-color: #f1f3f5;
     border-right: 1px solid #e0e0e0;
     padding: 20px;
     overflow-y: auto;
     transition: left 0.3s ease;
-    z-index: 1000;
+    z-index: 999;
   }
 
-  /* Khi sidebar có class "open", chuyển vào khung nhìn */
+  /* Khi có class open: trượt vào */
   .navI.open {
     left: 0;
   }
 
-  /* Body content: khi sidebar đang mở, có thể đặt overlay */
-  .bodyI {
-    position: relative;
-  }
-  .bodyI::after {
-    content: "";
-    display: none; /* mặc định không hiện */
-  }
-  /* Khi sidebar mở, hiển thị overlay nền đen mờ */
-  .bodyI.overlay-active::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.4);
-    z-index: 500;
-  }
-
-  /* Content chính: padding thu gọn */
+  /* Content chính: đầy đủ chiều rộng */
   .contentI {
     padding: 20px;
-  }
-
-  /* Sidebar width: giữ 250px khi mở, nhưng phần content phủ toàn độ rộng */
-  /* Khi sidebar đóng, content sẽ chiếm hết */
-  .contentI {
     width: 100%;
   }
 
-  /* Menu header & item: thu nhỏ font nếu cần */
+  /* Menu header & item: thu nhỏ font */
   .menu-headerI {
     font-size: 0.9rem;
   }
@@ -252,11 +238,11 @@
   }
 }
 
-/* ===========================
-   Responsive cho điện thoại (<=480px)
-   =========================== */
+/* =========================
+   Mobile nhỏ (<= 480px)
+   ========================= */
 @media (max-width: 480px) {
-  /* Header: font-logo và nút thu gọn hơn */
+  /* Logo và toggle: thu gọn */
   .logoI {
     font-size: 1rem;
   }
@@ -269,21 +255,13 @@
     padding: 4px 8px;
   }
 
-  /* Sidebar: thu nhỏ padding hoặc ẩn hẳn khi đóng */
+  /* Sidebar: thu nhỏ padding */
   .navI {
-    width: 200px;
+    width: 200px;      /* rút gọn chút */
     padding: 16px;
   }
   .navI.open {
     left: 0;
-  }
-
-  /* Menu header & item: tiếp tục thu nhỏ */
-  .menu-headerI {
-    font-size: 0.85rem;
-  }
-  .menu-itemI {
-    font-size: 0.8rem;
   }
 
   /* Content: gỡ bỏ margin/padding thừa */
@@ -308,4 +286,49 @@
     height: auto;
     margin-top: 20px;
   }
+}
+
+/* =========================
+   Các style chung về menu
+   ========================= */
+.menu-groupI {
+  margin-bottom: 1rem;
+}
+.menu-headerI {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  padding: 5px 0;
+}
+.menu-headerI.activeI {
+  color: #212529;
+  text-decoration: underline;
+}
+.menu-listI {
+  list-style: none;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+.menu-itemI {
+  font-size: 0.9rem;
+  color: #6c757d;
+  cursor: pointer;
+  margin: 3px 0;
+}
+.menu-itemI:hover,
+.menu-itemI.activeI {
+  color: #343a40;
+  text-decoration: underline;
+}
+
+/* Overlay mờ riêng cho mobile (để click vào đóng sidebar) */
+.mobile-overlay {
+  position: fixed;
+  top: 60px; /* ngay dưới header */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 60px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 500;
 }

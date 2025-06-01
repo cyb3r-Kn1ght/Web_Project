@@ -20,7 +20,7 @@ const sidebarItems = [
 const Interview = () => {
   const [openSections, setOpenSections] = useState([]);
   const [selectedItem, setSelectedItem] = useState('Your First API Call');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const handleSectionClick = (section) => {
     setOpenSections(prev => prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]);
   };
@@ -150,7 +150,7 @@ const Interview = () => {
       <header className="headerI">
         <button
           className="toggle-btn"
-          onClick={() => setIsSidebarCollapsed(prev => !prev)}
+          onClick={() => setIsSidebarOpen(prev => !prev)}
         >
           ☰
         </button>
@@ -160,7 +160,7 @@ const Interview = () => {
 
       <div className="bodyI">
        
-           <aside className={`navI ${isSidebarCollapsed ? '' : 'open'}`}>
+           <aside className={`navI ${isSidebarOpen ? 'open' : ''}`}>
  
           {sidebarItems.map((group, idx) => (
             <div key={idx} className="menu-groupI">
