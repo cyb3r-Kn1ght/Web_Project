@@ -38,6 +38,11 @@ export const getMessages = async (req, res) => {
 
 // Hàm chuyển đổi tên celeb sang persona
 function convertNameToPersona(name) {
+  // Trường hợp đặc biệt
+  const specialCases = {
+    'Sơn Tùng MTP': 'son_tung',
+  };
+  if (specialCases[name]) return specialCases[name];
   return name
     .normalize('NFD') // Loại bỏ dấu tiếng Việt
     .replace(/\p{Diacritic}/gu, '')
