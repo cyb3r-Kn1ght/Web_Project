@@ -170,43 +170,35 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;
-
+  
     if (!newPassword) {
-        return res.status(400).send("Missing new password");
+      return res.status(400).send("Missing new password");
     }
-
-    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
-    // if (!passwordRegex.test(newPassword)) {
-    //     return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
-    // }
-
+  
     try {
-        // tìm token đã lưu trong csdl
-        const tokenRecord = await Token.findOne({ token });
-        if (!tokenRecord || tokenRecord.expireAt < Date.now()) {
-            if (tokenRecord) await tokenRecord.remove();
-            return res.status(400).send("Invalid or expired token");
-        }
-
-        // tìm user dựa trên userId được lưu trong tokenRecord
-        const user = await User.findById(tokenRecord.userId);
-        if (!user) {
-            return res.status(400).send("User not found");
-        }
-
-        // hash mật khẩu mới và cập nhật cho user
-        user.password = bcrypt.hashSync(newPassword, 10);
-        await user.save();
-
-        // xóa token sau khi cập nhật mật khẩu thành công
-        await tokenRecord.remove();
-
-        res.send("Password has been reset successfully");
+      const tokenRecord = await Token.findOne({ token });
+      if (!tokenRecord) {
+        return res.status(400).send("Invalid or expired token");
+      }
+  
+      const user = await User.findById(tokenRecord.userId);
+      if (!user) {
+        await Token.deleteOne({ _id: tokenRecord._id }); // Xóa token dù user không tồn tại
+        return res.status(400).send("User not found");
+      }
+  
+      // Sử dụng bcrypt bất đồng bộ
+      user.password = await bcrypt.hash(newPassword, 10);
+      await user.save();
+  
+      await Token.deleteOne({ _id: tokenRecord._id }); // Sử dụng deleteOne
+  
+      res.send("Password has been reset successfully");
     } catch (err) {
-        console.error("Error resetting password: ", err);
-        res.status(500).send("Internal Server Error");
+      console.error("Error resetting password: ", err);
+      res.status(500).send("Internal Server Error");
     }
-}
+  }
 
 // xử lý đăng nhập bằng Google OAuth thông qua Passport.js.
 export const googleAuth = (req, res, next) => {
