@@ -176,10 +176,10 @@ export const resetPassword = async (req, res) => {
     }
 
     // kiểm tra độ mạnh của mật khẩu mới
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
-    if (!passwordRegex.test(newPassword)) {
-        return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
-    }
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$/;
+    // if (!passwordRegex.test(newPassword)) {
+    //     return res.status(400).send("Password must be at least 8 characters long, contain a letter, a number and a special character");
+    // }
 
     try {
         // tìm token đã lưu trong csdl
