@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../../style/passwd/ForgotPasswordPage.css'; // Import CSS styles
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -16,19 +17,20 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div>
-      <h2>Quên mật khẩu</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="forgot-container">
+      <h2 className="forgot-title">Quên mật khẩu</h2>
+      <form className="forgot-form" onSubmit={handleSubmit}>
         <input
+          className="forgot-input"
           type="email"
           placeholder="Nhập email"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
         />
-        <button type="submit">Gửi link đặt lại mật khẩu</button>
+        <button className="forgot-btn" type="submit">Gửi link đặt lại mật khẩu</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="forgot-message">{message}</p>}
     </div>
   );
 }
