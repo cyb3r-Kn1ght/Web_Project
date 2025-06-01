@@ -273,7 +273,7 @@
     scrollbar-width: none;
     /* Firefox */
     -ms-overflow-style: none;
-    /* IE/Edge */
+    /* Edge*/
 
     /* Cuộn được */
     overflow-y: auto;
@@ -283,6 +283,6 @@
 
   .historychatbox::-webkit-scrollbar {
     display: none;
-    /* Chrome/Safari */
+    /* Chrome*/
   }
 }
