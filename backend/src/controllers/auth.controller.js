@@ -165,7 +165,7 @@ export const forgotPassword = async (req, res) => {
     });
     await newToken.save();
 
-    const reset_link = `${getClientDomain(req)}/${reset_token}`;
+    const reset_link = `${getClientDomain(req)}/reset-password/${reset_token}`;
     await sendEmail(email, reset_link);
     res.json({ message: "Reset link has been sent to your email" });
 }

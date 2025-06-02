@@ -29,7 +29,7 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 
 
 const corsOptions = {
-  origin: ['https://celebritychatbot.id.vn'],
+  origin: 'https://celebritychatbot.id.vn',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
