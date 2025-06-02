@@ -197,8 +197,7 @@
 
   /* Sidebar (ẩn trái) */
   .navI {
-    position: fixed;
-    top: 60px;
+    position: relative;
     /* ngay dưới header */
     left: -250px;
     /* ẩn trái */
