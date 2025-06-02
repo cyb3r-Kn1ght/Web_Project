@@ -230,10 +230,9 @@ export const googleAuth = (req, res, next) => {
         sameSite: 'none',
         maxAge: 60 * 60 * 1000
       });
-
+      
       // Redirect về frontend với success status
       res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
-
     } catch (error) {
       res.redirect(`${getClientDomain(req)}/login?error=server_error`);
     }
