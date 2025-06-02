@@ -233,6 +233,14 @@ export const googleAuth = (req, res, next) => {
       
       // Redirect về frontend với success status
       res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
+          const today = new Date().toDateString();
+      if (!user.lastReset||user.lastReset.toDateString() !== today) {
+            user.remainingMessages = 10;
+            user.lastReset = new Date();
+  await user.save();
+  console.log("Reset remainingMessages to 10");
+
+ }
     } catch (error) {
       res.redirect(`${getClientDomain(req)}/login?error=server_error`);
     }
