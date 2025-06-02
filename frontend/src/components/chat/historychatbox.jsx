@@ -136,6 +136,7 @@ const HistoryChatbox = () => {
       // Xoá audioRef để chuẩn bị cho âm thanh mới
       audioRef.current = null;
     }
+    // set trạng thái đang phát âm thanh cho spinningId
     setSpinningId(id);
 
     try {
@@ -202,27 +203,36 @@ const HistoryChatbox = () => {
                 // key là duy nhất để React có thể theo dõi các phần tử trong danh sách khi cần cập nhận, thêm, xóa
                 key={message._id || `temp-${message.timestamp}`}
               >
-                <p>{message.message}</p>
+                {/* Hiển thị tin nhắn */}
+                <p>{message.message}</p> 
+                {/* Nếu là tin nhắn của người dùng thì không hiển thị button TTS */}
                 {!isUserMessage && (
                   <div>
                     <button
+                      // Button để phát âm thanh từ tin nhắn, chỉ hiển thị nếu người dùng có tài khoản premium
                       className="button-text-to-speech"
                       title="Nghe"
                       onClick={async () => {
                       if (authUser.tier !== 'premium') {
+                      // Nếu người dùng không phải premium, hiển thị thông báo lỗi
                       toast.error('Tính năng Text-to-Speech chỉ dành cho tài khoản premium. Vui lòng nâng cấp.');
                       return;
                        }
+                      // Phát âm thanh tin nhắn
                       handlePlayTTS(message.message);}}
                     >
+                      {/* Hiển thị biểu tượng tai nghe, nếu đang phát âm thanh thì thêm class để xoay biểu tượng */}
                       <FontAwesomeIcon
                         icon={faHeadphones}
                         className={spinningId === (message._id || `temp-${message.timestamp}`) ? 'icon-spinning' : ''}
                       />
                     </button>
+                    {/* Nếu TTS đã xử lý xong → render <audio> để người dùng điều khiển phát/tạm dừng */}
                     {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
                       <audio
+                        // trình phát nhúng sẵn trong HTML để người dùng có thể điều khiển âm thanh
                         controls
+                        // Lấy url blob âm thanh tương ứng để phát
                         src={audioUrlMap[message._id || `temp-${message.timestamp}`]}
                         style={{ marginLeft: 8, verticalAlign: 'middle' }}
                       />
@@ -234,13 +244,19 @@ const HistoryChatbox = () => {
           })
         ) : (
           <div className="empty-chat">
+            {/* Nếu không có tin nhắn nào, hiển thị thông báo đề xuất người dùng bắt đầu cuộc trò chuyện */}
             <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
           </div>
         )}
+        {/* Phần tử để cuộn xuống cuối chatbox */}
         <div ref={bottomRef} />
+        {/* Hiển thị trạng thái AI đang gõ nếu isAITyping là true */}
         {isAITyping && (
+          // Hiển thị thông báo AI đang trả lời
           <div className="ai-typing-indicator">
+            {/* Hiển thị tên nhân vật + đang trả lời */}
             <span>{useSelectedCeleb?.celebName} đang trả lời</span>
+            {/* Hiển thị hiệu ứng gõ với 3 chấm lên xuống */}
             <div className="typing-dots">
               <div className="dot"></div>
               <div className="dot"></div>
