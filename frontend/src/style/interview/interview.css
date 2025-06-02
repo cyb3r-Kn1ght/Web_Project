@@ -72,18 +72,6 @@
   position: relative;
 }
 
-/* Overlay mờ (hiển thị khi sidebar mở trên mobile/tablet) */
-.bodyI.overlay-active::after {
-  content: "";
-  position: fixed;
-  top: 60px;
-  /* Bắt đầu phía dưới header */
-  left: 0;
-  width: 100vw;
-  height: calc(100vh - 60px);
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 500;
-}
 
 /* Sidebar mặc định ẩn (width: 0) */
 .navI {
@@ -194,15 +182,6 @@
     left: auto;
     height: auto;
     background-color: #f1f3f5;
-  }
-
-  /* Khi sidebar mở, đẩy content sang phải */
-  .contentI {
-    margin-left: 0;
-    /* mặc định */
-  }
-  .navI.open ~ .contentI {
-    margin-left: 250px;
   }
 
 
