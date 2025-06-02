@@ -177,7 +177,7 @@ const Interview = () => {
                       key={index}
                       className={`menu-itemI ${selectedItem === item ? 'activeI' : ''}`}
                       onClick={() => {
-                        if (window.innerWidth < 768) {  
+                        if (window.innerWidth < 768) {
                           setIsSidebarOpen(false);
                         }
                         setSelectedItem(item)
