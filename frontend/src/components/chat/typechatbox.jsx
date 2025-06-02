@@ -7,7 +7,7 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
   const { sendMessage } = useChatStore();
-  const { authUser, checkAuth } = useAuthStore();
+  const { authUser, setAuthUser  } = useAuthStore();
   const handleSend = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -20,7 +20,10 @@ const TypeChatbox = () => {
       await sendMessage({
         message: message.trim(),
       });
-      await checkAuth();
+      setAuthUser({
+  ...authUser,
+  remainingMessages: authUser.remainingMessages - 1
+});
     } catch (error) {
       console.error("Failed to send message:", error);
     }

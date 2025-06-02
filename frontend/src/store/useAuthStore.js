@@ -14,7 +14,8 @@ export const useAuthStore = create(persist((set, get) => ({
   isCheckingAuth: true,
   socket: null,
   isSocketConnecting: false, // Flag để tránh gọi connectSocket nhiều lần
-
+      
+  setAuthUser: (user) => set({ authUser: user }),
   // Hàm kiểm tra xác thực, nếu thành công sẽ gọi connectSocket
   checkAuth: async () => {
   try {
