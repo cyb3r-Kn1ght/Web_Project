@@ -175,15 +175,6 @@
     border-right: 1px solid #e0e0e0;
   }
 
-  /* Các vị trí, kích thước cố định cho desktop: */
-  .navI {
-    top: auto;
-    left: auto;
-    height: auto;
-    background-color: #f1f3f5;
-  }
-
-
 
 /* =========================
    Các style chung về menu
@@ -241,7 +232,6 @@
     height: calc(100vh - 60px);
     background-color: #f1f3f5;
     border-right: 1px solid #e0e0e0;
-    padding: 20px;
     overflow-y: auto;
     transition: left 0.3s ease;
     z-index: 999;
@@ -250,7 +240,6 @@
   /* Khi có class open: trượt vào */
   .navI.open {
     width: 200px;
-    left: 0;
   }
 
   /* Content chính: đầy đủ chiều rộng */
