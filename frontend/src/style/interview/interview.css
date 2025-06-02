@@ -184,61 +184,6 @@
   }
 
 
-/* =========================
-   Tablet + Mobile (<= 768px)
-   ========================= */
-@media (max-width: 768px) {
-
-  /* Header: padding thu gọn */
-  .headerI {
-    padding: 8px 16px;
-    height: 60px;
-  }
-
-  /* Sidebar (ẩn trái) */
-  .navI {
-    position: relative;
-    /* ngay dưới header */
-    left: -250px;
-    /* ẩn trái */
-    width: 250px;
-    height: calc(100vh - 60px);
-    background-color: #f1f3f5;
-    border-right: 1px solid #e0e0e0;
-    padding: 20px;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    z-index: 999;
-  }
-
-  /* Khi có class open: trượt vào */
-  .navI.open {
-    left: 0;
-  }
-
-  /* Content chính: đầy đủ chiều rộng */
-  .contentI {
-    padding: 20px;
-    width: 100%;
-  }
-  .navI.open ~ .contentI {
-  margin-left: 0;
-}
-  /* Menu header & item: thu nhỏ font */
-  .menu-headerI {
-    font-size: 0.9rem;
-  }
-
-  .menu-itemI {
-    font-size: 0.85rem;
-  }
-    .img_off_page {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-  }
-}
-
 
 /* =========================
    Các style chung về menu
@@ -278,3 +223,53 @@
   color: #343a40;
   text-decoration: underline;
 }
+/* =========================
+   Tablet + Mobile (<= 768px)
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Header: padding thu gọn */
+  .headerI {
+    padding: 8px 16px;
+    height: 60px;
+  }
+
+  /* Sidebar (ẩn trái) */
+  .navI {
+    position: relative;
+    width: 0px;
+    height: calc(100vh - 60px);
+    background-color: #f1f3f5;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 999;
+  }
+
+  /* Khi có class open: trượt vào */
+  .navI.open {
+    width: 250px;
+    left: 0;
+  }
+
+  /* Content chính: đầy đủ chiều rộng */
+  .contentI {
+    padding: 20px;
+    width: 100%;
+  }
+  /* Menu header & item: thu nhỏ font */
+  .menu-headerI {
+    font-size: 0.9rem;
+  }
+
+  .menu-itemI {
+    font-size: 0.85rem;
+  }
+    .img_off_page {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+  }
+}
+
