@@ -33,7 +33,7 @@ router.post("/create-payment", async (req, res) => {
   const tmnCode = "SNBUG3T2";
   const secretKey = "1VIULX38MI6P6YB5P04A8WRJVFCBZRQ4";
   const vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-  const returnUrl = "https://celebritychatbot.up.railway.app/api/vnpay/check-payment";
+  const returnUrl = "https://celebritychatbot.id.vn/api/vnpay/check-payment";
 
 
   // Format date for VNPAY (YYYYMMDDHHmmss)
@@ -113,22 +113,22 @@ router.get('/check-payment', verifyToken, async (req, res) => {
           { tier: 'premium' },
           { new: true }
         );
-                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=success');
+                return res.redirect('https://celebritychatbot.id.vn/chat?payment=success');
             } else {
                 // Payment failed
                 console.log('Payment failed with code:', vnp_ResponseCode);
-                return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=failed');
+                return res.redirect('https://celebritychatbot.id.vn/chat?payment=failed');
             }
         } else {
             // Invalid signature
             console.log('Invalid signature');
             console.log('Expected:', signed);
             console.log('Received:', secureHash);
-            return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=invalid');
+            return res.redirect('https://celebritychatbot.id.vn/chat?payment=invalid');
         }
     } catch (error) {
         console.error('Payment verification error:', error);
-        return res.redirect('https://web-project-flame-five.vercel.app/chat?payment=error');
+        return res.redirect('https://celebritychatbot.id.vn/chat?payment=error');
     }
 });
 

@@ -29,7 +29,7 @@ const port = process.env.PORT || 4000; //port mặc định phòng trường h�
 
 
 const corsOptions = {
-  origin: 'https://web-project-flame-five.vercel.app',
+  origin: 'https://celebritychatbot.id.vn',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'ok',
     timestamp: Date.now()
@@ -88,7 +88,7 @@ app.use('/api/tts', ttsRoute);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   // Thêm headers CORS vào response lỗi
-  res.header("Access-Control-Allow-Origin", "https://web-project-flame-five.vercel.app");
+  res.header("Access-Control-Allow-Origin", "https://celebritychatbot.id.vn");
   res.header("Access-Control-Allow-Credentials", "true");
   res.status(err.status || 500).json({ error: err.message });
 });

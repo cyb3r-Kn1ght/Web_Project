@@ -11,6 +11,10 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const getClientDomain = (req) => {
+  return 'https://celebritychatbot.id.vn'; // Luôn trả về domain production
+};
+
 // xử lý quên mật khẩu
 const sendEmail = async (email, reset_link) => {
     const transporter = nodemailer.createTransport({
@@ -72,7 +76,7 @@ export const signup = async (req, res) => {
     // lưu user mới vào trong csdl
     await newUser.save();
     res.send("User created successfully");
-    res.redirect(`https://web-project-flame-five.vercel.app/login`);
+    res.redirect(`${getClientDomain(req)}/login`);
 }
 
 export const login = async (req, res) => {
@@ -161,7 +165,7 @@ export const forgotPassword = async (req, res) => {
     });
     await newToken.save();
 
-    const reset_link = `https://web-project-flame-five.vercel.app/reset-password/${reset_token}`;
+    const reset_link = `${getClientDomain(req)}/reset-password/${reset_token}`;
     await sendEmail(email, reset_link);
     res.json({ message: "Reset link has been sent to your email" });
 }
@@ -205,7 +209,7 @@ export const googleAuth = (req, res, next) => {
   passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
     try {    
     
-      if (err || !user) return res.redirect('https://web-project-flame-five.vercel.app/login?error=auth_failed');
+      if (err || !user) return res.redirect(`${getClientDomain(req)}/login?error=auth_failed`);
       
       const { id, displayName, emails } = user;
       let existingUser = await User.findOne({ GoogleId: id });
@@ -228,9 +232,9 @@ export const googleAuth = (req, res, next) => {
       });
       
       // Redirect về frontend với success status
-      res.redirect(`https://web-project-flame-five.vercel.app/auth/oauth-success`);
+      res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
     } catch (error) {
-      res.redirect('https://web-project-flame-five.vercel.app/login?error=server_error');
+      res.redirect(`${getClientDomain(req)}/login?error=server_error`);
     }
   })(req, res, next);
 };
