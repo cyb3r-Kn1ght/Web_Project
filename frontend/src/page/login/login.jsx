@@ -196,7 +196,7 @@ const Login = () => {
                 disabled={signInLoading}
               />
 
-              <a href="/forgot-password">Quên mật khẩu?</a>
+              <a href="/forgot-password">Forgot password?</a>
               <p className="social-text">
                 Or sign in with social platforms
               </p>
