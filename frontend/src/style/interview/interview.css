@@ -40,13 +40,13 @@
 .logoI {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #343a40;
+  color: #1d4ed8;
 }
 .home-btn {
   text-decoration: none;
   font-size: 1rem;
   font-weight: 600;
-  color: #343a40;
+  color: #1d4ed8;
   margin-left: auto;
   padding: 5px 10px;
   position: relative;
@@ -102,7 +102,7 @@
 .contentI h2 {
   font-size: 1.75rem;
   margin-bottom: 1rem;
-  color: #212529;
+  color: #1d4ed8;
 }
 .contentI h3 {
   font-size: 1.17rem;
