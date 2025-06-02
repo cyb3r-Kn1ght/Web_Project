@@ -230,6 +230,9 @@ export const googleAuth = (req, res, next) => {
         sameSite: 'none',
         maxAge: 60 * 60 * 1000
       });
+
+      // Redirect về frontend với success status
+      res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
       const today = new Date().toDateString();
       if (!existingUser.lastReset || existingUser.lastReset.toDateString() !== today) {
         existingUser.remainingMessages = 10;
@@ -237,9 +240,6 @@ export const googleAuth = (req, res, next) => {
         await existingUser.save();
         console.log("Reset remainingMessages to 10");
       }
-      // Redirect về frontend với success status
-      res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
-
     } catch (error) {
       res.redirect(`${getClientDomain(req)}/login?error=server_error`);
     }
