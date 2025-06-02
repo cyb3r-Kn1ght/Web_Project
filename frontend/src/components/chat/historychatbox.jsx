@@ -95,7 +95,7 @@ const HistoryChatbox = () => {
     setSpinningId(id);
 
     try {
-      const response = await fetch('https://celebritychatbot.up.railway.app/api/tts', {
+      const response = await fetch('https://celebritychatbot.up.id.vn/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: message })

@@ -12,10 +12,7 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const getClientDomain = (req) => {
-  const host = req.headers.host || '';
-  return host.includes('celebritychatbot.id.vn') 
-    ? 'https://celebritychatbot.id.vn' 
-    : 'https://web-project-flame-five.vercel.app';
+  return 'https://celebritychatbot.id.vn'; // Luôn trả về domain production
 };
 
 // xử lý quên mật khẩu
