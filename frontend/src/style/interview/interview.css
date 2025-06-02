@@ -221,7 +221,9 @@
     padding: 20px;
     width: 100%;
   }
-
+  .navI.open ~ .contentI {
+  margin-left: 0;
+}
   /* Menu header & item: thu nhỏ font */
   .menu-headerI {
     font-size: 0.9rem;
@@ -229,6 +231,11 @@
 
   .menu-itemI {
     font-size: 0.85rem;
+  }
+    .img_off_page {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
   }
 }
 
@@ -270,60 +277,4 @@
 .menu-itemI.activeI {
   color: #343a40;
   text-decoration: underline;
-}
-
-/* =========================
-   Mobile nhỏ (<= 480px)
-   ========================= */
-@media (max-width: 480px) {
-
-  /* Logo và toggle: thu gọn */
-  .logoI {
-    font-size: 1rem;
-  }
-
-  .toggle-btn {
-    font-size: 1.25rem;
-    margin-right: 12px;
-  }
-
-  .home-btn {
-    font-size: 0.9rem;
-    padding: 4px 8px;
-  }
-
-  /* Sidebar: thu nhỏ padding */
-  .navI {
-    width: 180px;
-    padding: 12px;
-  }
-
-  .navI.open {
-    left: 0;
-  }
-
-  /* Content: gỡ bỏ margin/padding thừa */
-  .contentI {
-    padding: 16px;
-  }
-
-  /* Tiêu đề trong nội dung: thu nhỏ */
-  .contentI h2 {
-    font-size: 1.5rem;
-  }
-
-  .contentI h3 {
-    font-size: 1rem;
-  }
-
-  .contentI p {
-    font-size: 0.95rem;
-  }
-
-  /* Ảnh (.img_off_page) */
-  .img_off_page {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-  }
 }
