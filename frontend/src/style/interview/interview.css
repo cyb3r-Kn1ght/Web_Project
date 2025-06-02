@@ -249,7 +249,7 @@
 
   /* Khi có class open: trượt vào */
   .navI.open {
-    width: 250px;
+    width: 200px;
     left: 0;
   }
 
