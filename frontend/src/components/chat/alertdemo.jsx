@@ -1,5 +1,3 @@
-import React from 'react';
-
 const AlertDemo = () => {
   return (
     // Đây là một thông báo demo, hiển thị ở dưới cùng của chatbox.
