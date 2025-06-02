@@ -33,3 +33,42 @@ Chúng tôi ưu tiên các **chỉ số hiệu suất** và **hỗ trợ tiếp 
 ## Một vài thao tác cơ bản trên web
 
 ![image](https://github.com/user-attachments/assets/e20c50bd-9a68-406a-a206-d0587c2a9a38)
+
+---
+
+# Model AI của trang Web
+
+## Lựa chọn Model
+
+Để có thể tạo ra một **chatbot AI người Việt**, chúng tôi đã sử dụng **model Ollama 3.2 3B-Instruction**. Sau đó tiến hành **fine-tune** dựa trên lượng **data được tìm kiếm thủ công và lọc chọn kỹ càng**, nhằm mang lại một model:
+- Biết **nói Tiếng Việt**.
+- Biết **sáng tạo theo phong cách của người nổi tiếng 100%**.
+
+---
+
+## Tại sao chúng tôi chọn Ollama 3.2 3B-Instruction?
+
+- **Hỗ trợ đa ngôn ngữ**, đặc biệt là **Tiếng Việt**, giúp tiết kiệm công sức training thêm ngữ cảnh giao tiếp đặc trưng của người Việt.
+- Với **3 tỷ tham số (3B)**, model đủ nhẹ để chạy trên cấu hình tầm trung, nhưng vẫn đủ mạnh để **không bị “ngơ”** trong các tương tác phức tạp.
+
+### Hình ảnh benchmark giữa các model:
+![image](https://github.com/user-attachments/assets/d1f0893c-2740-4cfe-9570-e4d006be4115)
+
+---
+
+## Quá trình Fine-tune Model
+
+Việc fine-tune một model AI không đơn giản, nó đòi hỏi:
+
+- **Kỹ thuật tối ưu phần cứng** để tiết kiệm chi phí và thời gian train.
+- **Nguồn dữ liệu lớn, đúng chủ đề**, được thu thập chủ yếu từ:
+  - Talkshow
+  - Bài báo
+  - Tạp chí
+  - Video phỏng vấn
+- **Lọc chọn những dữ liệu đặc trưng nhất** của từng nhân vật để làm nổi bật tính cách và phong cách giao tiếp.
+- **Tạo dữ liệu ảo** dựa trên dữ liệu thật để làm sinh động thêm và mở rộng bối cảnh mô phỏng.
+- **Định dạng dữ liệu theo persona**: giúp model nhận diện được từng nhân vật cụ thể, không chỉ qua nội dung mà còn là **cách nói chuyện, tính cách và câu chuyện cá nhân**.
+
+### Hình ảnh thông số fine-tune AI
+![image](https://github.com/user-attachments/assets/54f116be-95da-4cfa-8029-36cf7773d342)
