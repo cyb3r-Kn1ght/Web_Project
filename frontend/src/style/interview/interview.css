@@ -179,14 +179,8 @@
 .Title_of_page {
   color: black;
   margin-top: 10px;
+
 }
-
-/* =========================
-   Desktop (>= 769px)
-   ========================= */
-@media (min-width: 769px) {
-
-  /* Sidebar khi mở (có class open) */
   .navI.open {
     width: 250px;
     padding: 20px;
@@ -208,9 +202,9 @@
     /* mặc định */
   }
   .navI.open ~ .contentI {
-    margin-left: 0px;
+    margin-left: 250px;
   }
-}
+
 
 /* =========================
    Tablet + Mobile (<= 768px)
@@ -261,62 +255,6 @@
   }
 }
 
-/* =========================
-   Mobile nhỏ (<= 480px)
-   ========================= */
-@media (max-width: 480px) {
-
-  /* Logo và toggle: thu gọn */
-  .logoI {
-    font-size: 1rem;
-  }
-
-  .toggle-btn {
-    font-size: 1.25rem;
-    margin-right: 12px;
-  }
-
-  .home-btn {
-    font-size: 0.9rem;
-    padding: 4px 8px;
-  }
-
-  /* Sidebar: thu nhỏ padding */
-  .navI {
-    width: 200px;
-    /* rút gọn chút */
-    padding: 16px;
-  }
-
-  .navI.open {
-    left: 0;
-  }
-
-  /* Content: gỡ bỏ margin/padding thừa */
-  .contentI {
-    padding: 16px;
-  }
-
-  /* Tiêu đề trong nội dung: thu nhỏ */
-  .contentI h2 {
-    font-size: 1.5rem;
-  }
-
-  .contentI h3 {
-    font-size: 1rem;
-  }
-
-  .contentI p {
-    font-size: 0.95rem;
-  }
-
-  /* Ảnh (.img_off_page) */
-  .img_off_page {
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-  }
-}
 
 /* =========================
    Các style chung về menu
@@ -357,13 +295,58 @@
   text-decoration: underline;
 }
 
-/* Overlay mờ riêng cho mobile (để click vào đóng sidebar) */
-.mobile-overlay {
-  position: fixed;
-  top: 60px; /* ngay dưới header */
-  left: 0;
-  width: 100vw;
-  height: calc(100vh - 60px);
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 500;
+/* =========================
+   Mobile nhỏ (<= 480px)
+   ========================= */
+@media (max-width: 480px) {
+
+  /* Logo và toggle: thu gọn */
+  .logoI {
+    font-size: 1rem;
+  }
+
+  .toggle-btn {
+    font-size: 1.25rem;
+    margin-right: 12px;
+  }
+
+  .home-btn {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
+  /* Sidebar: thu nhỏ padding */
+  .navI {
+    width: 180px;
+    padding: 12px;
+  }
+
+  .navI.open {
+    left: 0;
+  }
+
+  /* Content: gỡ bỏ margin/padding thừa */
+  .contentI {
+    padding: 16px;
+  }
+
+  /* Tiêu đề trong nội dung: thu nhỏ */
+  .contentI h2 {
+    font-size: 1.5rem;
+  }
+
+  .contentI h3 {
+    font-size: 1rem;
+  }
+
+  .contentI p {
+    font-size: 0.95rem;
+  }
+
+  /* Ảnh (.img_off_page) */
+  .img_off_page {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+  }
 }
