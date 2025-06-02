@@ -76,7 +76,7 @@ export const signup = async (req, res) => {
     // lưu user mới vào trong csdl
     await newUser.save();
     res.send("User created successfully");
-    res.redirect(`${getClientDomain(req)}/login`);
+    res.redirect(`${getClientDomain(req)}/auth/login`);
 }
 
 export const login = async (req, res) => {
@@ -209,7 +209,7 @@ export const googleAuth = (req, res, next) => {
   passport.authenticate("google", { failureRedirect: "/login", session: false }, async (err, user) => {
     try {    
     
-      if (err || !user) return res.redirect(`${getClientDomain(req)}/login?error=auth_failed`);
+      if (err || !user) return res.redirect(`${getClientDomain(req)}/auth/login?error=auth_failed`);
       
       const { id, displayName, emails } = user;
       let existingUser = await User.findOne({ GoogleId: id });
@@ -234,7 +234,7 @@ export const googleAuth = (req, res, next) => {
       // Redirect về frontend với success status
       res.redirect(`${getClientDomain(req)}/auth/oauth-success`);
     } catch (error) {
-      res.redirect(`${getClientDomain(req)}/login?error=server_error`);
+      res.redirect(`${getClientDomain(req)}/auth/login?error=server_error`);
     }
   })(req, res, next);
 };
