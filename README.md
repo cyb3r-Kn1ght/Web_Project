@@ -43,7 +43,8 @@ Chúng tôi ưu tiên các **chỉ số hiệu suất** và **hỗ trợ tiếp 
 Để có thể tạo ra một **chatbot AI người Việt**, chúng tôi đã sử dụng **model Ollama 3.2 3B-Instruction**. Sau đó tiến hành **fine-tune** dựa trên lượng **data được tìm kiếm thủ công và lọc chọn kỹ càng**, nhằm mang lại một model:
 - Biết **nói Tiếng Việt**.
 - Biết **sáng tạo theo phong cách của người nổi tiếng 100%**.
-
+- Link drive model đã finetune: https://drive.google.com/file/d/1Qb67Rs_uKEAGNuu9gxsZ9F1_RBLO1F83/view?usp=sharing
+- Link facebook liên hệ: https://www.facebook.com/le.minh.905864/
 ---
 
 ## Tại sao chúng tôi chọn Ollama 3.2 3B-Instruction?
