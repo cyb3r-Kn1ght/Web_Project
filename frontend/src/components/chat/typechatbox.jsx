@@ -7,7 +7,7 @@ import { useAuthStore } from "../../store/useAuthStore.js";
 const TypeChatbox = () => {
   const [message, setMessage] = useState('');
   const { sendMessage } = useChatStore();
-  const { authUser } = useAuthStore(); // giả sử toast từ react-hot-toast
+  const { authUser, checkAuth } = useAuthStore();
   const handleSend = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -20,6 +20,7 @@ const TypeChatbox = () => {
       await sendMessage({
         message: message.trim(),
       });
+      await checkAuth();
     } catch (error) {
       console.error("Failed to send message:", error);
     }
