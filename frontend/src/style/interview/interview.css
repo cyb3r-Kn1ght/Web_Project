@@ -79,7 +79,7 @@
   padding: 0;
   background-color: #f1f3f5;
   border-right: none;
-  overflow: visible;
+  overflow: hidden;
   transition: width 0.3s ease, padding 0.3s ease;
   position: relative;
   z-index: 999;
@@ -177,7 +177,6 @@
 
   /* Các vị trí, kích thước cố định cho desktop: */
   .navI {
-    position: relative;
     top: auto;
     left: auto;
     height: auto;

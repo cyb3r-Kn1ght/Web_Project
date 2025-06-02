@@ -20,7 +20,7 @@ const sidebarItems = [
 const Interview = () => {
   const [openSections, setOpenSections] = useState([]);
   const [selectedItem, setSelectedItem] = useState('Your First API Call');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const handleSectionClick = (section) => {
     setOpenSections(prev => prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]);
   };
