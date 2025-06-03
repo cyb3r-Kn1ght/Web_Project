@@ -8,7 +8,7 @@ const Footer = lazy(() => import('../../components/web_page/footer.jsx'));
 
 function Home() {
   useEffect(() => {
-    document.title = 'AI ChatBot-Home';
+    document.title = 'CelebChatBot- Chat AI với Người Nổi Tiếng – Trò Chuyện Ngay Hôm Nay';
   }, []);
   return (
     <>
