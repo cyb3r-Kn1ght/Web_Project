@@ -19,7 +19,9 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const checkAuth = useAuthStore(state => state.checkAuth);
-
+    useEffect(() => {
+    document.title = 'AI ChatBot';
+  }, []);
   // Xử lý kết quả thanh toán
   useEffect(() => {
     const params = new URLSearchParams(location.search);
