@@ -1,49 +1,41 @@
 import express from 'express';
-import axios from 'axios';
+import axios   from 'axios';
 
 const router = express.Router();
 
 /**
  * POST /api/tts
- * Forward văn bản tới proxy StyleTTS-2 và trả lại WAV cho frontend.
+ * Forward văn bản tới TTS service (đã public qua ngrok) và trả lại WAV.
  *
  * Body JSON:
- *   text              (string, bắt buộc)
- *   speed             (float, tuỳ chọn, mặc định 1.0)
- *   reference_audio   (string URL hoặc đường dẫn local, tuỳ chọn)
- *   denoise           (float, tuỳ chọn, mặc định 0.6)
- *   avg_style         (bool,  tuỳ chọn, mặc định true)
- *   stabilize         (bool,  tuỳ chọn, mặc định true)
+ *   text     (string, bắt buộc)
+ *   persona  (string, tuỳ chọn – "my_tam" | "son_tung" | "tran_thanh")
+ *   speed    (float,  tuỳ chọn, mặc định 1.0)
  */
 router.post('/', async (req, res) => {
   const {
     text,
+    persona = null,
     speed = 1.0,
-    reference_audio = null,
-    denoise = 0.6,
-    avg_style = true,
-    stabilize = true
   } = req.body;
 
   if (!text?.trim()) {
     return res.status(400).json({ error: 'Text is required' });
   }
-
   try {
-    // URL proxy, có thể đặt trong .env: STYLETTS2_PROXY_URL=http://host:8000/tts
-    const proxyUrl = process.env.STYLETTS2_PROXY_URL || 'http://localhost:8000/tts';
+    // Public ngrok URL, set trong .env → TTS_PUBLIC_URL=https://abcd1234.ngrok-free.app/tts
+    const ttsUrl = process.env.TTS_PUBLIC_URL || 'https://21f6-2a09-bac5-d46f-e6-00-17-214.ngrok-free.app/tts';
 
-    const proxyResp = await axios.post(
-      proxyUrl,
-      { text, speed, reference_audio, denoise, avg_style, stabilize },
-      { responseType: 'arraybuffer', timeout: 60000 }        // nhận WAV thô
-    );
+    const { data } = await axios.post(ttsUrl, { text, persona, speed }, {
+      responseType: 'arraybuffer',
+      timeout: 60000,
+    });
 
     res.setHeader('Content-Type', 'audio/wav');
-    res.send(Buffer.from(proxyResp.data));
+    res.send(Buffer.from(data));
   } catch (err) {
-    console.error('StyleTTS2 Error:', err.response?.data || err.message);
-    res.status(502).json({ error: 'TTS proxy failed' });
+    console.error('TTS proxy error:', err.response?.data || err.message);
+    res.status(502).json({ error: 'Remote TTS failed' });
   }
 });
 
