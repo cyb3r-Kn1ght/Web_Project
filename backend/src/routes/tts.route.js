@@ -3,38 +3,47 @@ import axios from 'axios';
 
 const router = express.Router();
 
+/**
+ * POST /api/tts
+ * Forward văn bản tới proxy StyleTTS-2 và trả lại WAV cho frontend.
+ *
+ * Body JSON:
+ *   text              (string, bắt buộc)
+ *   speed             (float, tuỳ chọn, mặc định 1.0)
+ *   reference_audio   (string URL hoặc đường dẫn local, tuỳ chọn)
+ *   denoise           (float, tuỳ chọn, mặc định 0.6)
+ *   avg_style         (bool,  tuỳ chọn, mặc định true)
+ *   stabilize         (bool,  tuỳ chọn, mặc định true)
+ */
 router.post('/', async (req, res) => {
-  const text = req.body.text;
-  if (!text) return res.status(400).json({ error: 'Text is required' });
+  const {
+    text,
+    speed = 1.0,
+    reference_audio = null,
+    denoise = 0.6,
+    avg_style = true,
+    stabilize = true
+  } = req.body;
+
+  if (!text?.trim()) {
+    return res.status(400).json({ error: 'Text is required' });
+  }
 
   try {
-    // Gọi FPT AI để lấy URL audio
-    const response = await axios.post(
-      'https://api.fpt.ai/hmi/tts/v5',
-      text,
-      {
-        headers: {
-          'api-key': process.env.FPT_AI_API_KEY, // Đặt key trong .env
-          'speed': '1',
-          'voice': 'leminh',
-          'Content-Type': 'text/plain'
-        }
-      }
+    // URL proxy, có thể đặt trong .env: STYLETTS2_PROXY_URL=http://host:8000/tts
+    const proxyUrl = process.env.STYLETTS2_PROXY_URL || 'http://localhost:8000/tts';
+
+    const proxyResp = await axios.post(
+      proxyUrl,
+      { text, speed, reference_audio, denoise, avg_style, stabilize },
+      { responseType: 'arraybuffer', timeout: 60000 }        // nhận WAV thô
     );
-    const audioUrl = response.data.async;
 
-    // Đợi file audio sẵn sàng (FPT AI cần 1-2s)
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Backend tải file audio về
-    const audioResponse = await axios.get(audioUrl, { responseType: 'arraybuffer' });
-
-    // Trả về file audio cho frontend
-    res.setHeader('Content-Type', 'audio/mpeg');
-    res.send(Buffer.from(audioResponse.data));
-  } catch (error) {
-    console.error('TTS Error:', error.response?.data || error.message);
-    res.status(500).json({ error: 'TTS failed' });
+    res.setHeader('Content-Type', 'audio/wav');
+    res.send(Buffer.from(proxyResp.data));
+  } catch (err) {
+    console.error('StyleTTS2 Error:', err.response?.data || err.message);
+    res.status(502).json({ error: 'TTS proxy failed' });
   }
 });
 

@@ -1,240 +1,187 @@
-import { useEffect, useRef, useState } from 'react';
-import '../../style/chat/chatbox.css';
-import { useAuthStore } from "../../store/useAuthStore.js";
-import { useChatStore } from "../../store/useChatStore.js";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
-import { toast } from 'react-hot-toast';
+import React, { useEffect, useRef, useState } from 'react';
+import "././style/chat/chatbox.css";
+import { useAuthStore } from "././store/useAuthStore.js";
+import { useChatStore } from "././store/useChatStore.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeadphones } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-hot-toast";
 
-// CSS cho hiệu ứng xoay tròn của biểu tượng tai nghe
+/* -------------------------------------------------------------------------- */
+/*                               Local helpers                                */
+/* -------------------------------------------------------------------------- */
+
+// CSS‑in‑JS spinner so chúng ta không phải sửa SCSS gốc
 const spinStyle = `
-@keyframes spin {
-  0% { transform: rotate(0deg);}
-  100% { transform: rotate(360deg);}
-}
-.icon-spinning {
-  animation: spin 1s linear infinite;
-  display: inline-block;
-}
+@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+.icon-spinning { animation: spin 1s linear infinite; display: inline-block; }
 `;
 
+// Endpoint StyleTTS‑2 proxy trực tiếp
+const TTS_ENDPOINT = import.meta.env.VITE_TTS_URL || "http://localhost:8000/tts";
+
+/* -------------------------------------------------------------------------- */
+/*                               React component                              */
+/* -------------------------------------------------------------------------- */
+
 const HistoryChatbox = () => {
-  // State để quản lý các trạng thái của chatbox
-  // State để quản lý animation AI đang gõ
-  const [isAITyping, setIsAITyping] = useState(false);
-  // State để quản lý ID của tin nhắn đang phát âm thanh
-  const [playingId, setPlayingId] = useState(null);
-  // State để quản lý trạng thái TTS (Text-to-Speech)
-  const [ttsLoading, setTtsLoading] = useState(null);
-  // State để quản lý lỗi TTS
-  const [ttsError, setTtsError] = useState(null);
-  // State để quản lý URL của audio đã được tạo
-  const [audioUrlMap, setAudioUrlMap] = useState({});
-  // State để quản lý ID của tin nhắn đang xoay biểu tượng tai nghe
-  const [spinningId, setSpinningId] = useState(null);
-  // Lấy các hàm và dữ liệu từ chat store
+  /* ------------------------------- UI states ------------------------------- */
+  const [isAITyping, setIsAITyping]   = useState(false);
+  const [playingId, setPlayingId]     = useState(null);   // hiển thị icon Playing nếu cần
+  const [spinningId, setSpinningId]   = useState(null);   // icon loading khi đang fetch TTS
+  const [audioUrlMap, setAudioUrlMap] = useState({});     // lưu blob URL cho mỗi message (để <audio> controls)
+
+  /* ----------------------------- Global stores ----------------------------- */
   const {
     messages,
-    // Hàm để lấy danh sách tin nhắn giữa người dùng và nhân vật được chọn
     getMessages,
-    // Nhân vật được chọn trong chat
     useSelectedCeleb,
-    // Hàm để đăng ký nhận tin nhắn từ socket
     subscribeToMessages,
-    // Hàm để hủy đăng ký nhận tin nhắn từ socket
     unsubscribeFromMessages,
   } = useChatStore();
-  // Lấy thông tin người dùng đã đăng nhập và socket từ auth store
   const { authUser, socket } = useAuthStore();
-  // Tham chiếu đến phần tử cuối cùng của chatbox để cuộn xuống
+
+  /* ------------------------------ Refs / misc ------------------------------ */
   const bottomRef = useRef(null);
-  // Tham chiếu đến audio để phát âm thanh
-  const audioRef = useRef(null);
+  const audioRef  = useRef(null);
 
-  // Hàm để cuộn xuống cuối chatbox khi có tin nhắn mới
-  const scrollToBottom = () => {
-    // Nếu có phần tử cuối cùng thì cuộn xuống với hiệu ứng mượt mà
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  /* -------------------------- Helpers & effects --------------------------- */
+  const scrollToBottom = () => bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 
-  // Hàm để xử lý sự kiện khi có tin nhắn mới từ socket
+  // Khi mount hoặc celeb/user thay đổi → join room & lấy lịch sử
   useEffect(() => {
-    // NẾu không có socket hoặc không có nhân vật được chọn hoặc chưa có người dùng đăng nhập thì không làm gì cả
     if (!socket || !useSelectedCeleb || !authUser?._id) return;
-    // Tạo một room cho người dùng dựa trên ID của họ
     const userRoom = `user_${authUser._id}`;
-    // Gửi sự kiện 'joinroom' lên server thông qua socket, yêu cầu tham gia phòng này. Server sẽ dùng phòng này để gửi tin nhắn đến người dùng
-    socket.emit('joinRoom', userRoom);
-    // Lấy danh sách tin nhắn từ server thông qua hàm getMessages giữa người dùng và nhân vật được chọn
+    socket.emit("joinRoom", userRoom);
     getMessages(useSelectedCeleb._id);
-    return () => {
-      // Khi component unmount (gỡ khỏi giao diện), rời khỏi phòng chat để không nhận tin nhắn nữa
-      socket.emit('leaveRoom', userRoom);
-    };
-    // usereffect sẽ chạy lại khi socket, authUser._id hoặc useSelectedCeleb thay đổi
+    return () => socket.emit("leaveRoom", userRoom);
   }, [socket, authUser._id, useSelectedCeleb]);
 
-  // Hàm để xử lý sự kiện khi có tin nhắn mới từ socket
+  // Lắng nghe tin nhắn realtime từ socket
   useEffect(() => {
-    // Nếu không có socket thì không làm gì cả
     if (!socket) return;
-    // Hàm để xử lý tin nhắn mới nhận được từ socket
     subscribeToMessages();
-    // Hàm return sẽ gọi tới unsubscribeFromMessages để hủy đăng ký nhận tin nhắn khi component unmount
     return () => unsubscribeFromMessages();
   }, [socket]);
 
-  // Hàm để xử lý trạng thái của AI đang gõ
+  // Lắng nghe AI typing indicator
   useEffect(() => {
-    // Nếu không có socket thì không làm gì cả
     if (!socket) return;
-    const handleError = (error) => {
-      console.error('Socket error:', error);
+    const handleError = (e) => {
+      console.error("Socket error:", e);
       setIsAITyping(false);
     };
-    // Khi có sự kiện 'error' từ socket, gọi hàm handleError để xử lý lỗi
-    socket.on('error', handleError);
-    // Khi có sự kiện 'ai_typing_start' từ socket, đặt trạng thái isAITyping thành true
-    socket.on('ai_typing_start', () => setIsAITyping(true));
-    // Khi có sự kiện 'ai_typing_end' từ socket, đặt trạng thái isAITyping thành false
-    socket.on('ai_typing_end', () => setIsAITyping(false));
-    // useEffect sẽ return một hàm để hủy đăng ký các sự kiện này khi component unmount
+    socket.on("error", handleError);
+    socket.on("ai_typing_start", () => setIsAITyping(true));
+    socket.on("ai_typing_end",   () => setIsAITyping(false));
     return () => {
-      // Hủy đăng ký các sự kiện để tránh rò rỉ bộ nhớ
-      // Hủy đăng ký sự kiện 'error'
-      socket.off('error', handleError);
-      // Hủy đăng ký sự kiện 'ai_typing_start' và 'ai_typing_end'
-      socket.off('ai_typing_start');
-      socket.off('ai_typing_end');
+      socket.off("error", handleError);
+      socket.off("ai_typing_start");
+      socket.off("ai_typing_end");
     };
   }, [socket]);
 
-  // Hàm để cuộn xuống cuối chatbox mỗi khi có tin nhắn mới
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // Auto‑scroll on new messages
+  useEffect(scrollToBottom, [messages]);
 
-  // Hàm để dọn dẹp audio khi component unmount
-  useEffect(() => {
-    return () => {
-      // Nếu có audio đang phát thì dừng nó và giải phóng tài nguyên
-      if (audioRef.current) {
-        // Dừng audio đang phát
-        audioRef.current.pause();
-        // Giải phóng URL đã tạo
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  // Hàm gọi TTS backend và phát audio
-  const handlePlayTTS = async (message, id) => {
-    // Nếu audioRef hiện tại đang phát, dừng và xóa nó trước khi phát âm thanh mới
+  // Cleanup audio on unmount
+  useEffect(() => () => {
     if (audioRef.current) {
-      // Dừng audio đang phát
       audioRef.current.pause();
-      // Xoá audioRef để chuẩn bị cho âm thanh mới
       audioRef.current = null;
     }
-    // set trạng thái đang phát âm thanh cho spinningId
+  }, []);
+
+  /* --------------------------- TTS main handler --------------------------- */
+  const handlePlayTTS = async (text, id) => {
+    // Check premium tier
+    if (authUser.tier !== "premium") {
+      toast.error("Tính năng Text‑to‑Speech chỉ dành cho tài khoản premium. Vui lòng nâng cấp.");
+      return;
+    }
+
+    // Stop bất kỳ audio đang phát
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
     setSpinningId(id);
+    setPlayingId(null);
 
     try {
-      // Gửi một request POST đến API TTS để chuyển đổi văn bản thành giọng nói
-      const response = await fetch('https://celebritychatbot.id.vn/api/tts', {
-        method: 'POST',
-        // header để chỉ định nội dung là JSON
-        headers: { 'Content-Type': 'application/json' },
-        // body chứa văn bản cần chuyển đổi thành giọng nói
-        body: JSON.stringify({ text: message })
+      const resp = await fetch(TTS_ENDPOINT, {
+        method : "POST",
+        headers: { "Content-Type": "application/json" },
+        body   : JSON.stringify({ text }),
       });
-      // Nếu response không thành công, ném lỗi
-      if (!response.ok) throw new Error('TTS request failed');
-      // Nhận file âm thanh từ server dưới dạng blob
-      const blob = await response.blob();
-      // Tạo URL tạm cho trình duyệt để phát âm thanh
-      const audioUrl = URL.createObjectURL(blob);
-      // Tạo đối tượng Audio mới để phát âm thanh
-      const audio = new Audio(audioUrl);
-      // Lưu audio đó vào audioRef.current để có thể quản lý và dọn dẹp sau này
+      if (!resp.ok) throw new Error(`TTS request failed → ${resp.status}`);
+
+      const blob = await resp.blob();
+      const url  = URL.createObjectURL(blob);
+
+      // Lưu vào map để show <audio controls>
+      setAudioUrlMap(prev => ({ ...prev, [id]: url }));
+
+      const audio = new Audio(url);
       audioRef.current = audio;
+      setPlayingId(id);
 
-      // Khi âm thanh phát xong, giải phóng URL và đặt spinningId về null
       audio.onended = () => {
+        setPlayingId(null);
         setSpinningId(null);
-        URL.revokeObjectURL(audioUrl);
+        URL.revokeObjectURL(url);
+      };
+      audio.onerror = () => {
+        setPlayingId(null);
+        setSpinningId(null);
+        URL.revokeObjectURL(url);
+        toast.error("Không phát được audio");
       };
 
-      // Khi có lỗi trong quá trình phát âm thanh, cũng giải phóng URL và đặt spinningId về null
-      audio.onerror = () => {
-        setSpinningId(null);
-        URL.revokeObjectURL(audioUrl);
-      };
-      // Bắt đầu phát âm thanh
       await audio.play();
-      // Nếu có lỗi trong quá trình phát âm thanh
     } catch (err) {
-      // Nếu có lỗi trong quá trình phát âm thanh, đặt spinningId về null
+      console.error("TTS Error:", err);
       setSpinningId(null);
-      // Hiển thị thông báo lỗi
-      console.error('TTS Error:', err);
+      toast.error("Text‑to‑Speech lỗi :(");
     }
   };
 
+  /* ------------------------------ JSX return ------------------------------ */
   return (
     <>
-      {/* Thêm CSS cho hiệu ứng xoay tròn của biểu tượng tai nghe */}
       <style>{spinStyle}</style>
-      {/* Hiển thị danh sách các tin nhắn trong chatbox */}
       <div className="historychatbox">
-        {/* Nếu có tin nhắn thì hiển thị chúng, ngược lại hiển thị suggest "Start a conversation" */}
         {messages.length > 0 ? (
-          // Duyệt qua từng tin nhắn và hiển thị chúng
-          messages.map((message) => {
-            const senderId = message.sender?._id || message.sender;
-            const isUserMessage = message?.userType && message.userType !== 'ai';
-            const isPlaying = playingId === (message._id || `temp-${message.timestamp}`);
-            const isLoading = ttsLoading === (message._id || `temp-${message.timestamp}`);
-            const hasError = ttsError === (message._id || `temp-${message.timestamp}`);
+          messages.map((msg) => {
+            const isUserMessage = msg?.userType && msg.userType !== "ai";
+            const keyId         = msg._id || `temp-${msg.timestamp}`;
             return (
               <div
-                // Thêm class để xác định loại tin nhắn (người dùng hoặc AI)
-                className={`chat-message ${isUserMessage ? 'user-message' : 'bot-message'}`}
-                // key là duy nhất để React có thể theo dõi các phần tử trong danh sách khi cần cập nhận, thêm, xóa
-                key={message._id || `temp-${message.timestamp}`}
+                className={`chat-message ${isUserMessage ? "user-message" : "bot-message"}`}
+                key={keyId}
               >
-                {/* Hiển thị tin nhắn */}
-                <p>{message.message}</p> 
-                {/* Nếu là tin nhắn của người dùng thì không hiển thị button TTS */}
+                <p>{msg.message}</p>
+
+                {/* Chỉ AI message mới có nút TTS */}
                 {!isUserMessage && (
                   <div>
                     <button
-                      // Button để phát âm thanh từ tin nhắn, chỉ hiển thị nếu người dùng có tài khoản premium
                       className="button-text-to-speech"
                       title="Nghe"
-                      onClick={async () => {
-                      if (authUser.tier !== 'premium') {
-                      // Nếu người dùng không phải premium, hiển thị thông báo lỗi
-                      toast.error('Tính năng Text-to-Speech chỉ dành cho tài khoản premium. Vui lòng nâng cấp.');
-                      return;
-                       }
-                      // Phát âm thanh tin nhắn
-                      handlePlayTTS(message.message);}}
+                      onClick={() => handlePlayTTS(msg.message, keyId)}
                     >
-                      {/* Hiển thị biểu tượng tai nghe, nếu đang phát âm thanh thì thêm class để xoay biểu tượng */}
                       <FontAwesomeIcon
                         icon={faHeadphones}
-                        className={spinningId === (message._id || `temp-${message.timestamp}`) ? 'icon-spinning' : ''}
+                        className={spinningId === keyId ? "icon-spinning" : ""}
                       />
                     </button>
-                    {/* Nếu TTS đã xử lý xong → render <audio> để người dùng điều khiển phát/tạm dừng */}
-                    {audioUrlMap[message._id || `temp-${message.timestamp}`] && (
+
+                    {/* Hiển thị audio control khi đã có URL */}
+                    {audioUrlMap[keyId] && (
                       <audio
-                        // trình phát nhúng sẵn trong HTML để người dùng có thể điều khiển âm thanh
                         controls
-                        // Lấy url blob âm thanh tương ứng để phát
-                        src={audioUrlMap[message._id || `temp-${message.timestamp}`]}
-                        style={{ marginLeft: 8, verticalAlign: 'middle' }}
+                        src={audioUrlMap[keyId]}
+                        style={{ marginLeft: 8, verticalAlign: "middle" }}
                       />
                     )}
                   </div>
@@ -244,19 +191,15 @@ const HistoryChatbox = () => {
           })
         ) : (
           <div className="empty-chat">
-            {/* Nếu không có tin nhắn nào, hiển thị thông báo đề xuất người dùng bắt đầu cuộc trò chuyện */}
             <p>Start a conversation with {useSelectedCeleb?.celebName}!</p>
           </div>
         )}
-        {/* Phần tử để cuộn xuống cuối chatbox */}
+
         <div ref={bottomRef} />
-        {/* Hiển thị trạng thái AI đang gõ nếu isAITyping là true */}
+
         {isAITyping && (
-          // Hiển thị thông báo AI đang trả lời
           <div className="ai-typing-indicator">
-            {/* Hiển thị tên nhân vật + đang trả lời */}
             <span>{useSelectedCeleb?.celebName} đang trả lời</span>
-            {/* Hiển thị hiệu ứng gõ với 3 chấm lên xuống */}
             <div className="typing-dots">
               <div className="dot"></div>
               <div className="dot"></div>

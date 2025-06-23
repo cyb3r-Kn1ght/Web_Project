@@ -275,4 +275,4 @@ export const facebookAuth = (req, res, next) => {
                 res.redirect(`https://web-project-flame-five.vercel.app/chat`);
             })(req, res, next);
         };
-        
+
