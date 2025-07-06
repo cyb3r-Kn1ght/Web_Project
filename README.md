@@ -6,7 +6,7 @@
 3. Lương Hoàng Long - 23520879
 4. Dương Phước Nhật Nam -23520968
 5. Võ Hoài Nam - 23520990
-
+Link media video TikTok: https://vt.tiktok.com/ZSBATNMyN/
 ## Công nghệ
 
 - **Front-end**: Sử dụng **React.js** kết hợp **Vite** nhằm tăng khả năng tối ưu trang web, thiết kế phù hợp với xu hướng hiện tại, thân thiện và dễ tiếp cận.
